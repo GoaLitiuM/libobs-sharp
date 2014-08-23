@@ -38,7 +38,6 @@
             this.Name = "TestForm";
             this.Text = "libobs-sharp-test";
             this.Load += new System.EventHandler(this.TestForm_Load);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestForm_FormClosed);
             this.ResumeLayout(false);
 
         }
