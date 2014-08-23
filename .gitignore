@@ -1,0 +1,11 @@
+*.csproj.user
+*.suo
+*.sdf
+*.opensdf
+
+
+test/bin
+test/obj
+
+libobs-sharp/bin
+libobs-sharp/obj
