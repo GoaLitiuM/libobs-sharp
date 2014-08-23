@@ -19,36 +19,36 @@ using System;
 
 namespace OBS
 {
-    public static class Obs
-    {
-        public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
-        {
-            libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
-        }
+	public static class Obs
+	{
+		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
+		{
+			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
+		}
 
-        public static unsafe bool Startup(string locale)
-        {
-            return libobs.obs_startup(locale);
-        }
+		public static unsafe bool Startup(string locale)
+		{
+			return libobs.obs_startup(locale);
+		}
 
-        public static unsafe int ResetVideo(libobs.obs_video_info ovi)
-        {
-            return libobs.obs_reset_video(ref ovi);
-        }
+		public static unsafe int ResetVideo(libobs.obs_video_info ovi)
+		{
+			return libobs.obs_reset_video(ref ovi);
+		}
 
-        public static unsafe void LoadAllModules()
-        {
-            libobs.obs_load_all_modules();
-        }
+		public static unsafe void LoadAllModules()
+		{
+			libobs.obs_load_all_modules();
+		}
 
-        public static unsafe void Shutdown()
-        {
-            libobs.obs_shutdown();
-        }
+		public static unsafe void Shutdown()
+		{
+			libobs.obs_shutdown();
+		}
 
-        public static unsafe void RenderMainView()
-        {
-            libobs.obs_render_main_view();
-        }
-    }
+		public static unsafe void RenderMainView()
+		{
+			libobs.obs_render_main_view();
+		}
+	}
 }

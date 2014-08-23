@@ -20,19 +20,19 @@ using System.Windows.Forms;
 
 namespace test
 {
-    static class Program
-    {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            //System.Diagnostics.Debug.Assert(Type.GetType("Mono.Runtime") != null, "Mono VM not detected.");
+	static class Program
+	{
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main()
+		{
+			//System.Diagnostics.Debug.Assert(Type.GetType("Mono.Runtime") != null, "Mono VM not detected.");
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TestForm());
-        }
-    }
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new TestForm());
+		}
+	}
 }

@@ -23,78 +23,78 @@ using System.Runtime.InteropServices;
 
 namespace test
 {
-    public partial class TestForm : Form
-    {
-        public TestForm()
-        {
-            InitializeComponent();
-        }
+	public partial class TestForm : Form
+	{
+		public TestForm()
+		{
+			InitializeComponent();
+		}
 
-        ~TestForm()
-        {
-            Obs.Shutdown();
-        }
+		~TestForm()
+		{
+			Obs.Shutdown();
+		}
 
-        private void TestForm_Load(object sender, EventArgs e)
-        {
-            Rectangle rc = new Rectangle(0, 0, Width, Height);
+		private void TestForm_Load(object sender, EventArgs e)
+		{
+			Rectangle rc = new Rectangle(0, 0, Width, Height);
 
-            libobs.obs_video_info ovi = new libobs.obs_video_info
-            {
-                adapter = 0,
-                base_width = (uint)rc.Right,
-                base_height = (uint)rc.Bottom,
-                fps_num = 30000,
-                fps_den = 1001,
-                graphics_module = "libobs-d3d11",
-                window_width = (uint)rc.Right,
-                window_height = (uint)rc.Bottom,
-                output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
-                output_width = (uint)rc.Right,
-                output_height = (uint)rc.Bottom,
-                window = new libobs.gs_window()
-                {
-                    hwnd = Handle
-                }
-            };
+			libobs.obs_video_info ovi = new libobs.obs_video_info
+			{
+				adapter = 0,
+				base_width = (uint)rc.Right,
+				base_height = (uint)rc.Bottom,
+				fps_num = 30000,
+				fps_den = 1001,
+				graphics_module = "libobs-d3d11",
+				window_width = (uint)rc.Right,
+				window_height = (uint)rc.Bottom,
+				output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
+				output_width = (uint)rc.Right,
+				output_height = (uint)rc.Bottom,
+				window = new libobs.gs_window()
+				{
+					hwnd = Handle
+				}
+			};
 
-            if (!Obs.Startup("en-US"))
-                Close();
+			if (!Obs.Startup("en-US"))
+				Close();
 
-            if (Obs.ResetVideo(ovi) != 0)
-            {
-                Close();
-                return;
-            }
+			if (Obs.ResetVideo(ovi) != 0)
+			{
+				Close();
+				return;
+			}
 
-            Obs.LoadAllModules();
+			Obs.LoadAllModules();
 
-            Console.WriteLine("managed sizeof obs_source: " + Marshal.SizeOf(typeof(libobs.obs_source)));
+			Console.WriteLine("managed sizeof obs_source: " + Marshal.SizeOf(typeof(libobs.obs_source)));
 
-            ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source");
-            ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter");
+			ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source");
+			ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter");
 
-            source.AddFilter(filter);
+			source.AddFilter(filter);
 
-            ObsScene scene = new ObsScene("test scene");
+			ObsScene scene = new ObsScene("test scene");
 
-            libobs.vec2 scale = new libobs.vec2(20.0f, 20.0f);
-            ObsSceneItem item = scene.Add(source);
-            item.Scale(scale);
+			libobs.vec2 scale = new libobs.vec2(20.0f, 20.0f);
+			ObsSceneItem item = scene.Add(source);
+			item.Scale(scale);
 
-            Obs.SetOutputSource(0, scene.GetSource());
+			Obs.SetOutputSource(0, scene.GetSource());
 
-            libobs.obs_add_draw_callback(new libobs.draw_callback(RenderWindow), IntPtr.Zero);
-        }
+			libobs.obs_add_draw_callback(new libobs.draw_callback(RenderWindow), IntPtr.Zero);
+		}
 
-        private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            
-        }
+		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			
+		}
 
-        private void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
-        {
-            Obs.RenderMainView();
-        }
-    }
+		private void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
+		{
+			Obs.RenderMainView();
+		}
+	}
 }

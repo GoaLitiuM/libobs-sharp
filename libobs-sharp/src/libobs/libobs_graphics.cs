@@ -20,42 +20,42 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-    public static partial class libobs
-    {
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public struct gs_window
-        {
-            public IntPtr hwnd;
+	public static partial class libobs
+	{
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct gs_window
+		{
+			public IntPtr hwnd;
 
-            /*public gs_window(IntPtr handle)
-            {
-                hwnd = handle;
-            }*/
+			/*public gs_window(IntPtr handle)
+			{
+				hwnd = handle;
+			}*/
 
-            //TODO: OS X / Linux specific handles?
-            //NOTE: sizeof gs_window in libobs not portable: one pointer in windows, pointer + uint32 in linux
-        };
+			//TODO: OS X / Linux specific handles?
+			//NOTE: sizeof gs_window in libobs not portable: one pointer in windows, pointer + uint32 in linux
+		};
 
-        public enum gs_color_format : int
-        {
-            GS_UNKNOWN,
-            GS_A8,
-            GS_R8,
-            GS_RGBA,
-            GS_BGRX,
-            GS_BGRA,
-            GS_R10G10B10A2,
-            GS_RGBA16,
-            GS_R16,
-            GS_RGBA16F,
-            GS_RGBA32F,
-            GS_RG16F,
-            GS_RG32F,
-            GS_R16F,
-            GS_R32F,
-            GS_DXT1,
-            GS_DXT3,
-            GS_DXT5
-        };
-    }
+		public enum gs_color_format : int
+		{
+			GS_UNKNOWN,
+			GS_A8,
+			GS_R8,
+			GS_RGBA,
+			GS_BGRX,
+			GS_BGRA,
+			GS_R10G10B10A2,
+			GS_RGBA16,
+			GS_R16,
+			GS_RGBA16F,
+			GS_RGBA32F,
+			GS_RG16F,
+			GS_RG32F,
+			GS_R16F,
+			GS_R32F,
+			GS_DXT1,
+			GS_DXT3,
+			GS_DXT5
+		};
+	}
 }

@@ -19,31 +19,31 @@ using System;
 
 namespace OBS
 {
-    public class ObsScene
-    {
-        internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object
+	public class ObsScene
+	{
+		internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object
 
-        public unsafe ObsScene(string name)
-        {
-            instance = (libobs.obs_scene*)libobs.obs_scene_create(name);
-            //libobs.obs_scene_addref((IntPtr)instance);
-        }
+		public unsafe ObsScene(string name)
+		{
+			instance = (libobs.obs_scene*)libobs.obs_scene_create(name);
+			//libobs.obs_scene_addref((IntPtr)instance);
+		}
 
-        unsafe ~ObsScene()
-        {
-            libobs.obs_scene_release((IntPtr)instance);
-        }
+		unsafe ~ObsScene()
+		{
+			libobs.obs_scene_release((IntPtr)instance);
+		}
 
-        public unsafe ObsSceneItem Add(ObsSource source)
-        {
-            libobs.obs_scene_item* sceneItem = (libobs.obs_scene_item*)libobs.obs_scene_add((IntPtr)instance, (IntPtr)source.GetPointer());
-            return new ObsSceneItem(sceneItem);
-        }
+		public unsafe ObsSceneItem Add(ObsSource source)
+		{
+			libobs.obs_scene_item* sceneItem = (libobs.obs_scene_item*)libobs.obs_scene_add((IntPtr)instance, (IntPtr)source.GetPointer());
+			return new ObsSceneItem(sceneItem);
+		}
 
-        public unsafe ObsSource GetSource()
-        {
-            libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
-            return new ObsSource(source);
-        }
-    }
+		public unsafe ObsSource GetSource()
+		{
+			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
+			return new ObsSource(source);
+		}
+	}
 }

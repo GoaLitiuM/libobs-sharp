@@ -23,24 +23,24 @@ using System.Threading.Tasks;
 
 namespace OBS
 {
-    public class ObsSceneItem
-    {
-        internal unsafe libobs.obs_scene_item* instance;    //pointer to unmanaged object
+	public class ObsSceneItem
+	{
+		internal unsafe libobs.obs_scene_item* instance;    //pointer to unmanaged object
 
-        public unsafe ObsSceneItem(libobs.obs_scene_item* instance)
-        {
-            this.instance = instance;
-            libobs.obs_sceneitem_addref((IntPtr)instance);
-        }
+		public unsafe ObsSceneItem(libobs.obs_scene_item* instance)
+		{
+			this.instance = instance;
+			libobs.obs_sceneitem_addref((IntPtr)instance);
+		}
 
-        unsafe ~ObsSceneItem()
-        {
-            libobs.obs_sceneitem_release((IntPtr)instance);
-        }
+		unsafe ~ObsSceneItem()
+		{
+			libobs.obs_sceneitem_release((IntPtr)instance);
+		}
 
-        public unsafe void Scale(libobs.vec2 scale)
-        {
-            libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);
-        }
-    }
+		public unsafe void Scale(libobs.vec2 scale)
+		{
+			libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);
+		}
+	}
 }

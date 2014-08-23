@@ -17,17 +17,17 @@
 
 namespace OBS
 {
-    public static partial class libobs
-    {
-        //TODO: requires handling of va_list
+	public static partial class libobs
+	{
+		//TODO: requires handling of va_list
 
-        //UNSUPPORTED
-        //set callback function for logging events
-        //[DllImport(importLibrary, CallingConvention = importCall)]
-        //public static extern void base_set_log_handler([MarshalAs(UnmanagedType.FunctionPtr)] log_handler_t handler, Object param);
+		//UNSUPPORTED
+		//set callback function for logging events
+		//[DllImport(importLibrary, CallingConvention = importCall)]
+		//public static extern void base_set_log_handler([MarshalAs(UnmanagedType.FunctionPtr)] log_handler_t handler, Object param);
 
-        //UNSUPPORTED
-        //[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
-        //public delegate void log_handler_t(int lvl, StringBuilder msg, IntPtr args, IntPtr p);
-    }
+		//UNSUPPORTED
+		//[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
+		//public delegate void log_handler_t(int lvl, StringBuilder msg, IntPtr args, IntPtr p);
+	}
 }

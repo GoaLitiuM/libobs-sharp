@@ -20,44 +20,44 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-    using pthread_mutex_t = IntPtr;
+	using pthread_mutex_t = IntPtr;
 
-    using signal_info_t = IntPtr;
+	using signal_info_t = IntPtr;
 
-    public static partial class libobs
-    {
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public struct signal_handler
-        {
-            private signal_info first;
-            private pthread_mutex_t mutex;
-        };
+	public static partial class libobs
+	{
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct signal_handler
+		{
+			private signal_info first;
+			private pthread_mutex_t mutex;
+		};
 
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public struct signal_info
-        {
-            private decl_info func;
-            private darray /*signal_callback*/   callbacks;
-            private pthread_mutex_t mutex;
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct signal_info
+		{
+			private decl_info func;
+			private darray /*signal_callback*/   callbacks;
+			private pthread_mutex_t mutex;
 
-            [MarshalAs(UnmanagedType.I1)]
-            private bool signalling;
+			[MarshalAs(UnmanagedType.I1)]
+			private bool signalling;
 
-            private signal_info_t next;
-        };
+			private signal_info_t next;
+		};
 
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public struct decl_info
-        {
-            public string name;
-            public string decl_string;
-            private darray /*decl_param*/   _params;
-        };
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct decl_info
+		{
+			public string name;
+			public string decl_string;
+			private darray /*decl_param*/   _params;
+		};
 
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public struct proc_handler
-        {
-            private darray /*proc_info*/ procs;
-        };
-    }
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct proc_handler
+		{
+			private darray /*proc_info*/ procs;
+		};
+	}
 }

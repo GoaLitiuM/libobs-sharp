@@ -20,67 +20,67 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-    using uint32_t = UInt32;
+	using uint32_t = UInt32;
 
-    public static partial class libobs
-    {
-        private const int MAX_AV_PLANES = 8;
+	public static partial class libobs
+	{
+		private const int MAX_AV_PLANES = 8;
 
-        [StructLayoutAttribute(LayoutKind.Sequential)]
-        public unsafe struct resample_info
-        {
-            private uint32_t samples_per_sec;
-            private audio_format format;
-            private speaker_layout speakers;
-        };
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct resample_info
+		{
+			private uint32_t samples_per_sec;
+			private audio_format format;
+			private speaker_layout speakers;
+		};
 
-        public enum video_format : int
-        {
-            VIDEO_FORMAT_NONE,
+		public enum video_format : int
+		{
+			VIDEO_FORMAT_NONE,
 
-            /* planar 420 format */
-            VIDEO_FORMAT_I420, /* three-plane */
-            VIDEO_FORMAT_NV12, /* two-plane, luma and packed chroma */
+			/* planar 420 format */
+			VIDEO_FORMAT_I420, /* three-plane */
+			VIDEO_FORMAT_NV12, /* two-plane, luma and packed chroma */
 
-            /* packed 422 formats */
-            VIDEO_FORMAT_YVYU,
-            VIDEO_FORMAT_YUY2, /* YUYV */
-            VIDEO_FORMAT_UYVY,
+			/* packed 422 formats */
+			VIDEO_FORMAT_YVYU,
+			VIDEO_FORMAT_YUY2, /* YUYV */
+			VIDEO_FORMAT_UYVY,
 
-            /* packed uncompressed formats */
-            VIDEO_FORMAT_RGBA,
-            VIDEO_FORMAT_BGRA,
-            VIDEO_FORMAT_BGRX,
-        };
+			/* packed uncompressed formats */
+			VIDEO_FORMAT_RGBA,
+			VIDEO_FORMAT_BGRA,
+			VIDEO_FORMAT_BGRX,
+		};
 
-        public enum audio_format : int
-        {
-            AUDIO_FORMAT_UNKNOWN,
+		public enum audio_format : int
+		{
+			AUDIO_FORMAT_UNKNOWN,
 
-            AUDIO_FORMAT_U8BIT,
-            AUDIO_FORMAT_16BIT,
-            AUDIO_FORMAT_32BIT,
-            AUDIO_FORMAT_FLOAT,
+			AUDIO_FORMAT_U8BIT,
+			AUDIO_FORMAT_16BIT,
+			AUDIO_FORMAT_32BIT,
+			AUDIO_FORMAT_FLOAT,
 
-            AUDIO_FORMAT_U8BIT_PLANAR,
-            AUDIO_FORMAT_16BIT_PLANAR,
-            AUDIO_FORMAT_32BIT_PLANAR,
-            AUDIO_FORMAT_FLOAT_PLANAR,
-        };
+			AUDIO_FORMAT_U8BIT_PLANAR,
+			AUDIO_FORMAT_16BIT_PLANAR,
+			AUDIO_FORMAT_32BIT_PLANAR,
+			AUDIO_FORMAT_FLOAT_PLANAR,
+		};
 
-        public enum speaker_layout : int
-        {
-            SPEAKERS_UNKNOWN,
-            SPEAKERS_MONO,
-            SPEAKERS_STEREO,
-            SPEAKERS_2POINT1,
-            SPEAKERS_QUAD,
-            SPEAKERS_4POINT1,
-            SPEAKERS_5POINT1,
-            SPEAKERS_5POINT1_SURROUND,
-            SPEAKERS_7POINT1,
-            SPEAKERS_7POINT1_SURROUND,
-            SPEAKERS_SURROUND,
-        };
-    }
+		public enum speaker_layout : int
+		{
+			SPEAKERS_UNKNOWN,
+			SPEAKERS_MONO,
+			SPEAKERS_STEREO,
+			SPEAKERS_2POINT1,
+			SPEAKERS_QUAD,
+			SPEAKERS_4POINT1,
+			SPEAKERS_5POINT1,
+			SPEAKERS_5POINT1_SURROUND,
+			SPEAKERS_7POINT1,
+			SPEAKERS_7POINT1_SURROUND,
+			SPEAKERS_SURROUND,
+		};
+	}
 }
