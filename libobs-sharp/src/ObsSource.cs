@@ -31,18 +31,38 @@ namespace OBS
 
 		unsafe ~ObsSource()
 		{
+			Release();
+		}
+
+		public unsafe void Release()
+		{
+			if (instance == null)
+				return;
+
 			libobs.obs_source_release((IntPtr)instance);
+			instance = null;
 		}
 
 		public unsafe ObsSource(libobs.obs_source* instance)
 		{
 			this.instance = instance;
+			libobs.obs_source_addref((IntPtr)instance);
 		}
 
 		public unsafe libobs.obs_source* GetPointer()
 		{
 			return instance;
 		}
+
+
+		public unsafe String Name
+		{
+			get
+			{
+				return libobs.obs_source_get_name((IntPtr)instance);
+			}
+		}
+
 
 		public unsafe void AddFilter(ObsSource filter)
 		{

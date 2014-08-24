@@ -20,7 +20,6 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	//ignore opaque types and treat them as pointers
 	using audio_line_t = IntPtr;
 	using audio_resampler_t = IntPtr;
 	using gs_effect_t = IntPtr;
@@ -86,6 +85,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_add_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
 
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_resize(uint32_t cx, uint32_t cy);
+
 		/*
 		 * source
 		 */
@@ -100,13 +102,27 @@ namespace OBS
 		public static extern void obs_source_release(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern bool obs_add_source(obs_source source);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_name")]
+		private static extern IntPtr import_obs_source_get_name(obs_source_t source);
+
+		public static string obs_source_get_name(obs_source_t source)
+		{
+			IntPtr strPtr = import_obs_source_get_name(source);
+			return Marshal.PtrToStringAnsi(strPtr);
+		}
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_filter_add(obs_source_t source, obs_source_t filter);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_get_source_by_name(string name);
 
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern bool obs_add_source(obs_source source);
+		
+
+		
 
 		/*
 		 * scene
@@ -127,18 +143,48 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static unsafe extern obs_source_t obs_scene_get_source(obs_scene_t scene);
 
+
 		/*
 		 * scene_item
 		 */
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_set_scale(obs_sceneitem_t item, out vec2 scale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static unsafe extern void obs_sceneitem_addref(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static unsafe extern void obs_sceneitem_release(obs_sceneitem_t item);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_remove(obs_sceneitem_t item);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void  obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_get_scale(obs_sceneitem_t item, out vec2 scale);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern uint32_t obs_sceneitem_get_alignment(obs_sceneitem_t item);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_set_pos(obs_sceneitem_t item, out vec2 pos);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_set_rot(obs_sceneitem_t item, float rot_deg);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_set_scale(obs_sceneitem_t item, out vec2 scale);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static unsafe extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
+
+		
 
 		/*
 		 * misc/uncategorized

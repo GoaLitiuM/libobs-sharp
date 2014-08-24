@@ -20,11 +20,23 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace test
 {
 	public partial class TestForm : Form
 	{
+		private libobs.draw_callback _RenderWindow = new libobs.draw_callback(RenderWindow);
+
+		private List<ObsScene> _scenes = new List<ObsScene>();
+		private int _selectedScene = 0;
+
+		private List<List<ObsSource>> _sceneSources = new List<List<ObsSource>>();
+		private int _selectedSource = 0;
+
+		private List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
+
+
 		public TestForm()
 		{
 			InitializeComponent();
@@ -39,7 +51,7 @@ namespace test
 		{
 			try
 			{
-				Rectangle rc = new Rectangle(0, 0, Width, Height);
+				Rectangle rc = new Rectangle(0, 0, panel1.Width, panel1.Height);
 
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{
@@ -56,40 +68,22 @@ namespace test
 					output_height = (uint)rc.Bottom,
 					window = new libobs.gs_window()
 					{
-						hwnd = Handle
+						hwnd = panel1.Handle
 					}
 				};
 
 				if (!Obs.Startup("en-US"))
-				{
-					MessageBox.Show("Startup failed.", "Error", MessageBoxButtons.OK);
-					Close();
-					return;
-				}
+					throw new ApplicationException("Startup failed.");
 
 				if (Obs.ResetVideo(ovi) != 0)
-				{
-					MessageBox.Show("ResetVideo failed.", "Error", MessageBoxButtons.OK);
-					Close();
-					return;
-				}
+					throw new ApplicationException("ResetVideo failed.");
 
 				Obs.LoadAllModules();
 
-				ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source");
-				ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter");
+				AddScene();
+				AddSource();
 
-				source.AddFilter(filter);
-
-				ObsScene scene = new ObsScene("test scene");
-
-				libobs.vec2 scale = new libobs.vec2(20.0f, 20.0f);
-				ObsSceneItem item = scene.Add(source);
-				item.Scale(scale);
-
-				Obs.SetOutputSource(0, scene.GetSource());
-
-				libobs.obs_add_draw_callback(new libobs.draw_callback(RenderWindow), IntPtr.Zero);
+				libobs.obs_add_draw_callback(_RenderWindow, IntPtr.Zero);
 			}
 			catch (Exception exp)
 			{
@@ -98,9 +92,134 @@ namespace test
 			}
 		}
 
-		private void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
+		private void AddScene()
+		{
+			ObsScene scene = new ObsScene("test scene");
+			Obs.SetOutputSource(0, scene.GetSource());
+
+			_sceneSources.Add(new List<ObsSource>());
+			_sceneItems.Add(new List<ObsSceneItem>());
+			_scenes.Add(scene);
+			listBox1.Items.Add(scene.Name);
+
+			listBox1.SelectedIndex = listBox1.Items.Count - 1;
+		}
+
+		private void AddSource()
+		{
+			if (_selectedScene < 0)
+				return;
+
+			ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source" + (_sceneSources[_selectedScene].Count + 1));
+
+			ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
+			source.AddFilter(filter);
+
+			ObsSceneItem item = _scenes[_selectedScene].Add(source);
+			item.SetScale(new libobs.vec2(20.0f, 20.0f));
+			item.SetPosition(new libobs.vec2(10 * _sceneSources[_selectedScene].Count, 10 * _sceneSources[_selectedScene].Count));
+
+
+			_sceneSources[_selectedScene].Add(source);
+			_sceneItems[_selectedScene].Add(item);
+			listBox2.Items.Add(source.Name);
+		}
+
+		private void DelScene(int index)
+		{
+			if (_scenes.Count <= 1)
+				return;
+
+
+			foreach (ObsSceneItem item in _sceneItems[index])
+				item.Release();
+
+			foreach (ObsSource source in _sceneSources[index])
+				source.Release();
+
+			ObsScene scene = _scenes[index];
+			scene.Release();
+
+			_sceneSources.RemoveAt(index);
+			_scenes.RemoveAt(index);
+
+			_selectedScene = _scenes.Count - 1;
+
+			listBox1.Items.RemoveAt(index);
+		}
+
+		private void DelSource(int index)
+		{
+			if (_selectedScene < 0)
+				return;
+
+			if (index >= _sceneSources[_selectedScene].Count || index < 0)
+				return;
+
+			ObsSource source = _sceneSources[_selectedScene][index];
+			source.Release();
+
+			ObsSceneItem item = _sceneItems[_selectedScene][index];
+			item.Release();
+
+			_sceneSources[_selectedScene].RemoveAt(index);
+			_sceneItems[_selectedScene].RemoveAt(index);
+			listBox2.Items.RemoveAt(index);
+
+			listBox2.SelectedIndex = listBox2.Items.Count - 1;
+		}
+
+		private static void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
 		{
 			Obs.RenderMainView();
+		}
+
+		private void panel1_SizeChanged(object sender, EventArgs e)
+		{
+			Obs.ResizeMainView(panel1.Width, panel1.Height);
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			AddSource();
+		}
+
+		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listBox1.SelectedIndex < 0)
+			{
+				listBox1.SelectedIndex = _selectedScene;
+				return;
+			}
+
+			_selectedScene = listBox1.SelectedIndex;
+			Obs.SetOutputSource(0, _scenes[_selectedScene].GetSource());
+
+			listBox2.Items.Clear();
+			foreach (ObsSource source in _sceneSources[_selectedScene])
+			{
+				listBox2.Items.Add(source.Name);
+			}
+		}
+
+		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_selectedSource = listBox2.SelectedIndex;
+		}
+
+		private void button4_Click(object sender, EventArgs e)
+		{
+			DelScene(_selectedScene);
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			DelSource(_selectedSource);
+		}
+
+		private void button3_Click(object sender, EventArgs e)
+		{
+			AddScene();
 		}
 	}
 }

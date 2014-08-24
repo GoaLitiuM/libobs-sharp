@@ -16,22 +16,38 @@
 ***************************************************************************/
 
 using System;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace OBS
 {
+
 	public class ObsScene
 	{
 		internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object
+		bool disposed = false;
 
 		public unsafe ObsScene(string name)
 		{
 			instance = (libobs.obs_scene*)libobs.obs_scene_create(name);
-			//libobs.obs_scene_addref((IntPtr)instance);
+			libobs.obs_scene_addref((IntPtr)instance);
 		}
 
 		unsafe ~ObsScene()
 		{
+			Release();
+		}
+
+		public unsafe void Release()
+		{
+			if (instance == null)
+				return;
+
+			ObsSource source = GetSource();
+			source.Release();
+
 			libobs.obs_scene_release((IntPtr)instance);
+			instance = null;
 		}
 
 		public unsafe ObsSceneItem Add(ObsSource source)
@@ -44,6 +60,15 @@ namespace OBS
 		{
 			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
 			return new ObsSource(source);
+		}
+
+
+		public unsafe String Name
+		{
+			get
+			{
+				return libobs.obs_source_get_name((IntPtr)(libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance));
+			}
 		}
 	}
 }
