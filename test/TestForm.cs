@@ -19,7 +19,6 @@ using OBS;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace test
 {
@@ -39,7 +38,7 @@ namespace test
 		{
 			try
 			{
-				Rectangle rc = new Rectangle(0, 0, Width, Height);
+				Rectangle rc = ClientRectangle;
 
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{
@@ -89,11 +88,11 @@ namespace test
 
 				Obs.SetOutputSource(0, scene.GetSource());
 
-				libobs.obs_add_draw_callback(new libobs.draw_callback(RenderWindow), IntPtr.Zero);
+				libobs.obs_add_draw_callback(RenderWindow, IntPtr.Zero);
 			}
 			catch (Exception exp)
 			{
-				MessageBox.Show(exp.Message.ToString(), "Error", MessageBoxButtons.OK);
+				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
 				Close();
 			}
 		}
