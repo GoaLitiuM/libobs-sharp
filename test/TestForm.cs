@@ -87,8 +87,6 @@ namespace test
 				_filterTypes = Obs.GetSourceFilterTypes();
 				_transitionTypes = Obs.GetSourceTransitionTypes();
 
-                string imageSourceName = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, "image_source");
-
 				AddScene();
 				AddSource();
 
@@ -134,9 +132,9 @@ namespace test
 			listBox2.Items.Add(source.Name);
 		}
 
-		private void AddSource(ObsSourceType type, string id, string name)
+		private void AddInputSource(string id, string name)
 		{
-			ObsSource source = new ObsSource(type, id, name);
+			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
 
 			ObsSceneItem item = _scenes[_selectedScene].Add(source);
 			item.SetScale(new libobs.vec2(20.0f, 20.0f));
@@ -151,10 +149,16 @@ namespace test
 		{
 			ContextMenu filtermenu = new ContextMenu();
 
-			for (int i = 0; i < _filterTypes.Length; i++)
+			foreach (var filterType in _filterTypes)
 			{
-				filtermenu.MenuItems.Add(_filterTypes[i]);
-				filtermenu.MenuItems[i].Click += OnFilterSourceMenuClick;
+				MenuItem menuitem = new MenuItem
+				{
+					Name = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType),
+					Tag = filterType
+				};
+				menuitem.Click += OnFilterSourceMenuClick;
+
+				filtermenu.MenuItems.Add(menuitem);
 			}
 
 			filtermenu.Show(this, PointToClient(Cursor.Position));
@@ -163,9 +167,10 @@ namespace test
 		private void OnFilterSourceMenuClick(object sender, EventArgs eventArgs)
 		{
 			MenuItem send = (MenuItem)sender;
-			string id = send.Text;
-
-			var filter = new ObsSource(ObsSourceType.Filter, id, "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
+			string id = send.Tag.ToString();
+			string name = send.Text;
+			
+			ObsSource filter = new ObsSource(ObsSourceType.Filter, id, name + (_sceneSources[_selectedScene].Count + 1));
 			_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
 		}
 
@@ -173,10 +178,16 @@ namespace test
 		{
 			ContextMenu inputmenu = new ContextMenu();
 
-			for (int i = 0; i < _inputTypes.Length; i++)
+			foreach (string inputType in _inputTypes)
 			{
-				inputmenu.MenuItems.Add(_inputTypes[i]);
-				inputmenu.MenuItems[i].Click += OnInputSourceMenuClick;
+				MenuItem menuitem = new MenuItem
+				{
+					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType), 
+					Tag = inputType
+				};
+				menuitem.Click += OnInputSourceMenuClick;
+				
+				inputmenu.MenuItems.Add(menuitem);
 			}
 
 			inputmenu.Show(this, PointToClient(Cursor.Position));
@@ -185,9 +196,10 @@ namespace test
 		private void OnInputSourceMenuClick(object sender, EventArgs eventArgs)
 		{
 			MenuItem send = (MenuItem)sender;
-			string id = send.Text;
-			
-			AddSource(ObsSourceType.Input, id, id + (_sceneSources[_selectedScene].Count + 1));
+			string id = send.Tag.ToString();
+			string name = send.Text;
+
+			AddInputSource(id, name + (_sceneSources[_selectedScene].Count + 1));
 		}
 
 		private void DelScene(int index)
@@ -294,6 +306,6 @@ namespace test
 			{
 				DisplayFilterSourceMenu();
 			}
-		}		
+		}
 	}
 }
