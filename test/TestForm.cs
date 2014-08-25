@@ -80,6 +80,11 @@ namespace test
 
 				Obs.LoadAllModules();
 
+
+				string[] inputTypes = Obs.GetSourceInputTypes();
+                string[] filterTypes = Obs.GetSourceFilterTypes();
+                string[] transitionTypes = Obs.GetSourceTransitionTypes();
+
 				AddScene();
 				AddSource();
 

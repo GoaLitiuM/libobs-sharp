@@ -16,6 +16,7 @@
 ***************************************************************************/
 
 using System;
+using System.Collections.Generic;
 
 namespace OBS
 {
@@ -55,5 +56,42 @@ namespace OBS
 		{
 			libobs.obs_resize((UInt32)width, (UInt32)height);
 		}
+
+
+        public static unsafe string[] GetSourceInputTypes()
+        {
+            int idx = 0;
+            string id = null;
+            List<string> idList = new List<string>();
+
+            while (libobs.obs_enum_input_types(idx++, out id))
+                idList.Add(id);
+
+            return idList.ToArray();
+        }
+
+        public static unsafe string[] GetSourceFilterTypes()
+        {
+            int idx = 0;
+            string id = null;
+            List<string> idList = new List<string>();
+
+            while (libobs.obs_enum_filter_types(idx++, out id))
+                idList.Add(id);
+
+            return idList.ToArray();
+        }
+
+        public static unsafe string[] GetSourceTransitionTypes()
+        {
+            int idx = 0;
+            string id = null;
+            List<string> idList = new List<string>();
+
+            while (libobs.obs_enum_transition_types(idx++, out id))
+                idList.Add(id);
+
+            return idList.ToArray();
+        }
 	}
 }

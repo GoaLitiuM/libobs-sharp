@@ -61,6 +61,7 @@ namespace OBS
 		 */
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_startup(string locale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
@@ -102,6 +103,7 @@ namespace OBS
 		public static extern void obs_source_release(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_add_source(obs_source source);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_name")]
@@ -167,22 +169,22 @@ namespace OBS
 		public static unsafe extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_get_scale(obs_sceneitem_t item, out vec2 scale);
+		public static extern void obs_sceneitem_get_scale(obs_sceneitem_t item, out vec2 scale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern uint32_t obs_sceneitem_get_alignment(obs_sceneitem_t item);
+		public static extern uint32_t obs_sceneitem_get_alignment(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_set_pos(obs_sceneitem_t item, out vec2 pos);
+		public static extern void obs_sceneitem_set_pos(obs_sceneitem_t item, out vec2 pos);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_set_rot(obs_sceneitem_t item, float rot_deg);
+		public static extern void obs_sceneitem_set_rot(obs_sceneitem_t item, float rot_deg);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_set_scale(obs_sceneitem_t item, out vec2 scale);
+		public static extern void obs_sceneitem_set_scale(obs_sceneitem_t item, out vec2 scale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
+		public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
 
 		
 
@@ -194,7 +196,60 @@ namespace OBS
 		public static extern IntPtr obs_data_create();
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_set_output_source(uint32_t channel, obs_source_t source);
+		public static extern void obs_set_output_source(uint32_t channel, obs_source_t source);
+
+
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_input_types")]
+		[return: MarshalAs(UnmanagedType.I1)]
+		private static extern bool import_obs_enum_input_types(size_t idx, out IntPtr id);
+
+		public static bool obs_enum_input_types(int idx, out string id)
+		{
+			IntPtr strPtr = IntPtr.Zero;
+			bool ret = import_obs_enum_input_types((size_t)idx, out strPtr);
+
+			if (strPtr != IntPtr.Zero)
+				id = Marshal.PtrToStringAnsi(strPtr);
+			else
+				id = null;
+
+			return ret;
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_filter_types")]
+		[return: MarshalAs(UnmanagedType.I1)]
+		private static extern bool import_obs_enum_filter_types(size_t idx, out IntPtr id);
+
+		public static bool obs_enum_filter_types(int idx, out string id)
+		{
+			IntPtr strPtr = IntPtr.Zero;
+			bool ret = import_obs_enum_filter_types((size_t)idx, out strPtr);
+
+			if (strPtr != IntPtr.Zero)
+				id = Marshal.PtrToStringAnsi(strPtr);
+			else
+				id = null;
+
+			return ret;
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_transition_types")]
+		[return: MarshalAs(UnmanagedType.I1)]
+		private static extern bool import_obs_enum_transition_types(size_t idx, out IntPtr id);
+
+		public static bool obs_enum_transition_types(int idx, out string id)
+		{
+			IntPtr strPtr = IntPtr.Zero;
+			bool ret = import_obs_enum_transition_types((size_t)idx, out strPtr);
+
+			if (strPtr != IntPtr.Zero)
+				id = Marshal.PtrToStringAnsi(strPtr);
+			else
+				id = null;
+
+			return ret;
+		}
 
 		/*
 		 * structures
