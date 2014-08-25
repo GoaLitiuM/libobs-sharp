@@ -131,7 +131,7 @@ namespace OBS
 		 */
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static unsafe extern obs_scene_t obs_scene_create(string name);
+		public static extern obs_scene_t obs_scene_create(string name);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_addref(obs_scene_t source);
@@ -140,10 +140,10 @@ namespace OBS
 		public static extern void obs_scene_release(obs_scene_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern obs_sceneitem_t obs_scene_add(obs_scene_t scene, obs_source_t source);
+		public static extern obs_sceneitem_t obs_scene_add(obs_scene_t scene, obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern obs_source_t obs_scene_get_source(obs_scene_t scene);
+		public static extern obs_source_t obs_scene_get_source(obs_scene_t scene);
 
 
 		/*
@@ -151,22 +151,22 @@ namespace OBS
 		 */
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_addref(obs_sceneitem_t item);
+		public static extern void obs_sceneitem_addref(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_release(obs_sceneitem_t item);
+		public static extern void obs_sceneitem_release(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void obs_sceneitem_remove(obs_sceneitem_t item);
+		public static extern void obs_sceneitem_remove(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);
+		public static extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern void  obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
+		public static extern void  obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static unsafe extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
+		public static extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_get_scale(obs_sceneitem_t item, out vec2 scale);
@@ -198,6 +198,20 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_set_output_source(uint32_t channel, obs_source_t source);
 
+
+        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_display_name")]
+		private static extern IntPtr import_obs_source_get_display_name(obs_source_type type, string id);
+
+        public static string obs_source_get_display_name(obs_source_type type, string id)
+        {
+            string str = null;
+            IntPtr strPtr = import_obs_source_get_display_name(type, id);
+            
+            if (strPtr != IntPtr.Zero)
+                str = Marshal.PtrToStringAnsi(strPtr);
+
+            return str;
+        }
 
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_input_types")]

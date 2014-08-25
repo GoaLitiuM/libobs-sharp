@@ -33,7 +33,7 @@ namespace OBS
 			libobs.obs_scene_addref((IntPtr)instance);
 		}
 
-		unsafe ~ObsScene()
+		~ObsScene()
 		{
 			Release();
 		}

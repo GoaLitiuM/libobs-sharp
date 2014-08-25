@@ -85,6 +85,8 @@ namespace test
                 string[] filterTypes = Obs.GetSourceFilterTypes();
                 string[] transitionTypes = Obs.GetSourceTransitionTypes();
 
+                string imageSourceName = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, "image_source");
+
 				AddScene();
 				AddSource();
 
