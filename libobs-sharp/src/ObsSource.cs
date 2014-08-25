@@ -29,7 +29,7 @@ namespace OBS
 			libobs.obs_source_addref((IntPtr)instance);
 		}
 
-		unsafe ~ObsSource()
+		~ObsSource()
 		{
 			Release();
 		}

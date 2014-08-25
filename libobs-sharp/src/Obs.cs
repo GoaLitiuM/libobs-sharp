@@ -22,22 +22,22 @@ namespace OBS
 {
 	public static class Obs
 	{
-		public static unsafe bool Startup(string locale)
+		public static bool Startup(string locale)
 		{
 			return libobs.obs_startup(locale);
 		}
 
-		public static unsafe void Shutdown()
+		public static void Shutdown()
 		{
 			libobs.obs_shutdown();
 		}
 
-		public static unsafe void LoadAllModules()
+		public static void LoadAllModules()
 		{
 			libobs.obs_load_all_modules();
 		}
 
-		public static unsafe int ResetVideo(libobs.obs_video_info ovi)
+		public static int ResetVideo(libobs.obs_video_info ovi)
 		{
 			return libobs.obs_reset_video(ref ovi);
 		}
@@ -47,18 +47,23 @@ namespace OBS
 			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
 		}
 
-		public static unsafe void RenderMainView()
+		public static void RenderMainView()
 		{
 			libobs.obs_render_main_view();
 		}
 
-		public static unsafe void ResizeMainView(int width, int height)
+		public static void ResizeMainView(int width, int height)
 		{
 			libobs.obs_resize((UInt32)width, (UInt32)height);
 		}
 
 
-        public static unsafe string[] GetSourceInputTypes()
+        public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
+        {
+            return libobs.obs_source_get_display_name((libobs.obs_source_type)type, id);
+        }
+
+        public static string[] GetSourceInputTypes()
         {
             int idx = 0;
             string id = null;
@@ -70,7 +75,7 @@ namespace OBS
             return idList.ToArray();
         }
 
-        public static unsafe string[] GetSourceFilterTypes()
+        public static string[] GetSourceFilterTypes()
         {
             int idx = 0;
             string id = null;
@@ -82,7 +87,7 @@ namespace OBS
             return idList.ToArray();
         }
 
-        public static unsafe string[] GetSourceTransitionTypes()
+        public static string[] GetSourceTransitionTypes()
         {
             int idx = 0;
             string id = null;
