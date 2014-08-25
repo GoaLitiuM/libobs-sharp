@@ -25,7 +25,7 @@ namespace test
 {
 	public partial class TestForm : Form
 	{
-		private libobs.draw_callback _RenderWindow = new libobs.draw_callback(RenderWindow);
+		private libobs.draw_callback _RenderWindow = RenderWindow;
 
 		private List<ObsScene> _scenes = new List<ObsScene>();
 		private int _selectedScene = 0;
@@ -68,7 +68,7 @@ namespace test
 					output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
 					output_width = (uint)rc.Right,
 					output_height = (uint)rc.Bottom,
-					window = new libobs.gs_window()
+					window = new libobs.gs_window
 					{
 						hwnd = panel1.Handle
 					}
@@ -82,7 +82,7 @@ namespace test
 
 				Obs.LoadAllModules();
 
-
+				// Populate Source Types
 				_inputTypes = Obs.GetSourceInputTypes();
 				_filterTypes = Obs.GetSourceFilterTypes();
 				_transitionTypes = Obs.GetSourceTransitionTypes();
@@ -94,7 +94,7 @@ namespace test
 			}
 			catch (Exception exp)
 			{
-				MessageBox.Show(exp.Message.ToString(), "Error", MessageBoxButtons.OK);
+				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
 				Close();
 			}
 		}
@@ -130,6 +130,62 @@ namespace test
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
 			listBox2.Items.Add(source.Name);
+		}
+
+		private void AddSource(ObsSourceType type, string id, string name)
+		{
+			ObsSource source = new ObsSource(type, id, name);
+
+			ObsSceneItem item = _scenes[_selectedScene].Add(source);
+			item.SetScale(new libobs.vec2(20.0f, 20.0f));
+			item.SetPosition(new libobs.vec2(10 * _sceneSources[_selectedScene].Count, 10 * _sceneSources[_selectedScene].Count));
+
+			_sceneSources[_selectedScene].Add(source);
+			_sceneItems[_selectedScene].Add(item);
+			listBox2.Items.Add(source.Name);
+		}
+
+		private void DisplayFilterSourceMenu()
+		{
+			ContextMenu filtermenu = new ContextMenu();
+
+			for (int i = 0; i < _filterTypes.Length; i++)
+			{
+				filtermenu.MenuItems.Add(_filterTypes[i]);
+				filtermenu.MenuItems[i].Click += OnFilterSourceMenuClick;
+			}
+
+			filtermenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		private void OnFilterSourceMenuClick(object sender, EventArgs eventArgs)
+		{
+			MenuItem send = (MenuItem)sender;
+			string id = send.Text;
+
+			var filter = new ObsSource(ObsSourceType.Filter, id, "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
+			_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
+		}
+
+		private void DisplayInputSourceMenu()
+		{
+			ContextMenu inputmenu = new ContextMenu();
+
+			for (int i = 0; i < _inputTypes.Length; i++)
+			{
+				inputmenu.MenuItems.Add(_inputTypes[i]);
+				inputmenu.MenuItems[i].Click += OnInputSourceMenuClick;
+			}
+
+			inputmenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		private void OnInputSourceMenuClick(object sender, EventArgs eventArgs)
+		{
+			MenuItem send = (MenuItem)sender;
+			string id = send.Text;
+			
+			AddSource(ObsSourceType.Input, id, id + (_sceneSources[_selectedScene].Count + 1));
 		}
 
 		private void DelScene(int index)
@@ -188,7 +244,8 @@ namespace test
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			AddSource();
+			// AddSource();
+			DisplayInputSourceMenu();
 		}
 
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -228,5 +285,13 @@ namespace test
 		{
 			AddScene();
 		}
+
+		private void listBox2_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right && _selectedScene != -1 && _selectedSource != -1)
+			{
+				DisplayFilterSourceMenu();
+			}
+		}		
 	}
 }
