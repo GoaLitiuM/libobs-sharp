@@ -19,7 +19,6 @@ using OBS;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace test
@@ -36,6 +35,9 @@ namespace test
 
 		private List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
 
+		private string[] _inputTypes;
+		private string[] _filterTypes;
+		private string[] _transitionTypes;
 
 		public TestForm()
 		{
@@ -81,9 +83,9 @@ namespace test
 				Obs.LoadAllModules();
 
 
-				string[] inputTypes = Obs.GetSourceInputTypes();
-                string[] filterTypes = Obs.GetSourceFilterTypes();
-                string[] transitionTypes = Obs.GetSourceTransitionTypes();
+				_inputTypes = Obs.GetSourceInputTypes();
+				_filterTypes = Obs.GetSourceFilterTypes();
+				_transitionTypes = Obs.GetSourceTransitionTypes();
 
 				AddScene();
 				AddSource();
