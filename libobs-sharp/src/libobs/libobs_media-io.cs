@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 namespace OBS
 {
 	using uint32_t = UInt32;
+	using uint64_t = UInt64;
 
 	public static partial class libobs
 	{
@@ -32,6 +33,17 @@ namespace OBS
 			private uint32_t samples_per_sec;
 			private audio_format format;
 			private speaker_layout speakers;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct audio_output_info
+		{
+			public string name;
+
+			public uint32_t samples_per_sec;
+			public audio_format format;
+			public speaker_layout speakers;
+			public uint64_t buffer_ms;
 		};
 
 		public enum video_format : int

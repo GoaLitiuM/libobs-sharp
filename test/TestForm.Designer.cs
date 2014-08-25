@@ -28,128 +28,127 @@
         /// </summary>
         private void InitializeComponent()
         {
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
-			this.button4 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
-			this.listBox2 = new System.Windows.Forms.ListBox();
-			this.listBox1 = new System.Windows.Forms.ListBox();
-			this.panel2.SuspendLayout();
+			this.mainViewPanel = new System.Windows.Forms.Panel();
+			this.bottomPanel = new System.Windows.Forms.Panel();
+			this.delSceneButton = new System.Windows.Forms.Button();
+			this.addSceneButton = new System.Windows.Forms.Button();
+			this.delSourceButton = new System.Windows.Forms.Button();
+			this.addSourceButton = new System.Windows.Forms.Button();
+			this.sourceListBox = new System.Windows.Forms.ListBox();
+			this.sceneListBox = new System.Windows.Forms.ListBox();
+			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// panel1
+			// mainViewPanel
 			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.mainViewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Location = new System.Drawing.Point(12, 9);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(694, 331);
-			this.panel1.TabIndex = 0;
-			this.panel1.SizeChanged += new System.EventHandler(this.panel1_SizeChanged);
+			this.mainViewPanel.Location = new System.Drawing.Point(12, 9);
+			this.mainViewPanel.Name = "mainViewPanel";
+			this.mainViewPanel.Size = new System.Drawing.Size(694, 331);
+			this.mainViewPanel.TabIndex = 0;
+			this.mainViewPanel.SizeChanged += new System.EventHandler(this.mainViewPanel_SizeChanged);
 			// 
-			// panel2
+			// bottomPanel
 			// 
-			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			this.bottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel2.Controls.Add(this.button4);
-			this.panel2.Controls.Add(this.button3);
-			this.panel2.Controls.Add(this.button2);
-			this.panel2.Controls.Add(this.button1);
-			this.panel2.Controls.Add(this.listBox2);
-			this.panel2.Controls.Add(this.listBox1);
-			this.panel2.Location = new System.Drawing.Point(12, 346);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(694, 121);
-			this.panel2.TabIndex = 1;
+			this.bottomPanel.Controls.Add(this.delSceneButton);
+			this.bottomPanel.Controls.Add(this.addSceneButton);
+			this.bottomPanel.Controls.Add(this.delSourceButton);
+			this.bottomPanel.Controls.Add(this.addSourceButton);
+			this.bottomPanel.Controls.Add(this.sourceListBox);
+			this.bottomPanel.Controls.Add(this.sceneListBox);
+			this.bottomPanel.Location = new System.Drawing.Point(12, 346);
+			this.bottomPanel.Name = "bottomPanel";
+			this.bottomPanel.Size = new System.Drawing.Size(694, 121);
+			this.bottomPanel.TabIndex = 1;
 			// 
-			// button4
+			// delSceneButton
 			// 
-			this.button4.Location = new System.Drawing.Point(84, 98);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(75, 23);
-			this.button4.TabIndex = 5;
-			this.button4.Text = "DelScene";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
+			this.delSceneButton.Location = new System.Drawing.Point(84, 98);
+			this.delSceneButton.Name = "delSceneButton";
+			this.delSceneButton.Size = new System.Drawing.Size(75, 23);
+			this.delSceneButton.TabIndex = 5;
+			this.delSceneButton.Text = "DelScene";
+			this.delSceneButton.UseVisualStyleBackColor = true;
+			this.delSceneButton.Click += new System.EventHandler(this.delSceneButton_Click);
 			// 
-			// button3
+			// addSceneButton
 			// 
-			this.button3.Location = new System.Drawing.Point(3, 98);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 4;
-			this.button3.Text = "AddScene";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.addSceneButton.Location = new System.Drawing.Point(3, 98);
+			this.addSceneButton.Name = "addSceneButton";
+			this.addSceneButton.Size = new System.Drawing.Size(75, 23);
+			this.addSceneButton.TabIndex = 4;
+			this.addSceneButton.Text = "AddScene";
+			this.addSceneButton.UseVisualStyleBackColor = true;
+			this.addSceneButton.Click += new System.EventHandler(this.addSceneButton_Click);
 			// 
-			// button2
+			// delSourceButton
 			// 
-			this.button2.Location = new System.Drawing.Point(246, 98);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 3;
-			this.button2.Text = "DelSource";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.delSourceButton.Location = new System.Drawing.Point(246, 98);
+			this.delSourceButton.Name = "delSourceButton";
+			this.delSourceButton.Size = new System.Drawing.Size(75, 23);
+			this.delSourceButton.TabIndex = 3;
+			this.delSourceButton.Text = "DelSource";
+			this.delSourceButton.UseVisualStyleBackColor = true;
+			this.delSourceButton.Click += new System.EventHandler(this.delSourceButton_Click);
 			// 
-			// button1
+			// addSourceButton
 			// 
-			this.button1.Location = new System.Drawing.Point(165, 98);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 2;
-			this.button1.Text = "AddSource";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.addSourceButton.Location = new System.Drawing.Point(165, 98);
+			this.addSourceButton.Name = "addSourceButton";
+			this.addSourceButton.Size = new System.Drawing.Size(75, 23);
+			this.addSourceButton.TabIndex = 2;
+			this.addSourceButton.Text = "AddSource";
+			this.addSourceButton.UseVisualStyleBackColor = true;
+			this.addSourceButton.Click += new System.EventHandler(this.addSourceButton_Click);
 			// 
-			// listBox2
+			// sourceListBox
 			// 
-			this.listBox2.FormattingEnabled = true;
-			this.listBox2.Location = new System.Drawing.Point(165, 0);
-			this.listBox2.Name = "listBox2";
-			this.listBox2.Size = new System.Drawing.Size(156, 95);
-			this.listBox2.TabIndex = 1;
-			this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
-			this.listBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox2_MouseDown);
+			this.sourceListBox.FormattingEnabled = true;
+			this.sourceListBox.Location = new System.Drawing.Point(165, 0);
+			this.sourceListBox.Name = "sourceListBox";
+			this.sourceListBox.Size = new System.Drawing.Size(156, 95);
+			this.sourceListBox.TabIndex = 1;
+			this.sourceListBox.SelectedIndexChanged += new System.EventHandler(this.sourceListBox_SelectedIndexChanged);
+			this.sourceListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sourceListBox_MouseDown);
 			// 
-			// listBox1
+			// sceneListBox
 			// 
-			this.listBox1.FormattingEnabled = true;
-			this.listBox1.Location = new System.Drawing.Point(3, 0);
-			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(156, 95);
-			this.listBox1.TabIndex = 0;
-			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+			this.sceneListBox.FormattingEnabled = true;
+			this.sceneListBox.Location = new System.Drawing.Point(3, 0);
+			this.sceneListBox.Name = "sceneListBox";
+			this.sceneListBox.Size = new System.Drawing.Size(156, 95);
+			this.sceneListBox.TabIndex = 0;
+			this.sceneListBox.SelectedIndexChanged += new System.EventHandler(this.sceneListBox_SelectedIndexChanged);
 			// 
 			// TestForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(718, 479);
-			this.Controls.Add(this.panel2);
-			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.bottomPanel);
+			this.Controls.Add(this.mainViewPanel);
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.Load += new System.EventHandler(this.TestForm_Load);
-			this.Resize += new System.EventHandler(this.TestForm_Resize);
-			this.panel2.ResumeLayout(false);
+			this.bottomPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
 
         #endregion
 
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.ListBox listBox2;
-		private System.Windows.Forms.ListBox listBox1;
+		private System.Windows.Forms.Panel mainViewPanel;
+		private System.Windows.Forms.Panel bottomPanel;
+		private System.Windows.Forms.Button delSceneButton;
+		private System.Windows.Forms.Button addSceneButton;
+		private System.Windows.Forms.Button delSourceButton;
+		private System.Windows.Forms.Button addSourceButton;
+		private System.Windows.Forms.ListBox sourceListBox;
+		private System.Windows.Forms.ListBox sceneListBox;
     }
 }
 

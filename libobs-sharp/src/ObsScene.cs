@@ -25,11 +25,14 @@ namespace OBS
 	public class ObsScene
 	{
 		internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object
-		bool disposed = false;
 
 		public unsafe ObsScene(string name)
 		{
 			instance = (libobs.obs_scene*)libobs.obs_scene_create(name);
+
+			if (instance == null)
+				throw new ApplicationException("obs_scene_create failed");
+
 			libobs.obs_scene_addref((IntPtr)instance);
 		}
 

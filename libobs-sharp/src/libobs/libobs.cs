@@ -68,10 +68,23 @@ namespace OBS
 		public static extern void obs_shutdown();
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_load_all_modules();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern int obs_reset_video(ref obs_video_info ovi);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_load_all_modules();
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_reset_audio(ref audio_output_info ai);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_get_video_info(ref obs_video_info ovi);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_get_audio_info(ref audio_output_info ai);
+	
 
 		/*
 		 * rendering
@@ -199,19 +212,19 @@ namespace OBS
 		public static extern void obs_set_output_source(uint32_t channel, obs_source_t source);
 
 
-        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_display_name")]
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_display_name")]
 		private static extern IntPtr import_obs_source_get_display_name(obs_source_type type, string id);
 
-        public static string obs_source_get_display_name(obs_source_type type, string id)
-        {
-            string str = null;
-            IntPtr strPtr = import_obs_source_get_display_name(type, id);
-            
-            if (strPtr != IntPtr.Zero)
-                str = Marshal.PtrToStringAnsi(strPtr);
+		public static string obs_source_get_display_name(obs_source_type type, string id)
+		{
+			string str = null;
+			IntPtr strPtr = import_obs_source_get_display_name(type, id);
+			
+			if (strPtr != IntPtr.Zero)
+				str = Marshal.PtrToStringAnsi(strPtr);
 
-            return str;
-        }
+			return str;
+		}
 
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_input_types")]
@@ -297,6 +310,8 @@ namespace OBS
 			[MarshalAs(UnmanagedType.I1)]
 			public bool gpu_conversion;
 		};
+
+
 
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public class obs_data

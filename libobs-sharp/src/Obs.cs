@@ -42,6 +42,33 @@ namespace OBS
 			return libobs.obs_reset_video(ref ovi);
 		}
 
+		public static bool ResetAudio(libobs.audio_output_info ai)
+		{
+			return libobs.obs_reset_audio(ref ai);
+		}
+
+		public static libobs.obs_video_info GetVideoInfo()
+		{
+			libobs.obs_video_info ovi = new libobs.obs_video_info();
+			bool ret = libobs.obs_get_video_info(ref ovi);
+
+			if (!ret)
+				throw new ApplicationException("obs_get_video_info failed");
+
+			return ovi;
+		}
+
+		public static libobs.audio_output_info GetAudioInfo()
+		{
+			libobs.audio_output_info ai = new libobs.audio_output_info();
+			bool ret = libobs.obs_get_audio_info(ref ai);
+
+			if (!ret)
+				throw new ApplicationException("obs_get_audio_info failed");
+
+			return ai;
+		}
+
 		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
 		{
 			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
@@ -58,45 +85,45 @@ namespace OBS
 		}
 
 
-        public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
-        {
-            return libobs.obs_source_get_display_name((libobs.obs_source_type)type, id);
-        }
+		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
+		{
+			return libobs.obs_source_get_display_name((libobs.obs_source_type)type, id);
+		}
 
-        public static string[] GetSourceInputTypes()
-        {
-            int idx = 0;
-            string id = null;
-            List<string> idList = new List<string>();
+		public static string[] GetSourceInputTypes()
+		{
+			int idx = 0;
+			string id = null;
+			List<string> idList = new List<string>();
 
-            while (libobs.obs_enum_input_types(idx++, out id))
-                idList.Add(id);
+			while (libobs.obs_enum_input_types(idx++, out id))
+				idList.Add(id);
 
-            return idList.ToArray();
-        }
+			return idList.ToArray();
+		}
 
-        public static string[] GetSourceFilterTypes()
-        {
-            int idx = 0;
-            string id = null;
-            List<string> idList = new List<string>();
+		public static string[] GetSourceFilterTypes()
+		{
+			int idx = 0;
+			string id = null;
+			List<string> idList = new List<string>();
 
-            while (libobs.obs_enum_filter_types(idx++, out id))
-                idList.Add(id);
+			while (libobs.obs_enum_filter_types(idx++, out id))
+				idList.Add(id);
 
-            return idList.ToArray();
-        }
+			return idList.ToArray();
+		}
 
-        public static string[] GetSourceTransitionTypes()
-        {
-            int idx = 0;
-            string id = null;
-            List<string> idList = new List<string>();
+		public static string[] GetSourceTransitionTypes()
+		{
+			int idx = 0;
+			string id = null;
+			List<string> idList = new List<string>();
 
-            while (libobs.obs_enum_transition_types(idx++, out id))
-                idList.Add(id);
+			while (libobs.obs_enum_transition_types(idx++, out id))
+				idList.Add(id);
 
-            return idList.ToArray();
-        }
+			return idList.ToArray();
+		}
 	}
 }

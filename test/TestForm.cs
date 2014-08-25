@@ -31,7 +31,7 @@ namespace test
 		private int _selectedScene = 0;
 
 		private List<List<ObsSource>> _sceneSources = new List<List<ObsSource>>();
-		private int _selectedSource = 0;
+		private int _selectedSource = -1;
 
 		private List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
 
@@ -53,7 +53,7 @@ namespace test
 		{
 			try
 			{
-				Rectangle rc = new Rectangle(0, 0, panel1.Width, panel1.Height);
+				Rectangle rc = new Rectangle(0, 0, mainViewPanel.Width, mainViewPanel.Height);
 
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{
@@ -70,8 +70,17 @@ namespace test
 					output_height = (uint)rc.Bottom,
 					window = new libobs.gs_window
 					{
-						hwnd = panel1.Handle
+						hwnd = mainViewPanel.Handle
 					}
+				};
+
+				libobs.audio_output_info ai = new libobs.audio_output_info
+				{
+					name = "Audio Output",
+					format = libobs.audio_format.AUDIO_FORMAT_FLOAT,
+					samples_per_sec = 44100,
+					speakers = libobs.speaker_layout.SPEAKERS_STEREO,
+					buffer_ms = 1000
 				};
 
 				if (!Obs.Startup("en-US"))
@@ -79,6 +88,9 @@ namespace test
 
 				if (Obs.ResetVideo(ovi) != 0)
 					throw new ApplicationException("ResetVideo failed.");
+
+				if (!Obs.ResetAudio(ai))
+					throw new ApplicationException("ResetAudio failed.");
 
 				Obs.LoadAllModules();
 
@@ -101,15 +113,15 @@ namespace test
 
 		private void AddScene()
 		{
-			ObsScene scene = new ObsScene("test scene");
+			ObsScene scene = new ObsScene("test scene (" + (_scenes.Count + 1) + ")");
 			Obs.SetOutputSource(0, scene.GetSource());
 
 			_sceneSources.Add(new List<ObsSource>());
 			_sceneItems.Add(new List<ObsSceneItem>());
 			_scenes.Add(scene);
-			listBox1.Items.Add(scene.Name);
+			sceneListBox.Items.Add(scene.Name);
 
-			listBox1.SelectedIndex = listBox1.Items.Count - 1;
+			sceneListBox.SelectedIndex = sceneListBox.Items.Count - 1;
 		}
 
 		private void AddSource()
@@ -129,7 +141,7 @@ namespace test
 
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
-			listBox2.Items.Add(source.Name);
+			sourceListBox.Items.Add(source.Name);
 		}
 
 		private void AddInputSource(string id, string name)
@@ -143,7 +155,7 @@ namespace test
 
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
-			listBox2.Items.Add(source.Name);
+			sourceListBox.Items.Add(source.Name);
 		}
 
 		private void DisplayFilterSourceMenu()
@@ -154,7 +166,7 @@ namespace test
 			{
 				MenuItem menuitem = new MenuItem
 				{
-					Name = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + "(" + filterType + ")",
+					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + " (" + filterType + ")",
 					Tag = filterType
 				};
 				menuitem.Click += OnFilterSourceMenuClick;
@@ -183,7 +195,7 @@ namespace test
 			{
 				MenuItem menuitem = new MenuItem
 				{
-					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType) + "(" + inputType + ")",
+					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType) + " (" + inputType + ")",
 					Tag = inputType
 				};
 				menuitem.Click += OnInputSourceMenuClick;
@@ -223,7 +235,7 @@ namespace test
 
 			_selectedScene = _scenes.Count - 1;
 
-			listBox1.Items.RemoveAt(index);
+			sceneListBox.Items.RemoveAt(index);
 		}
 
 		private void DelSource(int index)
@@ -242,9 +254,9 @@ namespace test
 
 			_sceneSources[_selectedScene].RemoveAt(index);
 			_sceneItems[_selectedScene].RemoveAt(index);
-			listBox2.Items.RemoveAt(index);
+			sourceListBox.Items.RemoveAt(index);
 
-			listBox2.SelectedIndex = listBox2.Items.Count - 1;
+			sourceListBox.SelectedIndex = sourceListBox.Items.Count - 1;
 		}
 
 		private static void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
@@ -252,67 +264,60 @@ namespace test
 			Obs.RenderMainView();
 		}
 
-		private void panel1_SizeChanged(object sender, EventArgs e)
+		private void mainViewPanel_SizeChanged(object sender, EventArgs e)
 		{
-			Obs.ResizeMainView(panel1.Width, panel1.Height);
+			Obs.ResizeMainView(mainViewPanel.Width, mainViewPanel.Height);
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void addSourceButton_Click(object sender, EventArgs e)
 		{
-			// AddSource();
 			DisplayInputSourceMenu();
 		}
 
-		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+		private void sceneListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (listBox1.SelectedIndex < 0)
+			if (sceneListBox.SelectedIndex < 0)
 			{
-				listBox1.SelectedIndex = _selectedScene;
+				sceneListBox.SelectedIndex = _selectedScene;
 				return;
 			}
 
-			_selectedScene = listBox1.SelectedIndex;
+			_selectedScene = sceneListBox.SelectedIndex;
 			Obs.SetOutputSource(0, _scenes[_selectedScene].GetSource());
 
-			listBox2.Items.Clear();
+			sourceListBox.Items.Clear();
 			foreach (ObsSource source in _sceneSources[_selectedScene])
 			{
-				listBox2.Items.Add(source.Name);
+				sourceListBox.Items.Add(source.Name);
 			}
 		}
 
-		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+		private void sourceListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_selectedSource = listBox2.SelectedIndex;
+			_selectedSource = sourceListBox.SelectedIndex;
 		}
 
-		private void button4_Click(object sender, EventArgs e)
+		private void delSceneButton_Click(object sender, EventArgs e)
 		{
 			DelScene(_selectedScene);
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void delSourceButton_Click(object sender, EventArgs e)
 		{
 			DelSource(_selectedSource);
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		private void addSceneButton_Click(object sender, EventArgs e)
 		{
 			AddScene();
 		}
 
-		private void listBox2_MouseDown(object sender, MouseEventArgs e)
+		private void sourceListBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right && _selectedScene != -1 && _selectedSource != -1)
 			{
 				DisplayFilterSourceMenu();
 			}
-		}
-
-		private void TestForm_Resize(object sender, EventArgs e)
-		{
-			// this doesnt work
-			Obs.ResizeMainView(panel1.Width,panel1.Height);			
 		}
 	}
 }

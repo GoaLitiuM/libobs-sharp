@@ -26,6 +26,10 @@ namespace OBS
 		public unsafe ObsSource(ObsSourceType type, string id, string name/*, obs_data settings*/)
 		{
 			instance = (libobs.obs_source*)libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero);
+
+			if (instance == null)
+				throw new ApplicationException("obs_source_create failed");
+
 			libobs.obs_source_addref((IntPtr)instance);
 		}
 
