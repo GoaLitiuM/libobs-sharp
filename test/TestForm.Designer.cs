@@ -113,6 +113,7 @@
 			this.listBox2.Size = new System.Drawing.Size(156, 95);
 			this.listBox2.TabIndex = 1;
 			this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
+			this.listBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox2_MouseDown);
 			// 
 			// listBox1
 			// 
@@ -133,6 +134,7 @@
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.Load += new System.EventHandler(this.TestForm_Load);
+			this.Resize += new System.EventHandler(this.TestForm_Resize);
 			this.panel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 

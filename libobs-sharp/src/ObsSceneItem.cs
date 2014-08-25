@@ -92,6 +92,10 @@ namespace OBS
 			libobs.obs_sceneitem_set_rot((IntPtr)instance, rotation);
 		}
 
+		/// <summary>
+		/// Sets scale of layer
+		/// </summary>
+		/// <param name="scale">1f = original size</param>
 		public unsafe void SetScale(libobs.vec2 scale)
 		{
 			libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);

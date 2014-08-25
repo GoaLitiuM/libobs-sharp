@@ -19,14 +19,13 @@ using OBS;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace test
 {
 	public partial class TestForm : Form
 	{
-		private libobs.draw_callback _RenderWindow = new libobs.draw_callback(RenderWindow);
+		private libobs.draw_callback _RenderWindow = RenderWindow;
 
 		private List<ObsScene> _scenes = new List<ObsScene>();
 		private int _selectedScene = 0;
@@ -36,7 +35,10 @@ namespace test
 
 		private List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
 
-
+		private string[] _inputTypes;
+		private string[] _filterTypes;
+		private string[] _transitionTypes;
+		
 		public TestForm()
 		{
 			InitializeComponent();
@@ -66,7 +68,7 @@ namespace test
 					output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
 					output_width = (uint)rc.Right,
 					output_height = (uint)rc.Bottom,
-					window = new libobs.gs_window()
+					window = new libobs.gs_window
 					{
 						hwnd = panel1.Handle
 					}
@@ -80,12 +82,10 @@ namespace test
 
 				Obs.LoadAllModules();
 
-
-				string[] inputTypes = Obs.GetSourceInputTypes();
-                string[] filterTypes = Obs.GetSourceFilterTypes();
-                string[] transitionTypes = Obs.GetSourceTransitionTypes();
-
-                string imageSourceName = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, "image_source");
+				// Populate Source Types
+				_inputTypes = Obs.GetSourceInputTypes();
+				_filterTypes = Obs.GetSourceFilterTypes();
+				_transitionTypes = Obs.GetSourceTransitionTypes();
 
 				AddScene();
 				AddSource();
@@ -94,7 +94,7 @@ namespace test
 			}
 			catch (Exception exp)
 			{
-				MessageBox.Show(exp.Message.ToString(), "Error", MessageBoxButtons.OK);
+				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
 				Close();
 			}
 		}
@@ -130,6 +130,77 @@ namespace test
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
 			listBox2.Items.Add(source.Name);
+		}
+
+		private void AddInputSource(string id, string name)
+		{
+			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
+
+			ObsSceneItem item = _scenes[_selectedScene].Add(source);
+			
+			item.SetScale(new libobs.vec2(1f, 1f));
+			item.SetPosition(new libobs.vec2(0f, 0f));
+
+			_sceneSources[_selectedScene].Add(source);
+			_sceneItems[_selectedScene].Add(item);
+			listBox2.Items.Add(source.Name);
+		}
+
+		private void DisplayFilterSourceMenu()
+		{
+			ContextMenu filtermenu = new ContextMenu();
+
+			foreach (var filterType in _filterTypes)
+			{
+				MenuItem menuitem = new MenuItem
+				{
+					Name = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + "(" + filterType + ")",
+					Tag = filterType
+				};
+				menuitem.Click += OnFilterSourceMenuClick;
+
+				filtermenu.MenuItems.Add(menuitem);
+			}
+
+			filtermenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		private void OnFilterSourceMenuClick(object sender, EventArgs eventArgs)
+		{
+			MenuItem send = (MenuItem)sender;
+			string id = send.Tag.ToString();
+			string name = send.Text;
+
+			ObsSource filter = new ObsSource(ObsSourceType.Filter, id, name + (_sceneSources[_selectedScene].Count + 1));
+			_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
+		}
+
+		private void DisplayInputSourceMenu()
+		{
+			ContextMenu inputmenu = new ContextMenu();
+
+			foreach (string inputType in _inputTypes)
+			{
+				MenuItem menuitem = new MenuItem
+				{
+					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType) + "(" + inputType + ")",
+					Tag = inputType
+				};
+				menuitem.Click += OnInputSourceMenuClick;
+
+				inputmenu.MenuItems.Add(menuitem);
+			}
+
+			inputmenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		private void OnInputSourceMenuClick(object sender, EventArgs eventArgs)
+		{
+			MenuItem send = (MenuItem)sender;
+			string id = send.Tag.ToString();
+			string name = send.Text;
+
+			AddInputSource(id, name + (_sceneSources[_selectedScene].Count + 1));
 		}
 
 		private void DelScene(int index)
@@ -188,7 +259,8 @@ namespace test
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			AddSource();
+			// AddSource();
+			DisplayInputSourceMenu();
 		}
 
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -227,6 +299,20 @@ namespace test
 		private void button3_Click(object sender, EventArgs e)
 		{
 			AddScene();
+		}
+
+		private void listBox2_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right && _selectedScene != -1 && _selectedSource != -1)
+			{
+				DisplayFilterSourceMenu();
+			}
+		}
+
+		private void TestForm_Resize(object sender, EventArgs e)
+		{
+			// this doesnt work
+			Obs.ResizeMainView(panel1.Width,panel1.Height);			
 		}
 	}
 }
