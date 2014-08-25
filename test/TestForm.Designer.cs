@@ -134,6 +134,7 @@
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.Load += new System.EventHandler(this.TestForm_Load);
+			this.Resize += new System.EventHandler(this.TestForm_Resize);
 			this.panel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -38,7 +38,7 @@ namespace test
 		private string[] _inputTypes;
 		private string[] _filterTypes;
 		private string[] _transitionTypes;
-
+		
 		public TestForm()
 		{
 			InitializeComponent();
@@ -137,8 +137,9 @@ namespace test
 			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
 
 			ObsSceneItem item = _scenes[_selectedScene].Add(source);
-			item.SetScale(new libobs.vec2(20.0f, 20.0f));
-			item.SetPosition(new libobs.vec2(10 * _sceneSources[_selectedScene].Count, 10 * _sceneSources[_selectedScene].Count));
+			
+			item.SetScale(new libobs.vec2(1f, 1f));
+			item.SetPosition(new libobs.vec2(0f, 0f));
 
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
@@ -153,7 +154,7 @@ namespace test
 			{
 				MenuItem menuitem = new MenuItem
 				{
-					Name = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType),
+					Name = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + "(" + filterType + ")",
 					Tag = filterType
 				};
 				menuitem.Click += OnFilterSourceMenuClick;
@@ -169,7 +170,7 @@ namespace test
 			MenuItem send = (MenuItem)sender;
 			string id = send.Tag.ToString();
 			string name = send.Text;
-			
+
 			ObsSource filter = new ObsSource(ObsSourceType.Filter, id, name + (_sceneSources[_selectedScene].Count + 1));
 			_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
 		}
@@ -182,11 +183,11 @@ namespace test
 			{
 				MenuItem menuitem = new MenuItem
 				{
-					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType), 
+					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType) + "(" + inputType + ")",
 					Tag = inputType
 				};
 				menuitem.Click += OnInputSourceMenuClick;
-				
+
 				inputmenu.MenuItems.Add(menuitem);
 			}
 
@@ -306,6 +307,12 @@ namespace test
 			{
 				DisplayFilterSourceMenu();
 			}
+		}
+
+		private void TestForm_Resize(object sender, EventArgs e)
+		{
+			// this doesnt work
+			Obs.ResizeMainView(panel1.Width,panel1.Height);			
 		}
 	}
 }
