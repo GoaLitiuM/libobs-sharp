@@ -45,13 +45,13 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.OKButton = new System.Windows.Forms.Button();
-			this.CancelButton = new System.Windows.Forms.Button();
-			this.DropDownListService = new System.Windows.Forms.ComboBox();
-			this.DropDownListServer = new System.Windows.Forms.ComboBox();
-			this.DropDownBoxAudio = new System.Windows.Forms.ComboBox();
-			this.DrowDownBoxVideoAdapter = new System.Windows.Forms.ComboBox();
-			this.TextBoxStreamKey = new System.Windows.Forms.TextBox();
+			this.okButton = new System.Windows.Forms.Button();
+			this.cancelButton = new System.Windows.Forms.Button();
+			this.serviceComboBox = new System.Windows.Forms.ComboBox();
+			this.serverComboBox = new System.Windows.Forms.ComboBox();
+			this.audioComboBox = new System.Windows.Forms.ComboBox();
+			this.videoAdapterComboBox = new System.Windows.Forms.ComboBox();
+			this.streamKeyTextBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -59,68 +59,68 @@ namespace test
 			this.label5 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// OKButton
+			// okButton
 			// 
-			this.OKButton.Location = new System.Drawing.Point(136, 174);
-			this.OKButton.Name = "OKButton";
-			this.OKButton.Size = new System.Drawing.Size(75, 23);
-			this.OKButton.TabIndex = 0;
-			this.OKButton.Text = "OK";
-			this.OKButton.UseVisualStyleBackColor = true;
-			this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+			this.okButton.Location = new System.Drawing.Point(136, 174);
+			this.okButton.Name = "okButton";
+			this.okButton.Size = new System.Drawing.Size(75, 23);
+			this.okButton.TabIndex = 0;
+			this.okButton.Text = "OK";
+			this.okButton.UseVisualStyleBackColor = true;
+			this.okButton.Click += new System.EventHandler(this.okButton_Click);
 			// 
-			// CancelButton
+			// cancelButton
 			// 
-			this.CancelButton.Location = new System.Drawing.Point(217, 174);
-			this.CancelButton.Name = "CancelButton";
-			this.CancelButton.Size = new System.Drawing.Size(75, 23);
-			this.CancelButton.TabIndex = 1;
-			this.CancelButton.Text = "Cancel";
-			this.CancelButton.UseVisualStyleBackColor = true;
-			this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+			this.cancelButton.Location = new System.Drawing.Point(217, 174);
+			this.cancelButton.Name = "cancelButton";
+			this.cancelButton.Size = new System.Drawing.Size(75, 23);
+			this.cancelButton.TabIndex = 1;
+			this.cancelButton.Text = "Cancel";
+			this.cancelButton.UseVisualStyleBackColor = true;
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
-			// DropDownListService
+			// serviceComboBox
 			// 
-			this.DropDownListService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.DropDownListService.FormattingEnabled = true;
-			this.DropDownListService.Location = new System.Drawing.Point(92, 12);
-			this.DropDownListService.Name = "DropDownListService";
-			this.DropDownListService.Size = new System.Drawing.Size(200, 21);
-			this.DropDownListService.TabIndex = 2;
+			this.serviceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.serviceComboBox.FormattingEnabled = true;
+			this.serviceComboBox.Location = new System.Drawing.Point(92, 12);
+			this.serviceComboBox.Name = "serviceComboBox";
+			this.serviceComboBox.Size = new System.Drawing.Size(200, 21);
+			this.serviceComboBox.TabIndex = 2;
 			// 
-			// DropDownListServer
+			// serverComboBox
 			// 
-			this.DropDownListServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.DropDownListServer.FormattingEnabled = true;
-			this.DropDownListServer.Location = new System.Drawing.Point(92, 39);
-			this.DropDownListServer.Name = "DropDownListServer";
-			this.DropDownListServer.Size = new System.Drawing.Size(200, 21);
-			this.DropDownListServer.TabIndex = 3;
+			this.serverComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.serverComboBox.FormattingEnabled = true;
+			this.serverComboBox.Location = new System.Drawing.Point(92, 39);
+			this.serverComboBox.Name = "serverComboBox";
+			this.serverComboBox.Size = new System.Drawing.Size(200, 21);
+			this.serverComboBox.TabIndex = 3;
 			// 
-			// DropDownBoxAudio
+			// audioComboBox
 			// 
-			this.DropDownBoxAudio.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.DropDownBoxAudio.FormattingEnabled = true;
-			this.DropDownBoxAudio.Location = new System.Drawing.Point(92, 146);
-			this.DropDownBoxAudio.Name = "DropDownBoxAudio";
-			this.DropDownBoxAudio.Size = new System.Drawing.Size(200, 21);
-			this.DropDownBoxAudio.TabIndex = 4;
+			this.audioComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.audioComboBox.FormattingEnabled = true;
+			this.audioComboBox.Location = new System.Drawing.Point(92, 146);
+			this.audioComboBox.Name = "audioComboBox";
+			this.audioComboBox.Size = new System.Drawing.Size(200, 21);
+			this.audioComboBox.TabIndex = 4;
 			// 
-			// DrowDownBoxVideoAdapter
+			// videoAdapterComboBox
 			// 
-			this.DrowDownBoxVideoAdapter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.DrowDownBoxVideoAdapter.FormattingEnabled = true;
-			this.DrowDownBoxVideoAdapter.Location = new System.Drawing.Point(92, 119);
-			this.DrowDownBoxVideoAdapter.Name = "DrowDownBoxVideoAdapter";
-			this.DrowDownBoxVideoAdapter.Size = new System.Drawing.Size(200, 21);
-			this.DrowDownBoxVideoAdapter.TabIndex = 5;
+			this.videoAdapterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.videoAdapterComboBox.FormattingEnabled = true;
+			this.videoAdapterComboBox.Location = new System.Drawing.Point(92, 119);
+			this.videoAdapterComboBox.Name = "videoAdapterComboBox";
+			this.videoAdapterComboBox.Size = new System.Drawing.Size(200, 21);
+			this.videoAdapterComboBox.TabIndex = 5;
 			// 
-			// TextBoxStreamKey
+			// streamKeyTextBox
 			// 
-			this.TextBoxStreamKey.Location = new System.Drawing.Point(92, 66);
-			this.TextBoxStreamKey.Name = "TextBoxStreamKey";
-			this.TextBoxStreamKey.Size = new System.Drawing.Size(200, 20);
-			this.TextBoxStreamKey.TabIndex = 6;
+			this.streamKeyTextBox.Location = new System.Drawing.Point(92, 66);
+			this.streamKeyTextBox.Name = "streamKeyTextBox";
+			this.streamKeyTextBox.Size = new System.Drawing.Size(200, 20);
+			this.streamKeyTextBox.TabIndex = 6;
 			// 
 			// label1
 			// 
@@ -177,13 +177,13 @@ namespace test
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.TextBoxStreamKey);
-			this.Controls.Add(this.DrowDownBoxVideoAdapter);
-			this.Controls.Add(this.DropDownBoxAudio);
-			this.Controls.Add(this.DropDownListServer);
-			this.Controls.Add(this.DropDownListService);
-			this.Controls.Add(this.CancelButton);
-			this.Controls.Add(this.OKButton);
+			this.Controls.Add(this.streamKeyTextBox);
+			this.Controls.Add(this.videoAdapterComboBox);
+			this.Controls.Add(this.audioComboBox);
+			this.Controls.Add(this.serverComboBox);
+			this.Controls.Add(this.serviceComboBox);
+			this.Controls.Add(this.cancelButton);
+			this.Controls.Add(this.okButton);
 			this.Name = "TestConfig";
 			this.Text = "TestConfig";
 			this.ResumeLayout(false);
@@ -193,13 +193,13 @@ namespace test
 
 		#endregion
 
-		private System.Windows.Forms.Button OKButton;
-		private System.Windows.Forms.Button CancelButton;
-		private System.Windows.Forms.ComboBox DropDownListService;
-		private System.Windows.Forms.ComboBox DropDownListServer;
-		private System.Windows.Forms.ComboBox DropDownBoxAudio;
-		private System.Windows.Forms.ComboBox DrowDownBoxVideoAdapter;
-		private System.Windows.Forms.TextBox TextBoxStreamKey;
+		private System.Windows.Forms.Button okButton;
+		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.ComboBox serviceComboBox;
+		private System.Windows.Forms.ComboBox serverComboBox;
+		private System.Windows.Forms.ComboBox audioComboBox;
+		private System.Windows.Forms.ComboBox videoAdapterComboBox;
+		private System.Windows.Forms.TextBox streamKeyTextBox;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;

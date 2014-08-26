@@ -47,13 +47,13 @@ namespace test
 			// give it a ToString() override to return the service display name
 		}
 
-		private void OKButton_Click(object sender, EventArgs e)
+		private void okButton_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		private void CancelButton_Click(object sender, EventArgs e)
+		private void cancelButton_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();
