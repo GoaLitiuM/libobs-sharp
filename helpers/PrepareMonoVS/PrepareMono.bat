@@ -20,24 +20,28 @@ goto end
 echo 64-bit Windows detected...
 SET MONOLOCATION=%MONOLOCATION64%
 SET TARGETLOCATION=%TARGETLOCATION64%
-goto prepare
+goto check_mono
 
 :32bit
 echo 32-bit Windows detected...
 SET MONOLOCATION=%MONOLOCATION32%
 SET TARGETLOCATION=%TARGETLOCATION32%
-goto prepare
+goto check_mono
 
+:check_mono
+IF EXIST %MONOLOCATION% GOTO prepare
+echo Error: Could not find Mono installation at default install location "%MONOLOCATION%"
 pause
+goto end
 
 :prepare
-
 cd /D "%TARGETLOCATION%"
 
 mkdir Profile
 cd Profile
 
 echo Creating symbolic link to Mono assemblies...
+rmdir Mono
 mklink /d Mono "%MONOLOCATION%\lib\mono\4.5"
 
 echo Copying RedistList...
