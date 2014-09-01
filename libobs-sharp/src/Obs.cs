@@ -155,6 +155,8 @@ namespace OBS
 				property = (libobs.obs_property*)next;
 			}
 
+			libobs.obs_properties_destroy((IntPtr)properties);
+
 			return propertyList.ToArray();
 		}
 	}

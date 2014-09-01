@@ -219,6 +219,10 @@ namespace OBS
 		public static extern bool obs_property_next(out obs_property_t p);
 
 
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_properties_destroy(obs_properties_t props);
+
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern string obs_property_name(obs_property_t p);
 
