@@ -223,11 +223,23 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_properties_destroy(obs_properties_t props);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern string obs_property_name(obs_property_t p);
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_name")]
+		private static extern IntPtr import_obs_property_name(obs_property_t p);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern string obs_property_description(obs_property_t p);
+		public static string obs_property_name(obs_property_t p)
+		{
+			IntPtr strPtr = import_obs_property_name(p);
+			return Marshal.PtrToStringAnsi(strPtr);
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_description")]
+		private static extern IntPtr import_obs_property_description(obs_property_t p);
+
+		public static string obs_property_description(obs_property_t p)
+		{
+			IntPtr strPtr = import_obs_property_description(p);
+			return Marshal.PtrToStringAnsi(strPtr);
+		}
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_property_type obs_property_get_type(obs_property_t p);
