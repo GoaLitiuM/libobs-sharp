@@ -29,6 +29,8 @@ namespace OBS
 	using obs_data_item_t = IntPtr;
 	using obs_data_t = IntPtr;
 	using obs_properties_t = IntPtr;
+	using obs_property_t = IntPtr;
+	using obs_property_modified_t = IntPtr;
 	using obs_sceneitem_t = IntPtr;
 	using obs_scene_t = IntPtr;
 	using obs_source_enum_proc_t = IntPtr;
@@ -199,7 +201,40 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
 
-		
+		/*
+		 * properties
+		 */
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_properties_t obs_get_source_properties(obs_source_type type, string id);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_properties_t obs_source_properties(obs_source_t source);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_property_t obs_properties_first(obs_properties_t props);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_next(out obs_property_t p);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern string obs_property_name(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern string obs_property_description(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_property_type obs_property_get_type(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_enabled(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_visible(obs_property_t p);
 
 		/*
 		 * misc/uncategorized
@@ -613,6 +648,34 @@ namespace OBS
 			public uint64_t timestamp;
 		};
 
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct obs_property
+		{
+			public char* name;
+			public char* desc;
+			public obs_property_type type;
+
+			[MarshalAs(UnmanagedType.I1)]
+			public bool visible;
+
+			[MarshalAs(UnmanagedType.I1)]
+			public bool enabled;
+
+			public obs_properties_t parent;
+			public obs_property_modified_t modified;
+			public obs_property_t next;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct obs_properties
+		{
+			public IntPtr param;
+			public IntPtr destroy; //void (*destroy)(void *param);
+
+			public obs_property_t first_property;
+			public obs_property_t* last;
+		};
+
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public unsafe struct darray
 		{
@@ -701,6 +764,20 @@ namespace OBS
 			OBS_BOUNDS_SCALE_TO_WIDTH,  /**< scales to the width  */
 			OBS_BOUNDS_SCALE_TO_HEIGHT, /**< scales to the height */
 			OBS_BOUNDS_MAX_ONLY,        /**< no scaling, maximum size only */
+		};
+
+		public enum obs_property_type : int
+		{
+			OBS_PROPERTY_INVALID,
+			OBS_PROPERTY_BOOL,
+			OBS_PROPERTY_INT,
+			OBS_PROPERTY_FLOAT,
+			OBS_PROPERTY_TEXT,
+			OBS_PROPERTY_PATH,
+			OBS_PROPERTY_LIST,
+			OBS_PROPERTY_COLOR,
+			OBS_PROPERTY_BUTTON,
+			OBS_PROPERTY_FONT,
 		};
 	}
 }

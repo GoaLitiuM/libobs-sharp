@@ -47,6 +47,7 @@
     <Compile Include="src\libobs\libobs_media-io.cs" />
     <Compile Include="src\libobs\libobs_util.cs" />
     <Compile Include="src\Obs.cs" />
+    <Compile Include="src\ObsProperty.cs" />
     <Compile Include="src\ObsScene.cs" />
     <Compile Include="src\ObsSceneItem.cs" />
     <Compile Include="src\ObsSource.cs" />

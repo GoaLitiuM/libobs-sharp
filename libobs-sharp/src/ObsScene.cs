@@ -21,7 +21,6 @@ using System.Text;
 
 namespace OBS
 {
-
 	public class ObsScene
 	{
 		internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object

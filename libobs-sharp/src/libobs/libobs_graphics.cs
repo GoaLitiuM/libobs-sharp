@@ -27,12 +27,10 @@ namespace OBS
 		{
 			public IntPtr hwnd;
 
-			/*public gs_window(IntPtr handle)
-			{
-				hwnd = handle;
-			}*/
-
 			//TODO: OS X / Linux specific handles?
+			//Windows: Handle refers to HWND
+			//OS X: Handle refers to HIView
+			//Linux: Handle refers to Window or GdkWindow* (GTK+)
 			//NOTE: sizeof gs_window in libobs not portable: one pointer in windows, pointer + uint32 in linux
 		};
 

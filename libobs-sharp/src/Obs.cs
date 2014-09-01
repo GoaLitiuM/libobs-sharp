@@ -69,6 +69,7 @@ namespace OBS
 			return ai;
 		}
 
+
 		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
 		{
 			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
@@ -124,6 +125,37 @@ namespace OBS
 				idList.Add(id);
 
 			return idList.ToArray();
+		}
+
+
+		public static unsafe ObsProperty[] GetSourceProperties(ObsSourceType type, string id)
+		{
+			return GetPropertyList(
+				(libobs.obs_properties*)libobs.obs_get_source_properties((libobs.obs_source_type)type, id));
+		}
+
+		public static unsafe ObsProperty[] GetSourceProperties(ObsSource source)
+		{
+			return GetPropertyList(
+				(libobs.obs_properties*)libobs.obs_source_properties((IntPtr)source.GetPointer()));
+		}
+
+		private static unsafe ObsProperty[] GetPropertyList(libobs.obs_properties* properties)
+		{
+			List<ObsProperty> propertyList = new List<ObsProperty>();
+
+			libobs.obs_property* property = (libobs.obs_property*)libobs.obs_properties_first((IntPtr)properties);
+
+			while (property != null)
+			{
+				propertyList.Add(new ObsProperty(property));
+
+				IntPtr next = (IntPtr)property;
+				libobs.obs_property_next(out next);
+				property = (libobs.obs_property*)next;
+			}
+
+			return propertyList.ToArray();
 		}
 	}
 }
