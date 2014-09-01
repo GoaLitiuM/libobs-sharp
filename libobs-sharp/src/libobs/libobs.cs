@@ -16,6 +16,7 @@
 ***************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OBS
@@ -205,24 +206,6 @@ namespace OBS
 		 * properties
 		 */
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_properties_t obs_get_source_properties(obs_source_type type, string id);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_properties_t obs_source_properties(obs_source_t source);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_property_t obs_properties_first(obs_properties_t props);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool obs_property_next(out obs_property_t p);
-
-
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_properties_destroy(obs_properties_t props);
-
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_name")]
 		private static extern IntPtr import_obs_property_name(obs_property_t p);
 
@@ -251,6 +234,103 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_property_visible(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_next(out obs_property_t p);
+
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern int obs_property_int_min(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern int obs_property_int_max(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern int obs_property_int_step(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern double obs_property_float_min(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern double obs_property_float_max(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern double obs_property_float_step(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_text_type obs_proprety_text_type(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_path_type obs_property_path_type(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_path_filter")]
+		private static extern IntPtr import_obs_property_path_filter(obs_property_t p);
+
+		public static string obs_property_path_filter(obs_property_t p)
+		{
+			IntPtr strPtr = import_obs_property_path_filter(p);
+			return Marshal.PtrToStringAnsi(strPtr);
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_path_default_path")]
+		private static extern IntPtr import_obs_property_path_default_path(obs_property_t p);
+
+		public static string obs_property_path_default_path(obs_property_t p)
+		{
+			IntPtr strPtr = import_obs_property_path_default_path(p);
+			return Marshal.PtrToStringAnsi(strPtr);
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_combo_type obs_property_list_type(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_combo_format obs_property_list_format(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern size_t obs_property_list_item_count(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_list_item_name")]
+		private static extern IntPtr import_obs_property_list_item_name(obs_property_t p, size_t idx);
+
+		public static string obs_property_list_item_name(obs_property_t p, size_t idx)
+		{
+			IntPtr strPtr = import_obs_property_list_item_name(p, idx);
+			return MarshalUTF8String(strPtr);
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_list_item_string")]
+		private static extern IntPtr import_obs_property_list_item_string(obs_property_t p, size_t idx);
+
+		public static string obs_property_list_item_string(obs_property_t p, size_t idx)
+		{
+			IntPtr strPtr = import_obs_property_list_item_string(p, idx);
+			return MarshalUTF8String(strPtr);
+		}
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern int64_t obs_property_list_item_int(obs_property_t p, size_t idx);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern double obs_property_list_item_float(obs_property_t p, size_t idx);
+
+
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_properties_t obs_get_source_properties(obs_source_type type, string id);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_properties_t obs_source_properties(obs_source_t source);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_property_t obs_properties_first(obs_properties_t props);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_properties_destroy(obs_properties_t props);
+
+		
 
 		/*
 		 * misc/uncategorized
@@ -782,6 +862,7 @@ namespace OBS
 			OBS_BOUNDS_MAX_ONLY,        /**< no scaling, maximum size only */
 		};
 
+
 		public enum obs_property_type : int
 		{
 			OBS_PROPERTY_INVALID,
@@ -795,5 +876,53 @@ namespace OBS
 			OBS_PROPERTY_BUTTON,
 			OBS_PROPERTY_FONT,
 		};
+
+		public enum obs_combo_format : int
+		{
+			OBS_COMBO_FORMAT_INVALID,
+			OBS_COMBO_FORMAT_INT,
+			OBS_COMBO_FORMAT_FLOAT,
+			OBS_COMBO_FORMAT_STRING
+		};
+
+		public enum obs_combo_type : int
+		{
+			OBS_COMBO_TYPE_INVALID,
+			OBS_COMBO_TYPE_EDITABLE,
+			OBS_COMBO_TYPE_LIST,
+		};
+
+		public enum obs_path_type : int
+		{
+			OBS_PATH_FILE,
+			OBS_PATH_DIRECTORY
+		};
+
+		public enum obs_text_type : int
+		{
+			OBS_TEXT_DEFAULT,
+			OBS_TEXT_PASSWORD,
+			OBS_TEXT_MULTILINE,
+		};
+
+		/*
+		 * helper functions
+		 */
+
+		//must be null-terminated string
+		private static string MarshalUTF8String(IntPtr strPtr)
+		{
+			var bytes = new List<byte>();
+			int offset = 0;
+			uint8_t chr = 0;
+
+			do
+			{
+				if ((chr = Marshal.ReadByte(strPtr, offset++)) != 0)
+					bytes.Add(chr);
+			} while (chr != 0);
+
+			return System.Text.Encoding.UTF8.GetString(bytes.ToArray());
+		}
 	}
 }
