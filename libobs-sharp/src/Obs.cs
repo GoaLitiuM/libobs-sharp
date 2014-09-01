@@ -144,18 +144,21 @@ namespace OBS
 		{
 			List<ObsProperty> propertyList = new List<ObsProperty>();
 
+			ObsProperties props = new ObsProperties(properties);
+			props.AddRef();
+
 			libobs.obs_property* property = (libobs.obs_property*)libobs.obs_properties_first((IntPtr)properties);
 
 			while (property != null)
 			{
-				propertyList.Add(new ObsProperty(property));
+				propertyList.Add(new ObsProperty(property, props));
 
 				IntPtr next = (IntPtr)property;
 				libobs.obs_property_next(out next);
 				property = (libobs.obs_property*)next;
 			}
 
-			libobs.obs_properties_destroy((IntPtr)properties);
+			props.Release();
 
 			return propertyList.ToArray();
 		}

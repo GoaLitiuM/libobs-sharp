@@ -26,15 +26,24 @@ namespace OBS
 	public class ObsProperty
 	{
 		internal unsafe libobs.obs_property* instance;    //pointer to unmanaged object
+		internal ObsProperties properties = null;
 
-		public unsafe ObsProperty(libobs.obs_property* pointer)
+		public unsafe ObsProperty(libobs.obs_property* pointer, ObsProperties props)
 		{
 			instance = pointer;
+			properties = props;
+			properties.AddRef();
 		}
 
 		unsafe ~ObsProperty()
 		{
 			instance = null;
+
+			if (properties == null)
+				return;
+
+			properties.Release();
+			properties = null;
 		}
 
 
@@ -78,6 +87,41 @@ namespace OBS
 			}
 		}
 
+	}
+
+	public class ObsProperties
+	{
+		internal unsafe libobs.obs_properties* instance;    //pointer to unmanaged object
+		internal int refs = 0;
+
+		public unsafe ObsProperties(libobs.obs_properties* pointer)
+		{
+			instance = pointer;
+		}
+
+		unsafe ~ObsProperties()
+		{
+			Release();
+		}
+
+		public unsafe void AddRef()
+		{
+			if (instance == null)
+				return;
+
+			refs++;
+		}
+
+		public unsafe void Release()
+		{
+			refs--;
+
+			if (refs > 0 || instance == null)
+				return;
+
+			libobs.obs_properties_destroy((IntPtr)instance);
+			instance = null;
+		}
 	}
 
 	public enum ObsPropertyType : int
