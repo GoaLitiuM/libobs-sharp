@@ -152,7 +152,7 @@ namespace test
 			
 			item.SetScale(new libobs.vec2(1f, 1f));
 			item.SetPosition(new libobs.vec2(0f, 0f));
-
+			
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
 			sourceListBox.Items.Add(source.Name);
@@ -193,28 +193,28 @@ namespace test
 
 			foreach (string inputType in _inputTypes)
 			{
+				// The variable dissapears when the loop ends so it needs to be copied
+				string type = inputType; 
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
+				
 				MenuItem menuitem = new MenuItem
 				{
-					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType) + " (" + inputType + ")",
-					Tag = inputType
+					Text = displayname + " (" + type + ")"					
 				};
-				menuitem.Click += OnInputSourceMenuClick;
+				
+				menuitem.Click += delegate
+				{
+					AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
+					var prop = new TestProperties(ObsSourceType.Input, type);
+					prop.Show();
+				};
 
 				inputmenu.MenuItems.Add(menuitem);
 			}
 
 			inputmenu.Show(this, PointToClient(Cursor.Position));
 		}
-
-		private void OnInputSourceMenuClick(object sender, EventArgs eventArgs)
-		{
-			MenuItem send = (MenuItem)sender;
-			string id = send.Tag.ToString();
-			string name = send.Text;
-
-			AddInputSource(id, name + (_sceneSources[_selectedScene].Count + 1));
-		}
-
+		
 		private void DelScene(int index)
 		{
 			if (_scenes.Count <= 1)
