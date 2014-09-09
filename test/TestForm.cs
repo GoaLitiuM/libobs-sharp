@@ -164,27 +164,24 @@ namespace test
 
 			foreach (var filterType in _filterTypes)
 			{
+				string type = filterType;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
+				int index = _sceneSources[_selectedScene].Count + 1;
+				
 				MenuItem menuitem = new MenuItem
 				{
-					Text = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + " (" + filterType + ")",
-					Tag = filterType
+					Text = displayname + " (" + filterType + ")"					
 				};
-				menuitem.Click += OnFilterSourceMenuClick;
+				menuitem.Click += delegate
+				{
+					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
+					_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
+				};
 
 				filtermenu.MenuItems.Add(menuitem);
 			}
 
 			filtermenu.Show(this, PointToClient(Cursor.Position));
-		}
-
-		private void OnFilterSourceMenuClick(object sender, EventArgs eventArgs)
-		{
-			MenuItem send = (MenuItem)sender;
-			string id = send.Tag.ToString();
-			string name = send.Text;
-
-			ObsSource filter = new ObsSource(ObsSourceType.Filter, id, name + (_sceneSources[_selectedScene].Count + 1));
-			_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
 		}
 
 		private void DisplayInputSourceMenu()

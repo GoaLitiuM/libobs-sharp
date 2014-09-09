@@ -179,7 +179,7 @@ namespace OBS
 		public static extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void  obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
+		public static extern void obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
@@ -904,6 +904,16 @@ namespace OBS
 			OBS_TEXT_PASSWORD,
 			OBS_TEXT_MULTILINE,
 		};
+		
+		[Flags]
+		public enum obs_align_type : int
+		{
+			OBS_ALIGN_CENTER = 0,
+			OBS_ALIGN_LEFT = 1 << 0,
+			OBS_ALIGN_RIGHT = 1 << 1,
+			OBS_ALIGN_TOP = 1 << 2,
+			OBS_ALIGN_BOTTOM = 1 << 3
+		}
 
 		/*
 		 * helper functions
