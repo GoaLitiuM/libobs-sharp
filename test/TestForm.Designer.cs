@@ -151,6 +151,7 @@ namespace test
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.Load += new System.EventHandler(this.TestForm_Load);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestForm_FormClosed);
 			this.bottomPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -158,7 +159,7 @@ namespace test
 
         #endregion
 
-		private System.Windows.Forms.Panel mainViewPanel;
+		public System.Windows.Forms.Panel mainViewPanel;
 		private System.Windows.Forms.Panel bottomPanel;
 		private System.Windows.Forms.Button delSceneButton;
 		private System.Windows.Forms.Button addSceneButton;

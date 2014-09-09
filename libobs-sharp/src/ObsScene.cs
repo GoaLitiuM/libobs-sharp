@@ -52,16 +52,9 @@ namespace OBS
 			instance = null;
 		}
 
-		public unsafe ObsSceneItem Add(ObsSource source)
+		public unsafe libobs.obs_scene* GetPointer()
 		{
-			libobs.obs_scene_item* sceneItem = (libobs.obs_scene_item*)libobs.obs_scene_add((IntPtr)instance, (IntPtr)source.GetPointer());
-			return new ObsSceneItem(sceneItem);
-		}
-
-		public unsafe ObsSource GetSource()
-		{
-			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
-			return new ObsSource(source);
+			return instance;
 		}
 
 
@@ -72,5 +65,25 @@ namespace OBS
 				return libobs.obs_source_get_name((IntPtr)(libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance));
 			}
 		}
+
+		public unsafe ObsSource GetSource()
+		{
+			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
+			return new ObsSource(source);
+		}
+
+		public unsafe ObsSceneItem Add(ObsSource source)
+		{
+			libobs.obs_scene_item* sceneItem = (libobs.obs_scene_item*)libobs.obs_scene_add((IntPtr)instance, (IntPtr)source.GetPointer());
+			return new ObsSceneItem(sceneItem);
+		}
+
+		
+		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)
+		{
+			libobs.obs_scene_enum_items((IntPtr)instance, callback, param);
+		}
+
+
 	}
 }

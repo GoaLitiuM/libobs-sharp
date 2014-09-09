@@ -15,6 +15,7 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using OBS.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -69,6 +70,15 @@ namespace OBS
 			return ai;
 		}
 
+		public static void AddDrawCallback(libobs.draw_callback callback, IntPtr param)
+		{
+			libobs.obs_add_draw_callback(callback, param);
+		}
+
+		public static void RemoveDrawCallback(libobs.draw_callback callback, IntPtr param)
+		{
+			libobs.obs_remove_draw_callback(callback, param);
+		}
 
 		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
 		{
@@ -162,5 +172,35 @@ namespace OBS
 
 			return propertyList.ToArray();
 		}
+
+
+		public static unsafe GSEffect GetDefaultEffect()
+		{
+			IntPtr ptr = libobs.obs_get_default_effect();
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			GSEffect effect = new GSEffect(ptr);
+			return effect;
+		}
+
+		public static unsafe GSEffect GetSolidEffect()
+		{
+			IntPtr ptr = libobs.obs_get_solid_effect();
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			GSEffect effect = new GSEffect(ptr);
+			return effect;
+		}
 	}
+
+	public enum ObsAlignment : uint
+	{
+		Center = 0,
+		Left = (1<<0),
+		Right = (1<<1),
+		Top = (1<<2),
+		Bottom = (1<<3),
+	};
 }

@@ -25,7 +25,10 @@ namespace test
 {
 	public partial class TestForm : Form
 	{
-		private libobs.draw_callback _RenderWindow = RenderWindow;
+		public readonly int MainWidth = 1280;
+		public readonly int MainHeight = 720;
+		private libobs.draw_callback _RenderMain;
+		private libobs.sceneitem_enum_callback _EnumSceneItem;
 
 		private List<ObsScene> _scenes = new List<ObsScene>();
 		private int _selectedScene = 0;
@@ -46,15 +49,23 @@ namespace test
 
 		~TestForm()
 		{
-			Obs.Shutdown();
+			Obs.Shutdown();	//FIXME: finalizer is never called
+		}
+
+		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			Obs.RemoveDrawCallback(_RenderMain, this.Handle);
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)
 		{
 			try
 			{
-				Rectangle rc = new Rectangle(0, 0, mainViewPanel.Width, mainViewPanel.Height);
+				//callbacks
+				_RenderMain = RenderMain;
+				_EnumSceneItem = EnumSceneItem;
 
+				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{
 					adapter = 0,
@@ -94,6 +105,8 @@ namespace test
 
 				Obs.LoadAllModules();
 
+				InitPrimitives();
+
 				// Populate Source Types
 				_inputTypes = Obs.GetSourceInputTypes();
 				_filterTypes = Obs.GetSourceFilterTypes();
@@ -102,7 +115,12 @@ namespace test
 				AddScene();
 				AddSource();
 
-				libobs.obs_add_draw_callback(_RenderWindow, IntPtr.Zero);
+				Obs.AddDrawCallback(_RenderMain, this.Handle);
+
+				Obs.ResizeMainView(mainViewPanel.Width, mainViewPanel.Height);
+
+				//select the first item
+				_sceneItems[0][0].Selected = true;
 			}
 			catch (Exception exp)
 			{
@@ -256,10 +274,6 @@ namespace test
 			sourceListBox.SelectedIndex = sourceListBox.Items.Count - 1;
 		}
 
-		private static void RenderWindow(IntPtr data, UInt32 cx, UInt32 cy)
-		{
-			Obs.RenderMainView();
-		}
 
 		private void mainViewPanel_SizeChanged(object sender, EventArgs e)
 		{
@@ -316,5 +330,7 @@ namespace test
 				DisplayFilterSourceMenu();
 			}
 		}
+
+		
 	}
 }
