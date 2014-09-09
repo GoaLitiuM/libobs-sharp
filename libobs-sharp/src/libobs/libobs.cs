@@ -24,8 +24,15 @@ namespace OBS
 	using audio_line_t = IntPtr;
 	using audio_resampler_t = IntPtr;
 	using gs_effect_t = IntPtr;
+	using gs_eparam_t = IntPtr;
+	using gs_indexbuffer_t = IntPtr;
+	using gs_rect_t = IntPtr;
+	using gs_samplerstate_t = IntPtr;
+	using gs_shader_t = IntPtr;
+	using gs_technique_t = IntPtr;
 	using gs_texrender_t = IntPtr;
 	using gs_texture_t = IntPtr;
+	using gs_vertbuffer_t = IntPtr;
 	using obs_audio_data_t = IntPtr;
 	using obs_data_item_t = IntPtr;
 	using obs_data_t = IntPtr;
@@ -42,10 +49,13 @@ namespace OBS
 	using signal_handler_t = IntPtr;
 
 	using int64_t = Int64;
-	using size_t = IntPtr;
+	using size_t = IntPtr;	//UIntPtr?
 	using uint32_t = UInt32;
 	using uint64_t = UInt64;
 	using uint8_t = Byte;
+
+	using axisang = libobs.vec4;
+	using quat = libobs.vec4;
 
 	public static partial class libobs
 	{
@@ -99,11 +109,25 @@ namespace OBS
 		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
 		public delegate void draw_callback(IntPtr param, uint32_t cx, uint32_t cy);
 
+		/** Adds a draw callback to the main render context */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_add_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
 
+		/** Removes a draw callback to the main render context */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_remove_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_resize(uint32_t cx, uint32_t cy);
+
+
+		/** Returns the default effect for generic RGB/YUV drawing */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_effect_t obs_get_default_effect();
+
+		/** Returns the solid effect for drawing solid colors */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_effect_t obs_get_solid_effect();
 
 		/*
 		 * source
@@ -161,6 +185,20 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_source_t obs_scene_get_source(obs_scene_t scene);
 
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_scene_t obs_scene_from_source(obs_source_t source);
+
+		/** Determines whether a source is within a scene */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_sceneitem_t obs_scene_find_source(obs_scene_t scene, string name);
+
+		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
+		public delegate bool sceneitem_enum_callback(obs_scene_t scene, obs_sceneitem_t sceneItem, IntPtr data);
+
+		/** Enumerates sources within a scene */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_scene_enum_items(obs_scene_t scene, sceneitem_enum_callback callback, IntPtr param);
+
 
 		/*
 		 * scene_item
@@ -175,11 +213,20 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_remove(obs_sceneitem_t item);
 
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void  obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
+		public static extern void obs_sceneitem_select(obs_sceneitem_t item, [MarshalAs(UnmanagedType.I1)] bool select);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_sceneitem_selected(obs_sceneitem_t item);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_sceneitem_get_pos(obs_sceneitem_t item, out vec2 pos);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern float obs_sceneitem_get_rot(obs_sceneitem_t item);
@@ -189,6 +236,12 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern uint32_t obs_sceneitem_get_alignment(obs_sceneitem_t item);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_sceneitem_get_draw_transform(obs_sceneitem_t item, out matrix4 transform);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_sceneitem_get_box_transform(obs_sceneitem_t item, out matrix4 transform);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_pos(obs_sceneitem_t item, out vec2 pos);
@@ -201,6 +254,8 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
+
+
 
 		/*
 		 * properties
@@ -410,6 +465,291 @@ namespace OBS
 		}
 
 		/*
+		 * graphics subsystem
+		 */
+
+		/** Helper function for entering the OBS graphics context */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_enter_graphics();
+
+		/** Helper function for leaving the OBS graphics context */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_leave_graphics();
+
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_begin_scene();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_draw(gs_draw_mode draw_mode, uint32_t start_vert, uint32_t num_verts);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_end_scene();
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_clear(uint32_t clear_flags, out vec4 color, float depth, uint8_t stencil);
+
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_viewport_push();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_viewport_pop();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_projection_push();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_projection_pop();
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_ortho(float left, float right, float top, float bottom, float znear, float zfar);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_frustum(float left, float right, float top, float bottom, float znear, float zfar);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_set_viewport(int x, int y, int width, int height);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_get_viewport(out gs_rect rect);
+
+		/** sets the viewport to current swap chain size */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_reset_viewport();
+
+		/** sets default screen-sized orthographich mode */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_set_2d_mode();
+
+		/** sets default screen-sized perspective mode */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_set_3d_mode(double fovy, double znear, double zvar);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_vertexbuffer(gs_vertbuffer_t vertbuffer);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_indexbuffer(gs_indexbuffer_t indexbuffer);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_texture(gs_texture_t tex, int unit);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_samplerstate(gs_samplerstate_t samplerstate, int unit);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_vertexshader(gs_shader_t vertshader);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_load_pixelshader(gs_shader_t pixelshader);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_render_start([MarshalAs(UnmanagedType.I1)] bool b_new);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_render_stop(gs_draw_mode mode);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_vertbuffer_t gs_render_save();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertex2f(float x, float y);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertex3f(float x, float y, float z);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_normal3f(float x, float y, float z);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_color(uint32_t color);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_texcoord(float x, float y, int unit);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertex2v(out vec2 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertex3v(out vec3 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_normal3v(out vec3 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_color4v(out vec4 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_texcoord2v(out vec2 v, int unit);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_vertbuffer_t gs_vertexbuffer_create(out gs_vb_data data, uint32_t flags);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertexbuffer_flush(gs_vertbuffer_t vertbuffer);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_vertexbuffer_destroy(gs_vertbuffer_t vertbuffer);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern size_t gs_effect_get_num_params(gs_effect_t effect);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_eparam_t gs_effect_get_param_by_idx(gs_effect_t effect, size_t param);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_eparam_t gs_effect_get_param_by_name(gs_effect_t effect, string name);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern size_t gs_technique_begin(gs_technique_t technique);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_technique_end(gs_technique_t technique);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool gs_technique_begin_pass(gs_technique_t technique, size_t pass);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool gs_technique_begin_pass_by_name(gs_technique_t technique, string name);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_technique_end_pass(gs_technique_t technique);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_technique_t gs_effect_get_technique(gs_effect_t effect, string name);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_bool(gs_eparam_t param, [MarshalAs(UnmanagedType.I1)] bool val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_float(gs_eparam_t param, float val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_int(gs_eparam_t param, int val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_matrix4(gs_eparam_t param, out matrix4 val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_vec2(gs_eparam_t param, out vec2 val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_vec3(gs_eparam_t param, out vec3 val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_vec4(gs_eparam_t param, out vec4 val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_texture(gs_eparam_t param, gs_texture_t val);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_val(gs_eparam_t param, IntPtr val, size_t size);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_effect_set_default(gs_eparam_t param);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern float vec3_plane_dist(out vec3 v, out plane p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_transform(out vec3 dst, out vec3 v, out matrix4 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_rotate(out vec3 dst, out vec3 v, out matrix3 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_transform3x4(out vec3 dst, out vec3 v, out matrix3 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_mirror(out vec3 dst, out vec3 v, out plane p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_mirrorv(out vec3 dst, out vec3 v, out vec3 vec);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_rand(out vec3 dst, int positive_only);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern float matrix4_determinant(out matrix4 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_translate3v(out matrix4 dst, out matrix4 m, out vec3 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_translate4v(out matrix4 dst, out matrix4 m, out vec4 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_rotate(out matrix4 dst, out matrix4 m, out quat q);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_rotate_aa(out matrix4 dst, out matrix4 m, out axisang aa);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_scale(out matrix4 dst, out matrix4 m, out vec3 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern bool matrix4_inv(out matrix4 dst, out matrix4 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix4_transpose(out matrix4 dst, out matrix4 m);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_push();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_pop();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_identity();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_transpose();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_set(out matrix4 matrix);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_get(out matrix4 dst);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_mul(out matrix4 matrix);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_rotquat(out quat rot);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_rotaa(out axisang rot);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_translate(out vec3 pos);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_scale(out vec3 scale);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_rotaa4f(float x, float y, float z, float angle);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_translate3f(float x, float y, float z);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_matrix_scale3f(float x, float y, float z);
+
+		/*
 		 * structures
 		 */
 
@@ -500,32 +840,12 @@ namespace OBS
 			public bool removed;
 
 			/* timing (if video is present, is based upon video) */
-
 			[MarshalAs(UnmanagedType.I1)]
 			public bool timing_set;
 			public uint64_t timing_adjust;
 			public uint64_t next_audio_ts_min;
 			public uint64_t last_frame_ts;
 			public uint64_t last_sys_timestamp;
-
-			/*
-			 * audio/video timestamp synchronization reference counter
-			 *
-			 * if audio goes outside of expected timing bounds, this number will
-			 * be deremented.
-			 *
-			 * if video goes outside of expecting timing bounds, this number will
-			 * be incremented.
-			 *
-			 * when this reference counter is at 0, it means ths audio is
-			 * synchronized with the video and it is safe to play.  when it's not
-			 * 0, it means that audio and video are desynchronized, and thus not
-			 * safe to play.  this just generally ensures synchronization between
-			 * audio/video when timing somehow becomes 'reset'.
-			 *
-			 * XXX: may be an overly cautious check
-			 */
-			public int av_sync_ref;
 
 			/* audio */
 			[MarshalAs(UnmanagedType.I1)]
@@ -799,9 +1119,40 @@ namespace OBS
 			public unsafe fixed float ptr[2];
 		};
 
+		[StructLayout(LayoutKind.Explicit, Size = 12)]
+		public struct vec3
+		{
+			public vec3(float x, float y, float z)
+			{
+				this.x = x;
+				this.y = y;
+				this.z = z;
+			}
+
+			[FieldOffset(0)]
+			public float x;
+
+			[FieldOffset(4)]
+			public float y;
+
+			[FieldOffset(8)]
+			public float z;
+
+			[FieldOffset(0)]
+			public unsafe fixed float ptr[3];
+		};
+
 		[StructLayout(LayoutKind.Explicit, Size = 16)]
 		public struct vec4
 		{
+			public vec4(float x, float y, float z, float w)
+			{
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				this.w = w;
+			}
+
 			[FieldOffset(0)]
 			public float x;
 
@@ -819,9 +1170,31 @@ namespace OBS
 		};
 
 		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct matrix3
+		{
+			public vec3 x;
+			public vec3 y;
+			public vec3 z;
+			public vec3 t;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct matrix4
 		{
 			public vec4 x, y, z, t;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct gs_rect
+		{
+			public int x, y, cx, cy;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct plane
+		{
+			public vec3 dir;
+			public float dist;
 		};
 
 		/*

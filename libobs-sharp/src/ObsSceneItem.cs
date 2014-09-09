@@ -50,12 +50,29 @@ namespace OBS
 			instance = null;
 		}
 
+		public unsafe libobs.obs_scene_item* GetPointer()
+		{
+			return instance;
+		}
+
 		public unsafe ObsSource GetSource()
 		{
 			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_sceneitem_get_source((IntPtr)instance);
 			return new ObsSource(source);
 		}
 
+
+		public unsafe bool Selected
+		{
+			get
+			{
+				return libobs.obs_sceneitem_selected((IntPtr)instance);
+			}
+			set
+			{
+				libobs.obs_sceneitem_select((IntPtr)instance, value);
+			}
+		}
 
 		public unsafe libobs.vec2 GetPosition()
 		{
