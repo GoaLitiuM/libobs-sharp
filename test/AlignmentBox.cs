@@ -15,21 +15,45 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using System.Collections.Generic;
-
 #region Usings
 
+using OBS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using OBS;
 
-#endregion
+#endregion Usings
 
 namespace test
 {
 	public partial class AlignmentBox : UserControl
 	{
+		public delegate void ClickHandler(ObsAlignment e);
+
+		private ObsAlignment _align = ObsAlignment.Center;
+
+		public AlignmentBox()
+		{
+			InitializeComponent();
+
+			topleft.Tag = ObsAlignment.Top | ObsAlignment.Left;
+			topcenter.Tag = ObsAlignment.Top | ObsAlignment.Center;
+			topright.Tag = ObsAlignment.Top | ObsAlignment.Right;
+			centerleft.Tag = ObsAlignment.Center | ObsAlignment.Left;
+			center.Tag = ObsAlignment.Center;
+			centerright.Tag = ObsAlignment.Center | ObsAlignment.Right;
+			bottomleft.Tag = ObsAlignment.Bottom | ObsAlignment.Left;
+			bottomcenter.Tag = ObsAlignment.Bottom | ObsAlignment.Center;
+			bottomright.Tag = ObsAlignment.Bottom | ObsAlignment.Right;
+
+			foreach (object control in panel.Controls)
+			{
+				((RadioButton)control).Click += btn_Click;
+			}
+
+			SetAlign();
+		}
+
 		public ObsAlignment Alignment
 		{
 			get { return _align; }
@@ -40,48 +64,15 @@ namespace test
 			}
 		}
 
-		private ObsAlignment _align = ObsAlignment.Center;
-
-		public delegate void ClickHandler(ObsAlignment e);
-
 		/// <summary>
 		/// Fired when one of the alignment buttons is clicked
 		/// e == alignment
 		/// </summary>
 		public new event ClickHandler Click;
 
-		public AlignmentBox()
-		{
-			InitializeComponent();
-
-			var aligntags = new List<Tuple<RadioButton, ObsAlignment>>
-			{
-				Tuple.Create(topleft, ObsAlignment.Top | ObsAlignment.Left),
-				Tuple.Create(topcenter, ObsAlignment.Top | ObsAlignment.Center),
-				Tuple.Create(topright, ObsAlignment.Top | ObsAlignment.Right),
-				Tuple.Create(centerleft, ObsAlignment.Center | ObsAlignment.Left),
-				Tuple.Create(center, ObsAlignment.Center),
-				Tuple.Create(centerright, ObsAlignment.Center | ObsAlignment.Right),
-				Tuple.Create(bottomleft, ObsAlignment.Bottom | ObsAlignment.Left),
-				Tuple.Create(bottomcenter, ObsAlignment.Bottom | ObsAlignment.Center),
-				Tuple.Create(bottomright, ObsAlignment.Bottom | ObsAlignment.Right)
-			};
-
-			foreach (var aligntag in aligntags)
-			{
-				RadioButton radiobutton = aligntag.Item1;
-				ObsAlignment alignment = aligntag.Item2;
-
-				radiobutton.Click += btn_Click;
-				radiobutton.Tag = alignment;
-			}
-			
-			SetAlign();
-		}
-
 		private void SetAlign()
 		{
-			foreach (var btn in panel.Controls.Cast<RadioButton>().Where(btn => (ObsAlignment)btn.Tag == Alignment))
+			foreach (RadioButton btn in panel.Controls.Cast<RadioButton>().Where(btn => (ObsAlignment)btn.Tag == Alignment))
 			{
 				btn.Checked = true;
 				break;
@@ -92,7 +83,10 @@ namespace test
 		{
 			RadioButton btn = (RadioButton)sender;
 			Alignment = (ObsAlignment)btn.Tag;
-			if (Click != null) Click(_align);
+			if (Click != null)
+			{
+				Click(_align);
+			}
 		}
 	}
 }
