@@ -28,7 +28,17 @@ namespace test
 {
 	public partial class AlignmentBox : UserControl
 	{
-		private libobs.obs_align_type _align;
+		public libobs.obs_align_type Alignment
+		{
+			get { return _align; }
+			set
+			{
+				_align = value;
+				SetAlign();
+			}
+		}
+
+		private libobs.obs_align_type _align = libobs.obs_align_type.OBS_ALIGN_CENTER;
 
 		public delegate void ClickHandler(libobs.obs_align_type e);
 
@@ -38,17 +48,21 @@ namespace test
 		/// </summary>
 		public new event ClickHandler Click;
 
-		public AlignmentBox(libobs.obs_align_type current)
+		public AlignmentBox()
 		{
 			InitializeComponent();
-			
+
 			foreach (
 				RadioButton btn in panel.Controls.Cast<object>().Where(control => control.GetType() == (typeof(RadioButton))).Cast<RadioButton>())
 			{
 				btn.Click += btn_Click;
 			}
 
-			_align = current;
+			SetAlign();
+		}
+
+		private void SetAlign()
+		{
 			if ((_align & libobs.obs_align_type.OBS_ALIGN_TOP) != 0)
 			{
 				if ((_align & libobs.obs_align_type.OBS_ALIGN_LEFT) != 0)
