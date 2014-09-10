@@ -15,6 +15,8 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using System.Collections.Generic;
+
 #region Usings
 
 using System;
@@ -23,8 +25,6 @@ using System.Windows.Forms;
 using OBS;
 
 #endregion
-
-// TODO: condense these 2 into a single method with get/set flag
 
 namespace test
 {
@@ -54,116 +54,44 @@ namespace test
 		{
 			InitializeComponent();
 
-			foreach (
-				RadioButton btn in panel.Controls.Cast<object>().Where(control => control.GetType() == (typeof(RadioButton))).Cast<RadioButton>())
+			var aligntags = new List<Tuple<RadioButton, ObsAlignment>>
 			{
-				btn.Click += btn_Click;
-			}
+				Tuple.Create(topleft, ObsAlignment.Top | ObsAlignment.Left),
+				Tuple.Create(topcenter, ObsAlignment.Top | ObsAlignment.Center),
+				Tuple.Create(topright, ObsAlignment.Top | ObsAlignment.Right),
+				Tuple.Create(centerleft, ObsAlignment.Center | ObsAlignment.Left),
+				Tuple.Create(center, ObsAlignment.Center),
+				Tuple.Create(centerright, ObsAlignment.Center | ObsAlignment.Right),
+				Tuple.Create(bottomleft, ObsAlignment.Bottom | ObsAlignment.Left),
+				Tuple.Create(bottomcenter, ObsAlignment.Bottom | ObsAlignment.Center),
+				Tuple.Create(bottomright, ObsAlignment.Bottom | ObsAlignment.Right)
+			};
 
+			foreach (var aligntag in aligntags)
+			{
+				RadioButton radiobutton = aligntag.Item1;
+				ObsAlignment alignment = aligntag.Item2;
+
+				radiobutton.Click += btn_Click;
+				radiobutton.Tag = alignment;
+			}
+			
 			SetAlign();
 		}
 
 		private void SetAlign()
 		{
-			if ((_align & ObsAlignment.Top) != 0)
+			foreach (var btn in panel.Controls.Cast<RadioButton>().Where(btn => (ObsAlignment)btn.Tag == Alignment))
 			{
-				if ((_align & ObsAlignment.Left) != 0)
-				{
-					topleft.Checked = true;
-				}
-				else if ((_align & ObsAlignment.Center) != 0)
-				{
-					topcenter.Checked = true;
-				}
-				else
-				{
-					topright.Checked = true;
-				}
-			}
-			else if ((_align & ObsAlignment.Center) != 0)
-			{
-				if ((_align & ObsAlignment.Left) != 0)
-				{
-					centerleft.Checked = true;
-				}
-				else if ((_align & ObsAlignment.Center) != 0)
-				{
-					center.Checked = true;
-				}
-				else
-				{
-					centerright.Checked = true;
-				}
-			}
-			else
-			{
-				if ((_align & ObsAlignment.Left) != 0)
-				{
-					bottomleft.Checked = true;
-				}
-				else if ((_align & ObsAlignment.Center) != 0)
-				{
-					bottomcenter.Checked = true;
-				}
-				else
-				{
-					bottomright.Checked = true;
-				}
+				btn.Checked = true;
+				break;
 			}
 		}
 
 		private void btn_Click(object sender, EventArgs e)
 		{
 			RadioButton btn = (RadioButton)sender;
-			string name = btn.Name;
-			if (name.StartsWith("top"))
-			{
-				_align = ObsAlignment.Top;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | ObsAlignment.Left;
-				}
-				else if (name.EndsWith("center"))
-				{
-					_align = _align | ObsAlignment.Center;
-				}
-				else
-				{
-					_align = _align | ObsAlignment.Right;
-				}
-			}
-			else if (name.StartsWith("center"))
-			{
-				_align = ObsAlignment.Center;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | ObsAlignment.Left;
-				}
-				else if (name.EndsWith("center"))
-				{
-					// nothing!
-				}
-				else
-				{
-					_align = _align | ObsAlignment.Right;
-				}
-			}
-			else
-			{
-				_align = ObsAlignment.Bottom;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | ObsAlignment.Left;
-				}
-				else if (name.EndsWith("center"))
-				{
-					_align = _align | ObsAlignment.Center;
-				}
-				else
-				{
-					_align = _align | ObsAlignment.Right;
-				}
-			}
+			Alignment = (ObsAlignment)btn.Tag;
 			if (Click != null) Click(_align);
 		}
 	}
