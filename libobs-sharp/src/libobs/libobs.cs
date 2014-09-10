@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
+	#region Using Defines
 	using audio_line_t = IntPtr;
 	using audio_resampler_t = IntPtr;
 	using gs_effect_t = IntPtr;
@@ -56,6 +57,7 @@ namespace OBS
 
 	using axisang = libobs.vec4;
 	using quat = libobs.vec4;
+	#endregion
 
 	public static partial class libobs
 	{
@@ -69,10 +71,7 @@ namespace OBS
 		//long = int (32-bit env)
 		//enums = int type
 
-		/*
-		 * startup
-		 */
-
+		#region Startup
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_startup(string locale);
@@ -97,12 +96,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_get_audio_info(ref audio_output_info ai);
-	
+		#endregion
 
-		/*
-		 * rendering
-		 */
-
+		#region Rendering
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_render_main_view();
 
@@ -128,11 +124,9 @@ namespace OBS
 		/** Returns the solid effect for drawing solid colors */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern gs_effect_t obs_get_solid_effect();
+		#endregion
 
-		/*
-		 * source
-		 */
-
+		#region Source
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_source_create(obs_source_type type, string id, string name, obs_data_t settings);
 
@@ -161,15 +155,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_get_source_by_name(string name);
+		#endregion
 
-		
-
-		
-
-		/*
-		 * scene
-		 */
-
+		#region Scene
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_scene_t obs_scene_create(string name);
 
@@ -198,12 +186,9 @@ namespace OBS
 		/** Enumerates sources within a scene */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_enum_items(obs_scene_t scene, sceneitem_enum_callback callback, IntPtr param);
+		#endregion
 
-
-		/*
-		 * scene_item
-		 */
-
+		#region Scene Item
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_addref(obs_sceneitem_t item);
 
@@ -254,13 +239,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
+		#endregion
 
-
-
-		/*
-		 * properties
-		 */
-
+		#region Properties
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_name")]
 		private static extern IntPtr import_obs_property_name(obs_property_t p);
 
@@ -384,13 +365,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_properties_destroy(obs_properties_t props);
-
+		#endregion
 		
-
-		/*
-		 * misc/uncategorized
-		 */
-
+		#region Misc/Uncategorized
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern IntPtr obs_data_create();
 
@@ -405,7 +382,7 @@ namespace OBS
 		{
 			string str = null;
 			IntPtr strPtr = import_obs_source_get_display_name(type, id);
-			
+
 			if (strPtr != IntPtr.Zero)
 				str = Marshal.PtrToStringAnsi(strPtr);
 
@@ -463,11 +440,9 @@ namespace OBS
 
 			return ret;
 		}
+		#endregion
 
-		/*
-		 * graphics subsystem
-		 */
-
+		#region Graphics Subsystem
 		/** Helper function for entering the OBS graphics context */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_enter_graphics();
@@ -476,7 +451,7 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_leave_graphics();
 
-		
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_begin_scene();
 
@@ -490,7 +465,7 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_clear(uint32_t clear_flags, out vec4 color, float depth, uint8_t stencil);
 
-		
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_viewport_push();
 
@@ -748,11 +723,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_matrix_scale3f(float x, float y, float z);
+		#endregion
 
-		/*
-		 * structures
-		 */
-
+		#region Structures
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public struct obs_video_info
 		{
@@ -1196,11 +1169,8 @@ namespace OBS
 			public vec3 dir;
 			public float dist;
 		};
-
-		/*
-		 * enums
-		 */
-
+#endregion
+		#region Enums
 		public enum obs_source_type : int
 		{
 			OBS_SOURCE_TYPE_INPUT,
@@ -1277,7 +1247,7 @@ namespace OBS
 			OBS_TEXT_PASSWORD,
 			OBS_TEXT_MULTILINE,
 		};
-		
+
 		[Flags]
 		public enum obs_align_type : int
 		{
@@ -1287,7 +1257,9 @@ namespace OBS
 			OBS_ALIGN_TOP = 1 << 2,
 			OBS_ALIGN_BOTTOM = 1 << 3
 		}
+		#endregion
 
+		#region Helper Functions
 		/*
 		 * helper functions
 		 */
@@ -1307,5 +1279,6 @@ namespace OBS
 
 			return System.Text.Encoding.UTF8.GetString(bytes.ToArray());
 		}
+		#endregion
 	}
 }
