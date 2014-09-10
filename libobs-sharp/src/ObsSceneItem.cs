@@ -38,6 +38,11 @@ namespace OBS
 			Release();
 		}
 
+		public string Name()
+		{
+			return GetSource().Name;
+		}
+
 		public unsafe void Release()
 		{
 			if (instance == null)
@@ -93,9 +98,9 @@ namespace OBS
 			return scale;
 		}
 
-		public unsafe UInt32 GetAlignment()
+		public unsafe libobs.obs_align_type GetAlignment()
 		{
-			return libobs.obs_sceneitem_get_alignment((IntPtr)instance);
+			return (libobs.obs_align_type) libobs.obs_sceneitem_get_alignment((IntPtr) instance);
 		}
 
 
@@ -118,13 +123,9 @@ namespace OBS
 			libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);
 		}
 
-		public unsafe void SetAlignment(UInt32 alignment)
+		public unsafe void SetAlignment(libobs.obs_align_type alignment)
 		{
-			libobs.obs_sceneitem_set_alignment((IntPtr)instance, alignment);
+			libobs.obs_sceneitem_set_alignment((IntPtr) instance, (uint)alignment);
 		}
-
-
-		
-
 	}
 }

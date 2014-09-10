@@ -1277,6 +1277,16 @@ namespace OBS
 			OBS_TEXT_PASSWORD,
 			OBS_TEXT_MULTILINE,
 		};
+		
+		[Flags]
+		public enum obs_align_type : int
+		{
+			OBS_ALIGN_CENTER = 0,
+			OBS_ALIGN_LEFT = 1 << 0,
+			OBS_ALIGN_RIGHT = 1 << 1,
+			OBS_ALIGN_TOP = 1 << 2,
+			OBS_ALIGN_BOTTOM = 1 << 3
+		}
 
 		/*
 		 * helper functions
