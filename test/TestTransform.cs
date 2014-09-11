@@ -34,12 +34,12 @@ namespace test
 		private bool _ok;
 		private bool _cancel;
 
-		private libobs.vec2 Position
+		private libobs.vec2 ItemPosition
 		{
 			get { return new libobs.vec2((float)xNumeric.Value, (float)yNumeric.Value); }
 		}
 
-		private libobs.vec2 Scale
+		private libobs.vec2 ItemScale
 		{
 			get { return new libobs.vec2((float)wNumeric.Value, (float)hNumeric.Value); }
 		}
@@ -85,11 +85,11 @@ namespace test
 			Alignment.Alignment = _oldAlignment;
 
 			// Delegates to change transform properties
-			xNumeric.ValueChanged += delegate { _selectedItem.SetPosition(Position); };
-			yNumeric.ValueChanged += delegate { _selectedItem.SetPosition(Position); };
+			xNumeric.ValueChanged += delegate { _selectedItem.SetPosition(ItemPosition); };
+			yNumeric.ValueChanged += delegate { _selectedItem.SetPosition(ItemPosition); };
 
-			wNumeric.ValueChanged += delegate { _selectedItem.SetScale(Scale); };
-			hNumeric.ValueChanged += delegate { _selectedItem.SetScale(Scale); };
+			wNumeric.ValueChanged += delegate { _selectedItem.SetScale(ItemScale); };
+			hNumeric.ValueChanged += delegate { _selectedItem.SetScale(ItemScale); };
 
 			Rotation.RotationChanged += rotation => _selectedItem.SetRotation(rotation);
 
