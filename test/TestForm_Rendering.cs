@@ -31,8 +31,8 @@ namespace test
 	{
 		private GSVertexBuffer _boxPrimitive;
 		private GSVertexBuffer _circlePrimitive;
-		private float _mainViewWidth = 1;
-		private float _mainViewHeight = 1;
+		public float MainViewWidth = 1;
+		public float MainViewHeight = 1;
 
 		const float HANDLE_RADIUS = 5.0f;
 		const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
@@ -86,8 +86,8 @@ namespace test
 			int previewX = (int)(((double)window.mainViewPanel.Width - previewCX) / 2);
 			int previewY = (int)(((double)window.mainViewPanel.Height - previewCY) / 2);
 			//window._previewScale = (float)previewCX / ovi.base_width;
-			window._mainViewWidth = previewCX;
-			window._mainViewHeight = previewCY;
+			window.MainViewWidth = previewCX;
+			window.MainViewHeight = previewCY;
 
 			//setup orthographic projection of the whole scene to be presented on viewport
 			GS.Ortho(0.0f, (float)ovi.base_width, 0.0f, (float)ovi.base_height, -100.0f, 100.0f);
@@ -170,7 +170,7 @@ namespace test
 				return true;
 
 			TestForm window = Control.FromHandle(data) as TestForm;
-			float previewScale = _mainViewWidth / MainWidth;
+			float previewScale = MainViewWidth / MainWidth;
 
 			GS.LoadVertexBuffer(_circlePrimitive);
 
@@ -214,7 +214,7 @@ namespace test
 
 		public float GetPreviewScale()
 		{
-			return (float)_mainViewWidth / MainWidth;
+			return (float)MainViewWidth / MainWidth;
 		}
 	}
 }
