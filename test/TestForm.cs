@@ -82,7 +82,7 @@ namespace test
 					window = new libobs.gs_window
 					{
 						hwnd = mainViewPanel.Handle
-					}
+					},
 				};
 
 				libobs.audio_output_info ai = new libobs.audio_output_info
@@ -162,7 +162,7 @@ namespace test
 			sourceListBox.Items.Add(source.Name);
 		}
 
-		private void AddInputSource(string id, string name)
+		private ObsSource AddInputSource(string id, string name)
 		{
 			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
 
@@ -174,6 +174,8 @@ namespace test
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
 			sourceListBox.Items.Add(source.Name);
+
+			return source;
 		}
 
 		private void DisplayFilterSourceMenu()
@@ -230,8 +232,8 @@ namespace test
 				
 				menuitem.Click += delegate
 				{
-					AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
-					var prop = new TestProperties(ObsSourceType.Input, type);
+					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
+					var prop = new TestProperties(source);
 					prop.Show();
 				};
 

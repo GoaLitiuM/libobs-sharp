@@ -128,6 +128,17 @@ namespace OBS
 			public gs_effect* effect;
 		};
 
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct gs_init_data
+		{
+			public gs_window window;
+			public uint32_t cx, cy;
+			public uint32_t num_backbuffers;
+			public gs_color_format format;
+			public gs_zstencil_format zsformat;
+			public uint32_t adapter;
+		};
+
 		public enum gs_draw_mode : int
 		{
 			GS_POINTS,
@@ -179,6 +190,15 @@ namespace OBS
 			GS_SHADER_PARAM_VEC4,
 			GS_SHADER_PARAM_MATRIX4X4,
 			GS_SHADER_PARAM_TEXTURE,
+		};
+
+		public enum gs_zstencil_format : int
+		{
+			GS_ZS_NONE,
+			GS_Z16,
+			GS_Z24_S8,
+			GS_Z32F,
+			GS_Z32F_S8X24
 		};
 	}
 }

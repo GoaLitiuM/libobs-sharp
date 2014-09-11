@@ -83,6 +83,9 @@
     <Compile Include="TestProperties.Designer.cs">
       <DependentUpon>TestProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="TestProperties_Rendering.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TestTransform.cs">
       <SubType>Form</SubType>
     </Compile>

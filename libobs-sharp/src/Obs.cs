@@ -96,6 +96,26 @@ namespace OBS
 		}
 
 
+		public static ObsDisplay CreateDisplay(libobs.gs_init_data graphicsData)
+		{
+			IntPtr ptr = libobs.obs_display_create(ref graphicsData);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsDisplay(ptr);
+		}
+
+		public static unsafe void AddDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
+		{
+			libobs.obs_display_add_draw_callback((IntPtr)display.GetPointer(), callback, param);
+		}
+
+		public static unsafe void RemoveDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
+		{
+			libobs.obs_display_remove_draw_callback((IntPtr)display.GetPointer(), callback, param);
+		}
+
+
 		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
 		{
 			return libobs.obs_source_get_display_name((libobs.obs_source_type)type, id);
