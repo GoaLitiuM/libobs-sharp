@@ -27,7 +27,6 @@ using System.Windows.Forms;
 
 namespace test
 {
-	[System.ComponentModel.DesignerCategory("")]
 	public partial class TestForm : Form
 	{
 		private GSVertexBuffer boxPrimitive;
@@ -35,7 +34,7 @@ namespace test
 		public float MainViewWidth = 1;
 		public float MainViewHeight = 1;
 
-		const float HANDLE_RADIUS = 12.0f;
+		const float HANDLE_RADIUS = 5.0f;
 		const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
 		const float CLAMP_DISTANCE = 10.0f;
 
@@ -173,31 +172,20 @@ namespace test
 			TestForm window = Control.FromHandle(data) as TestForm;
 			float previewScale = MainViewWidth / MainWidth;
 
-			GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(circlePrimitive);
 
 			libobs.matrix4 boxTransform;
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
 
-			//render the tiny squares on corners
-
-			GS.MatrixPush();
-
+			//render the tiny circles on corners
 			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);
-
-			GS.MatrixTranslate3f(0, -HANDLE_RADIUS, 0.0f);
 			DrawPrimitive(0.0f, 1.0f, boxTransform, previewScale);
-
-			GS.MatrixTranslate3f(-HANDLE_RADIUS, 0, 0.0f);
 			DrawPrimitive(1.0f, 1.0f, boxTransform, previewScale);
-
-			GS.MatrixTranslate3f(0, HANDLE_RADIUS, 0.0f);
 			DrawPrimitive(1.0f, 0.0f, boxTransform, previewScale);
-
-			GS.MatrixPop();
 
 			//render the main selection rectangle
 
-			//GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(boxPrimitive);
 
 			GS.MatrixPush();
 			GS.MatrixScale3f(previewScale, previewScale, 1.0f);

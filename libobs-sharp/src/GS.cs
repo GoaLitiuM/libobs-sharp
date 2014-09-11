@@ -251,9 +251,24 @@ namespace OBS.Graphics
 			libobs.gs_matrix_translate3f(x, y, z);
 		}
 
+		public static unsafe void MatrixScale(libobs.vec3 vec)
+		{
+			libobs.gs_matrix_scale(out vec);
+		}
+
 		public static unsafe void MatrixScale3f(float x, float y, float z)
 		{
 			libobs.gs_matrix_scale3f(x, y, z);
+		}
+
+		public static unsafe void MatrixRotate(libobs.vec4 vec)
+		{
+			libobs.gs_matrix_rotaa(out vec);
+		}
+
+		public static unsafe void MatrixRotate4f(float x, float y, float z, float angle)
+		{
+			libobs.gs_matrix_rotaa4f(x, y, z, angle);
 		}
 
 		public static unsafe void MatrixMul(libobs.matrix4 matrix)
