@@ -98,9 +98,9 @@ namespace OBS
 			return scale;
 		}
 
-		public unsafe libobs.obs_align_type GetAlignment()
+		public unsafe ObsAlignment GetAlignment()
 		{
-			return (libobs.obs_align_type) libobs.obs_sceneitem_get_alignment((IntPtr) instance);
+			return (ObsAlignment)libobs.obs_sceneitem_get_alignment((IntPtr)instance);
 		}
 
 
@@ -123,7 +123,7 @@ namespace OBS
 			libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);
 		}
 
-		public unsafe void SetAlignment(libobs.obs_align_type alignment)
+		public unsafe void SetAlignment(ObsAlignment alignment)
 		{
 			libobs.obs_sceneitem_set_alignment((IntPtr) instance, (uint)alignment);
 		}

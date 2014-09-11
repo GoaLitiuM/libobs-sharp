@@ -52,7 +52,7 @@ namespace test
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.MaximumSize = new System.Drawing.Size(400, 400);
-			this.MinimumSize = new System.Drawing.Size(100, 100);
+			this.MinimumSize = new System.Drawing.Size(50, 50);
 			this.Name = "RotationBox";
 			this.ResumeLayout(false);
 

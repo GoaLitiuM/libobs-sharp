@@ -198,7 +198,18 @@ namespace test
 
 				filtermenu.MenuItems.Add(menuitem);
 			}
-
+			filtermenu.MenuItems.Add("-");
+			MenuItem transform = new MenuItem
+			{
+				Text = "Edit Tranform Options..."
+			};
+			transform.Click += delegate
+			{
+				var transformfrm = new TestTransform(_sceneItems[_selectedScene][_selectedSource]);
+				transformfrm.ShowDialog(this);
+			};
+			filtermenu.MenuItems.Add(transform);
+			
 			filtermenu.Show(this, PointToClient(Cursor.Position));
 		}
 

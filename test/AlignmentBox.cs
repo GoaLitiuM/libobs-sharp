@@ -17,140 +17,76 @@
 
 #region Usings
 
+using OBS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using OBS;
 
-#endregion
+#endregion Usings
 
 namespace test
 {
 	public partial class AlignmentBox : UserControl
 	{
-		private libobs.obs_align_type _align;
+		public delegate void AlignmentChangedHandler(ObsAlignment e);
 
-		public delegate void ClickHandler(libobs.obs_align_type e);
+		private ObsAlignment _align = ObsAlignment.Center;
+
+		public AlignmentBox()
+		{
+			InitializeComponent();
+
+			topleft.Tag = ObsAlignment.Top | ObsAlignment.Left;
+			topcenter.Tag = ObsAlignment.Top | ObsAlignment.Center;
+			topright.Tag = ObsAlignment.Top | ObsAlignment.Right;
+			centerleft.Tag = ObsAlignment.Center | ObsAlignment.Left;
+			center.Tag = ObsAlignment.Center;
+			centerright.Tag = ObsAlignment.Center | ObsAlignment.Right;
+			bottomleft.Tag = ObsAlignment.Bottom | ObsAlignment.Left;
+			bottomcenter.Tag = ObsAlignment.Bottom | ObsAlignment.Center;
+			bottomright.Tag = ObsAlignment.Bottom | ObsAlignment.Right;
+
+			foreach (object control in panel.Controls)
+			{
+				((RadioButton)control).Click += btn_Click;
+			}
+
+			SetAlign();
+		}
+
+		public ObsAlignment Alignment
+		{
+			get { return _align; }
+			set
+			{
+				_align = value;
+				SetAlign();
+			}
+		}
 
 		/// <summary>
 		/// Fired when one of the alignment buttons is clicked
 		/// e == alignment
 		/// </summary>
-		public new event ClickHandler Click;
+		public event AlignmentChangedHandler AlignmentChanged;
 
-		public AlignmentBox(libobs.obs_align_type current)
+		private void SetAlign()
 		{
-			InitializeComponent();
-			
-			foreach (
-				RadioButton btn in panel.Controls.Cast<object>().Where(control => control.GetType() == (typeof(RadioButton))).Cast<RadioButton>())
+			foreach (RadioButton btn in panel.Controls.Cast<RadioButton>().Where(btn => (ObsAlignment)btn.Tag == Alignment))
 			{
-				btn.Click += btn_Click;
-			}
-
-			_align = current;
-			if ((_align & libobs.obs_align_type.OBS_ALIGN_TOP) != 0)
-			{
-				if ((_align & libobs.obs_align_type.OBS_ALIGN_LEFT) != 0)
-				{
-					topleft.Checked = true;
-				}
-				else if ((_align & libobs.obs_align_type.OBS_ALIGN_CENTER) != 0)
-				{
-					topcenter.Checked = true;
-				}
-				else
-				{
-					topright.Checked = true;
-				}
-			}
-			else if ((_align & libobs.obs_align_type.OBS_ALIGN_CENTER) != 0)
-			{
-				if ((_align & libobs.obs_align_type.OBS_ALIGN_LEFT) != 0)
-				{
-					centerleft.Checked = true;
-				}
-				else if ((_align & libobs.obs_align_type.OBS_ALIGN_CENTER) != 0)
-				{
-					center.Checked = true;
-				}
-				else
-				{
-					centerright.Checked = true;
-				}
-			}
-			else
-			{
-				if ((_align & libobs.obs_align_type.OBS_ALIGN_LEFT) != 0)
-				{
-					bottomleft.Checked = true;
-				}
-				else if ((_align & libobs.obs_align_type.OBS_ALIGN_CENTER) != 0)
-				{
-					bottomcenter.Checked = true;
-				}
-				else
-				{
-					bottomright.Checked = true;
-				}
+				btn.Checked = true;
+				break;
 			}
 		}
 
 		private void btn_Click(object sender, EventArgs e)
 		{
-			// TODO: surely this can be done cleaner x)
-
 			RadioButton btn = (RadioButton)sender;
-			string name = btn.Name;
-			if (name.StartsWith("top"))
+			Alignment = (ObsAlignment)btn.Tag;
+			if (AlignmentChanged != null)
 			{
-				_align = libobs.obs_align_type.OBS_ALIGN_TOP;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_LEFT;
-				}
-				else if (name.EndsWith("center"))
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_CENTER;
-				}
-				else
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_RIGHT;
-				}
+				AlignmentChanged(_align);
 			}
-			else if (name.StartsWith("center"))
-			{
-				_align = libobs.obs_align_type.OBS_ALIGN_CENTER;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_LEFT;
-				}
-				else if (name.EndsWith("center"))
-				{
-					// nothing!
-				}
-				else
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_RIGHT;
-				}
-			}
-			else
-			{
-				_align = libobs.obs_align_type.OBS_ALIGN_BOTTOM;
-				if (name.EndsWith("left"))
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_LEFT;
-				}
-				else if (name.EndsWith("center"))
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_CENTER;
-				}
-				else
-				{
-					_align = _align | libobs.obs_align_type.OBS_ALIGN_RIGHT;
-				}
-			}
-			if (Click != null) Click(_align);
 		}
 	}
 }
