@@ -29,10 +29,10 @@ namespace test
 {
 	public partial class TestForm : Form
 	{
-		private GSVertexBuffer boxPrimitive;
-		private GSVertexBuffer circlePrimitive;
-		public float MainViewWidth = 1;
-		public float MainViewHeight = 1;
+		private GSVertexBuffer _boxPrimitive;
+		private GSVertexBuffer _circlePrimitive;
+		private float _mainViewWidth = 1;
+		private float _mainViewHeight = 1;
 
 		const float HANDLE_RADIUS = 5.0f;
 		const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
@@ -49,7 +49,7 @@ namespace test
 			GS.Vertex2f(1.0f, 1.0f);
 			GS.Vertex2f(1.0f, 0.0f);
 			GS.Vertex2f(0.0f, 0.0f);
-			boxPrimitive = GS.RenderSave();
+			_boxPrimitive = GS.RenderSave();
 
 			//circle from vertices
 			GS.RenderStart(true);
@@ -58,7 +58,7 @@ namespace test
 				double pos = Math.PI * (double)i / 180.0;
 				GS.Vertex2f((float)Math.Cos(pos), (float)Math.Sin(pos));
 			}
-			circlePrimitive = GS.RenderSave();
+			_circlePrimitive = GS.RenderSave();
 
 			GS.LeaveGraphics();
 		}
@@ -86,8 +86,8 @@ namespace test
 			int previewX = (int)(((double)window.mainViewPanel.Width - previewCX) / 2);
 			int previewY = (int)(((double)window.mainViewPanel.Height - previewCY) / 2);
 			//window._previewScale = (float)previewCX / ovi.base_width;
-			window.MainViewWidth = previewCX;
-			window.MainViewHeight = previewCY;
+			window._mainViewWidth = previewCX;
+			window._mainViewHeight = previewCY;
 
 			//setup orthographic projection of the whole scene to be presented on viewport
 			GS.Ortho(0.0f, (float)ovi.base_width, 0.0f, (float)ovi.base_height, -100.0f, 100.0f);
@@ -130,7 +130,7 @@ namespace test
 			GS.MatrixIdentity();
 			GS.MatrixScale3f((float)cx, (float)cy, 1.0f);
 
-			GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(_boxPrimitive);
 
 			//draw solid black color over the scene
 			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
@@ -170,9 +170,9 @@ namespace test
 				return true;
 
 			TestForm window = Control.FromHandle(data) as TestForm;
-			float previewScale = MainViewWidth / MainWidth;
+			float previewScale = _mainViewWidth / MainWidth;
 
-			GS.LoadVertexBuffer(circlePrimitive);
+			GS.LoadVertexBuffer(_circlePrimitive);
 
 			libobs.matrix4 boxTransform;
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
@@ -185,7 +185,7 @@ namespace test
 
 			//render the main selection rectangle
 
-			GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(_boxPrimitive);
 
 			GS.MatrixPush();
 			GS.MatrixScale3f(previewScale, previewScale, 1.0f);
@@ -214,7 +214,7 @@ namespace test
 
 		public float GetPreviewScale()
 		{
-			return (float)MainViewWidth / MainWidth;
+			return (float)_mainViewWidth / MainWidth;
 		}
 	}
 }
