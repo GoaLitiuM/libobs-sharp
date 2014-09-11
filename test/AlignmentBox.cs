@@ -28,7 +28,7 @@ namespace test
 {
 	public partial class AlignmentBox : UserControl
 	{
-		public delegate void ClickHandler(ObsAlignment e);
+		public delegate void AlignmentChangedHandler(ObsAlignment e);
 
 		private ObsAlignment _align = ObsAlignment.Center;
 
@@ -68,7 +68,7 @@ namespace test
 		/// Fired when one of the alignment buttons is clicked
 		/// e == alignment
 		/// </summary>
-		public new event ClickHandler Click;
+		public event AlignmentChangedHandler AlignmentChanged;
 
 		private void SetAlign()
 		{
@@ -83,9 +83,9 @@ namespace test
 		{
 			RadioButton btn = (RadioButton)sender;
 			Alignment = (ObsAlignment)btn.Tag;
-			if (Click != null)
+			if (AlignmentChanged != null)
 			{
-				Click(_align);
+				AlignmentChanged(_align);
 			}
 		}
 	}

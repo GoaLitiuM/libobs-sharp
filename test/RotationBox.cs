@@ -32,7 +32,13 @@ namespace test
 	{
 		private bool _mouseDown;
 
-		private int _rotation;
+		private int _rotation = -90;
+
+		public delegate void RotationChangedHandler(float f);
+
+		public event RotationChangedHandler RotationChanged;
+
+		private bool _loaded;
 
 		public RotationBox()
 		{
@@ -56,6 +62,7 @@ namespace test
 					Rotation = (int) Math.Round(GetRotation(CenterPoint, e.Location)) + 90;
 				}
 			};
+			_loaded = true;
 		}
 
 		public bool Debug { get; set; }
@@ -79,6 +86,7 @@ namespace test
 				_rotation = rot - 90;
 				// repaint control
 				Refresh();
+				if (_loaded && RotationChanged != null) RotationChanged(value);
 			}
 		}
 
