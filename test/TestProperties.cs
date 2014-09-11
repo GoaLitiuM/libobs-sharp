@@ -25,21 +25,12 @@ namespace test
 {
 	public partial class TestProperties : Form
 	{
+		public ObsSource Source;
+		public Panel previewPanel;	//TODO: remove
+
 		private TestProperties()
 		{
 			InitializeComponent();
-		}
-
-		/// <summary>
-		/// Create a property dialog for a new source
-		/// </summary>
-		/// <param name="type">Type of source of type ObsSourceType</param>
-		/// <param name="id">Name of source</param>
-		public TestProperties(ObsSourceType type, string id)
-			: this()
-		{
-			_properties = Obs.GetSourceProperties(type, id);
-			Console.WriteLine(_properties.ToString());
 		}
 
 		/// <summary>
@@ -49,6 +40,7 @@ namespace test
 		public TestProperties(ObsSource source)
 			: this()
 		{
+			Source = source;
 			_properties = Obs.GetSourceProperties(source);
 		}
 
@@ -57,6 +49,7 @@ namespace test
 		private void TestProperties_Load(object sender, EventArgs e)
 		{
 			GenerateControls();
+			InitPreview(propertyPanel.Controls[0].Width, propertyPanel.Controls[0].Width, this.Handle);
 		}
 		public class ComboboxItem
 		{
@@ -82,6 +75,14 @@ namespace test
 			propertyPanel.RowCount = _properties.Length + 1;
 			propertyPanel.AutoSize = true;
 
+			// add preview panel
+			propertyPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+			previewPanel = new Panel();
+			previewPanel.Enabled = true;
+			previewPanel.Visible = true;
+			propertyPanel.Controls.Add(previewPanel, 1, 0);
+
 			for (var i = 0; i < _properties.Length; i++)
 			{
 				propertyPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -95,7 +96,7 @@ namespace test
 					Dock = DockStyle.Fill,
 					Visible = property.Visible
 				};
-				propertyPanel.Controls.Add(label, 0, i);
+				propertyPanel.Controls.Add(label, 0, i+1);
 
 				Control control = null;
 				switch (property.Type)
@@ -383,13 +384,18 @@ namespace test
 					control.Enabled = property.Enabled;
 					control.Visible = property.Visible;
 					control.Tag = property.Name;
-					propertyPanel.Controls.Add(control, 1, i);
+					propertyPanel.Controls.Add(control, 1, i+1);
 				}
 
 			}
 			// TODO: check if this extra row is really needed
 			propertyPanel.RowStyles.Add(new RowStyle());
 			propertyPanel.Refresh();
+		}
+
+		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			ClosePreview();
 		}
 	}
 }

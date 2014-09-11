@@ -120,6 +120,7 @@ namespace test
 			this.Name = "TestProperties";
 			this.Text = "TestProperties";
 			this.Load += new System.EventHandler(this.TestProperties_Load);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestProperties_FormClosed);
 			this.bottomPanel.ResumeLayout(false);
 			this.bottomPanel.PerformLayout();
 			this.ResumeLayout(false);

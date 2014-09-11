@@ -21,15 +21,18 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	#region Using Defines
+	#region Opaque Types
+
 	using audio_line_t = IntPtr;
 	using audio_resampler_t = IntPtr;
 	using gs_effect_t = IntPtr;
 	using gs_eparam_t = IntPtr;
 	using gs_indexbuffer_t = IntPtr;
+	using gs_init_data_t = IntPtr;
 	using gs_rect_t = IntPtr;
 	using gs_samplerstate_t = IntPtr;
 	using gs_shader_t = IntPtr;
+	using gs_swapchain_t = IntPtr;
 	using gs_technique_t = IntPtr;
 	using gs_texrender_t = IntPtr;
 	using gs_texture_t = IntPtr;
@@ -37,6 +40,7 @@ namespace OBS
 	using obs_audio_data_t = IntPtr;
 	using obs_data_item_t = IntPtr;
 	using obs_data_t = IntPtr;
+	using obs_display_t = IntPtr;
 	using obs_properties_t = IntPtr;
 	using obs_property_t = IntPtr;
 	using obs_property_modified_t = IntPtr;
@@ -57,11 +61,12 @@ namespace OBS
 
 	using axisang = libobs.vec4;
 	using quat = libobs.vec4;
+
 	#endregion
 
 	public static partial class libobs
 	{
-		public const string importLibrary = "obs";
+		public const string importLibrary = "obs";	//extension is handled automatically
 		public const CallingConvention importCall = CallingConvention.Cdecl;
 		public const CharSet importCharSet = CharSet.Ansi;
 
@@ -105,6 +110,7 @@ namespace OBS
 		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
 		public delegate void draw_callback(IntPtr param, uint32_t cx, uint32_t cy);
 
+
 		/** Adds a draw callback to the main render context */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_add_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
@@ -124,6 +130,27 @@ namespace OBS
 		/** Returns the solid effect for drawing solid colors */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern gs_effect_t obs_get_solid_effect();
+
+
+		/** Adds a new window display linked to the main render pipeline.
+		  * This creates a new swap chain which updates every frame. */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_display_t obs_display_create(ref gs_init_data graphics_data);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_destroy(obs_display_t display);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_resize(obs_display_t display, uint32_t cx, uint32_t cy);
+
+		/** Adds a draw callback for this display context */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_add_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
+
+		/** Removes a draw callback for this display context */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_remove_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
+
 		#endregion
 
 		#region Source
@@ -155,6 +182,20 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_get_source_by_name(string name);
+
+
+		/** Renders a video source. */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_source_video_render(obs_source_t source);
+
+		/** Gets the width of a source (if it has video) */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern uint32_t obs_source_get_width(obs_source_t source);
+
+		/** Gets the height of a source (if it has video) */
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern uint32_t obs_source_get_height(obs_source_t source);
+
 		#endregion
 
 		#region Scene
@@ -1097,6 +1138,21 @@ namespace OBS
 
 			public obs_property_t first_property;
 			public obs_property_t* last;
+		};
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public unsafe struct obs_display
+		{
+			[MarshalAs(UnmanagedType.I1)]
+			public bool size_changed;
+
+			public uint32_t cx, cy;
+			public gs_swapchain_t swap;
+			public pthread_mutex_t draw_callbacks_mutex;
+			public darray draw_callbacks; //draw_callback
+
+			public obs_display_t next;
+			public obs_display_t* prev_next;
 		};
 
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]

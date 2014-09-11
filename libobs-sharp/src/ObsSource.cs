@@ -67,10 +67,31 @@ namespace OBS
 			}
 		}
 
+		public unsafe uint Width
+		{
+			get
+			{
+				return libobs.obs_source_get_width((IntPtr)instance);
+			}
+		}
+
+		public unsafe uint Height
+		{
+			get
+			{
+				return libobs.obs_source_get_height((IntPtr)instance);
+			}
+		}
+
 
 		public unsafe void AddFilter(ObsSource filter)
 		{
 			libobs.obs_source_filter_add((IntPtr)instance, (IntPtr)filter.GetPointer());
+		}
+
+		public unsafe void Render()
+		{
+			libobs.obs_source_video_render((IntPtr)instance);
 		}
 	}
 
