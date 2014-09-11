@@ -658,6 +658,40 @@ namespace OBS
 
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_from_quat(out matrix3 dst, out quat q);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_from_axisang(out matrix3 dst, out axisang aa);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_from_matrix4(out matrix3 dst, out matrix4 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_mul(out matrix3 dst, out matrix3 m1, out matrix3 m2);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_rotate(out matrix3 dst, out matrix3 m, out quat q);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_rotate_aa(out matrix3 dst, out matrix3 m, out axisang aa);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_scale(out matrix3 dst, out matrix3 m, out vec3 v);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_transpose(out matrix3 dst, out matrix3 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_inv(out matrix3 dst, out matrix3 m);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_mirror(out matrix3 dst, out matrix3 m, out plane p);
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void matrix3_mirrorv(out matrix3 dst, out matrix3 m, out vec3 v);
+
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern float matrix4_determinant(out matrix4 m);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]

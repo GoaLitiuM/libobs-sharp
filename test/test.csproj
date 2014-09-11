@@ -69,7 +69,9 @@
     <Compile Include="TestConfig.Designer.cs">
       <DependentUpon>TestConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestForm.cs" />
+    <Compile Include="TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TestForm.Designer.cs">
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
