@@ -26,7 +26,7 @@ using System.Windows.Forms;
 
 #endregion
 
-namespace test
+namespace test.Controls
 {
 	public sealed partial class RotationBox : UserControl
 	{

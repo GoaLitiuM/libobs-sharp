@@ -17,14 +17,14 @@
 
 #region Usings
 
-using OBS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using OBS;
 
 #endregion Usings
 
-namespace test
+namespace test.Controls
 {
 	public partial class AlignmentBox : UserControl
 	{

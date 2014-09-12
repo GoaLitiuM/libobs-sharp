@@ -15,9 +15,9 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-namespace test
+namespace test.Controls
 {
-	sealed partial class RotationBox
+	partial class PropertyPanel
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -45,20 +45,46 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.nameLabel = new System.Windows.Forms.Label();
+			this.controlPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.SuspendLayout();
 			// 
-			// RotationBox
+			// nameLabel
+			// 
+			this.nameLabel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.nameLabel.Location = new System.Drawing.Point(0, 0);
+			this.nameLabel.Name = "nameLabel";
+			this.nameLabel.Size = new System.Drawing.Size(150, 25);
+			this.nameLabel.TabIndex = 0;
+			this.nameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// controlPanel
+			// 
+			this.controlPanel.AutoSize = true;
+			this.controlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.controlPanel.Location = new System.Drawing.Point(150, 0);
+			this.controlPanel.Name = "controlPanel";
+			this.controlPanel.Size = new System.Drawing.Size(450, 25);
+			this.controlPanel.TabIndex = 1;
+			// 
+			// PropertyPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.MaximumSize = new System.Drawing.Size(400, 400);
-			this.MinimumSize = new System.Drawing.Size(50, 50);
-			this.Name = "RotationBox";
+			this.AutoSize = true;
+			this.Controls.Add(this.controlPanel);
+			this.Controls.Add(this.nameLabel);
+			this.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
+			this.Name = "PropertyPanel";
+			this.Size = new System.Drawing.Size(600, 25);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
+		private System.Windows.Forms.Label nameLabel;
+		private System.Windows.Forms.FlowLayoutPanel controlPanel;
 	}
 }
