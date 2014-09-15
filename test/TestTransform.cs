@@ -91,16 +91,15 @@ namespace test
 			wNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
 			hNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
 
+			// These even handlers return the exact value we need
+			// Do this in the future for all custom even handlers
+			// Makes creating inline event handlers a breeze!
 			Rotation.RotationChanged += rotation => _selectedItem.SetRotation(rotation);
 
 			Alignment.AlignmentChanged += alignment => _selectedItem.SetAlignment(alignment);
 
 			// Close form methods
-			cancelButton.Click += (sender, args) =>
-			{
-				_cancel = true;
-				Close();
-			};
+			cancelButton.Click += (sender, args) => Close();
 
 			okButton.Click += (sender, args) =>
 			{
@@ -110,14 +109,13 @@ namespace test
 
 			Closing += (sender, args) =>
 			{
-				// if neither button or cancel was clicked, reset transform to old settings
-				if (_cancel || !_ok)
-				{
-					_selectedItem.SetPosition(_oldPos);
-					_selectedItem.SetScale(_oldScale);
-					_selectedItem.SetRotation(_oldRot);
-					_selectedItem.SetAlignment(_oldAlignment);
-				}
+				// if ok wasnt clicked flush changes
+				if (_ok) return;
+
+				_selectedItem.SetPosition(_oldPos);
+				_selectedItem.SetScale(_oldScale);
+				_selectedItem.SetRotation(_oldRot);
+				_selectedItem.SetAlignment(_oldAlignment);
 			};
 		}
 	}
