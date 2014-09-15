@@ -33,9 +33,8 @@ namespace test.Controls
 
 			foreach (Control control in controlPanel.Controls)
 			{
-				//  (containerHeight-labelHeight)/2
-				var topmargin = (controlPanel.Height - control.Height) / 2;
-				var oldmargin = control.Margin;
+				int topmargin = (controlPanel.Height - control.Height) / 2;
+				Padding oldmargin = control.Margin;
 				oldmargin.Top = topmargin;
 				oldmargin.Bottom = topmargin;
 				control.Margin = oldmargin;

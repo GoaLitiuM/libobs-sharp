@@ -27,7 +27,7 @@ namespace test
 	public partial class TestProperties
 	{
 		public readonly ObsSource Source;
-		
+
 		private TestProperties()
 		{
 			InitializeComponent();
@@ -49,19 +49,47 @@ namespace test
 		private void TestProperties_Load(object sender, EventArgs e)
 		{
 			GenerateControls();
-			// TODO: get render surface h/w > get ratio > scale top panel height from propertypanel width
-			// TODO: still slightly confused on how this works x)
-			InitPreview(640, 320, previewPanel.Handle);
-			
-			propertyPanel.AutoSize = true;
 
-			previewPanel.Width = propertyPanel.Width;
-			previewPanel.Height = propertyPanel.Height;
-			
-			okButton.Click += delegate { Close(); };
-			cancelButton.Click += delegate { Close(); };
+			// top panel ratio
+			float backratio = (float)previewBackPanel.Width / previewBackPanel.Height;
+
+			// source size
+			int width = (int)Source.Width;
+			int height = (int)Source.Height;
+
+			// source ratio
+			float previewratio = (float)width / height;
+
+			// padding
+			const int padding = 1;
+
+			if (backratio > previewratio)
+			{
+				previewPanel.Height = height - padding;
+				previewPanel.Width = (int)Math.Round(height * previewratio) - padding;
+			}
+			else
+			{
+				previewPanel.Width = width - padding;
+				previewPanel.Height = (int)Math.Round(width / previewratio) - padding;
+			}
+
+			previewBackPanel.Height = (int)(previewPanel.Height * 1.25);
+			previewBackPanel.Width = (int)(previewPanel.Width * 1.25);
+
+			// Center previewpanel in backpanel
+			var offsetx = (previewBackPanel.Width - previewPanel.Width) / 2;
+			var offsety = (previewBackPanel.Height - previewPanel.Height) / 2;
+
+			previewPanel.Location = new Point(offsetx, offsety);
+
+			InitPreview(previewPanel.Width, previewPanel.Height, previewPanel.Handle);
+
+			okButton.Click += (o, args) => Close();
+			cancelButton.Click += (o, args) => Close();
 		}
-		public class ComboboxItem
+	
+		private class ComboboxItem
 		{
 			public ComboboxItem(string text, object value)
 			{
@@ -87,306 +115,303 @@ namespace test
 				switch (property.Type)
 				{
 					case ObsPropertyType.Bool:
-					{
-						name = string.Empty;
-						CheckBox checkbox = new CheckBox
 						{
-							Text = property.Description,
-							TextAlign = ContentAlignment.MiddleLeft,
-							Width = 300
-						};
-
-						controls.Add(checkbox);
-						break;
-					}
-					case ObsPropertyType.Int:
-					{
-						NumericUpDown numeric = new NumericUpDown
-						{
-							Minimum = property.IntMin,
-							Maximum = property.IntMax,
-							Increment = property.IntStep,
-							Width = 300,
-							DecimalPlaces = 0
-						};
-
-						controls.Add(numeric);
-						break;
-					}
-					case ObsPropertyType.Float:
-					{
-						NumericUpDown numeric = new NumericUpDown
-						{
-							Minimum = (decimal)property.FloatMin,
-							Maximum = (decimal)property.FloatMax,
-							Increment = (decimal)property.FloatStep,
-							Width = 300,
-							DecimalPlaces = 2
-						};
-
-						controls.Add(numeric);
-						break;
-					}
-					case ObsPropertyType.Text:
-					{
-						TextBox textbox = new TextBox
-						{
-							Width = 300,							
-						};
-
-						switch (property.TextType)
-						{
-							case ObsTextType.Default:
+							name = string.Empty;
+							CheckBox checkbox = new CheckBox
 							{
-								// nothing?
-								break;
-							}
-							case ObsTextType.Password:
-							{
-								textbox.PasswordChar = '*';
-								break;
-							}
-							case ObsTextType.Multiline:
-							{
-								textbox.Multiline = true;
-								textbox.Height = 60;
-								break;
-							}
+								Text = property.Description,
+								TextAlign = ContentAlignment.MiddleLeft,
+								Width = 300
+							};
+
+							controls.Add(checkbox);
+							break;
 						}
-
-						controls.Add(textbox);
-						break;
-					}
-					case ObsPropertyType.Path:
-					{
-						TextBox textbox = new TextBox
+					case ObsPropertyType.Int:
 						{
-							Width = 300
-						};
-
-						Button button = new Button
-						{
-							Text = "Browse..."
-						};
-
-						switch (property.PathType)
-						{
-							case ObsPathType.File:
+							NumericUpDown numeric = new NumericUpDown
 							{
-								// File Filter encoding
-								//
-								// obs encoding
-								// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"	
-								//
-								// .net encoding
-								// Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
+								Minimum = property.IntMin,
+								Maximum = property.IntMax,
+								Increment = property.IntStep,
+								Width = 300,
+								DecimalPlaces = 0
+							};
 
-								string filter = string.Empty;
-								string[] filters = property.PathFilter.Split(
-									new[]
+							controls.Add(numeric);
+							break;
+						}
+					case ObsPropertyType.Float:
+						{
+							NumericUpDown numeric = new NumericUpDown
+							{
+								Minimum = (decimal)property.FloatMin,
+								Maximum = (decimal)property.FloatMax,
+								Increment = (decimal)property.FloatStep,
+								Width = 300,
+								DecimalPlaces = 2
+							};
+
+							controls.Add(numeric);
+							break;
+						}
+					case ObsPropertyType.Text:
+						{
+							TextBox textbox = new TextBox
+							{
+								Width = 300,
+							};
+
+							switch (property.TextType)
+							{
+								case ObsTextType.Default:
+									{
+										// nothing?
+										break;
+									}
+								case ObsTextType.Password:
+									{
+										textbox.PasswordChar = '*';
+										break;
+									}
+								case ObsTextType.Multiline:
+									{
+										textbox.Multiline = true;
+										textbox.Height = 60;
+										break;
+									}
+							}
+
+							controls.Add(textbox);
+							break;
+						}
+					case ObsPropertyType.Path:
+						{
+							TextBox textbox = new TextBox
+							{
+								Width = 300
+							};
+
+							Button button = new Button
+							{
+								Text = "Browse..."
+							};
+
+							switch (property.PathType)
+							{
+								case ObsPathType.File:
+									{
+										// File Filter encoding
+										//
+										// obs encoding
+										// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"	
+										//
+										// .net encoding
+										// Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
+
+										string filter = string.Empty;
+										string[] filters = property.PathFilter.Split(
+											new[]
 									{
 										';'
 									},
-									StringSplitOptions.RemoveEmptyEntries);
+											StringSplitOptions.RemoveEmptyEntries);
 
-								foreach (var s in filters)
-								{
-									string mask = s.Split('(')[1].Split(')')[0].Replace(' ', ';');
-									filter += string.Format("{0}|{1}|", s, mask);
-								}
-								filter = filter.Remove(filter.LastIndexOf('|'));
+										foreach (var s in filters)
+										{
+											string mask = s.Split('(')[1].Split(')')[0].Replace(' ', ';');
+											filter += string.Format("{0}|{1}|", s, mask);
+										}
+										filter = filter.Remove(filter.LastIndexOf('|'));
 
-								// this is pretty yucky, someone make a nice regex!
+										// this is pretty yucky, someone make a nice regex!
 
-								OpenFileDialog filedialog = new OpenFileDialog
-								{
-									AutoUpgradeEnabled = true,
-									Filter = filter,
-									InitialDirectory = property.PathDefault,
-									FilterIndex = 1
-								};
+										OpenFileDialog filedialog = new OpenFileDialog
+										{
+											AutoUpgradeEnabled = true,
+											Filter = filter,
+											InitialDirectory = property.PathDefault,
+											FilterIndex = 1
+										};
 
-								button.Click += delegate
-								{
-									if (filedialog.ShowDialog(this) == DialogResult.OK)
-									{
-										textbox.Text = filedialog.FileName;
+										button.Click += (sender, args) =>
+										{
+											if (filedialog.ShowDialog(this) == DialogResult.OK)
+											{
+												textbox.Text = filedialog.FileName;
+											}
+										};
+										break;
 									}
-								};
-								break;
-							}
-							case ObsPathType.Directory:
-							{
-								FolderBrowserDialog folderdialog = new FolderBrowserDialog
-								{
-									SelectedPath = property.PathDefault
-								};
-
-								button.Click += delegate
-								{
-									if (folderdialog.ShowDialog(this) == DialogResult.OK)
+								case ObsPathType.Directory:
 									{
-										textbox.Text = folderdialog.SelectedPath;
+										FolderBrowserDialog folderdialog = new FolderBrowserDialog
+										{
+											SelectedPath = property.PathDefault
+										};
+
+										button.Click += (sender, args) =>
+										{
+											if (folderdialog.ShowDialog(this) == DialogResult.OK)
+											{
+												textbox.Text = folderdialog.SelectedPath;
+											}
+										};
+										break;
 									}
-								};
-								break;
 							}
+
+							controls.Add(textbox);
+							controls.Add(button);
+							break;
 						}
-
-						controls.Add(textbox);
-						controls.Add(button);
-						break;
-					}
 					case ObsPropertyType.List:
-					{
-						ComboBox combobox = new ComboBox();
-
-						string[] namelist = property.GetListItemNames();
-						string[] valuelist = property.GetListItemValues();
-
-						var items = new List<ComboboxItem>();
-
-						for (var index = 0; index < property.ListItemCount; index++)
 						{
-							ComboboxItem item = new ComboboxItem(namelist[index], valuelist[index]);
-							items.Add(item);
-						}
+							ComboBox combobox = new ComboBox();
 
-						combobox.Items.AddRange(items.ToArray());
-							
-						if (combobox.Items.Count > 0)
-						{
-							combobox.SelectedIndex = 0;
-						}
+							string[] namelist = property.GetListItemNames();
+							string[] valuelist = property.GetListItemValues();
 
-						switch (property.ListType)
-						{
-							case ObsComboType.Invalid:
+							var items = new List<ComboboxItem>();
+
+							for (var index = 0; index < property.ListItemCount; index++)
 							{
-								combobox = null;
-
-								break;
+								ComboboxItem item = new ComboboxItem(namelist[index], valuelist[index]);
+								items.Add(item);
 							}
-							case ObsComboType.Editable:
+
+							combobox.Items.AddRange(items.ToArray());
+
+							if (combobox.Items.Count > 0)
 							{
-								combobox.Width = 300;
-
-								break;
+								combobox.SelectedIndex = 0;
 							}
-							case ObsComboType.List:
+
+							switch (property.ListType)
 							{
-								combobox.DropDownStyle = ComboBoxStyle.DropDownList;
-								combobox.Width = 300;
+								case ObsComboType.Invalid:
+									{
+										combobox = null;
 
-								break;
+										break;
+									}
+								case ObsComboType.Editable:
+									{
+										combobox.Width = 300;
+
+										break;
+									}
+								case ObsComboType.List:
+									{
+										combobox.DropDownStyle = ComboBoxStyle.DropDownList;
+										combobox.Width = 300;
+
+										break;
+									}
 							}
+							controls.Add(combobox);
+							break;
 						}
-						controls.Add(combobox);
-						break;
-					}
 					case ObsPropertyType.Color:
-					{
-						TextBox textbox = new TextBox
 						{
-							Text = "#FFFFFF",
-							ForeColor = Color.Black,
-							Width = 300,
-							TextAlign = HorizontalAlignment.Center
-						};
-
-						Button button = new Button
-						{
-							Text = "Browse..."
-						};
-
-						var colordialog = new ColorDialog
-						{
-							AllowFullOpen = true,
-							AnyColor = true,
-							FullOpen = true,
-							Color = textbox.ForeColor
-						};
-
-						textbox.TextChanged += delegate
-						{
-							try
+							TextBox textbox = new TextBox
 							{
-								var color = ColorTranslator.FromHtml(textbox.Text);
-								textbox.ForeColor = color;
-							}
-							catch
-							{
-								// do ~nothing~
-							}
-						};
+								Text = "#FFFFFF",
+								ForeColor = Color.Black,
+								Width = 300,
+								TextAlign = HorizontalAlignment.Center
+							};
 
-						button.Click += delegate
-						{
-							if (colordialog.ShowDialog(this) == DialogResult.OK)
+							Button button = new Button
 							{
-								textbox.ForeColor = colordialog.Color;
-								textbox.Text = ColorTranslator.ToHtml(colordialog.Color);
-							}							
-						};
+								Text = "Browse..."
+							};
 
-						controls.Add(textbox);
-						controls.Add(button);
-						break;
-					}
+							var colordialog = new ColorDialog
+							{
+								AllowFullOpen = true,
+								AnyColor = true,
+								FullOpen = true,
+								Color = textbox.ForeColor
+							};
+
+							textbox.TextChanged += (sender, args) =>
+							{
+								try
+								{
+									var color = ColorTranslator.FromHtml(textbox.Text);
+									textbox.ForeColor = color;
+								}
+								catch
+								{
+									// do ~nothing~
+								}
+							};
+
+							button.Click += (sender, args) =>
+							{
+								if (colordialog.ShowDialog(this) == DialogResult.OK)
+								{
+									textbox.ForeColor = colordialog.Color;
+									textbox.Text = ColorTranslator.ToHtml(colordialog.Color);
+								}
+							};
+
+							controls.Add(textbox);
+							controls.Add(button);
+							break;
+						}
 					case ObsPropertyType.Button:
-					{
-						Button button = new Button
 						{
-							Text = property.Description
-						};
-
-						button.Click += delegate
-						{
-							MessageBox.Show("Insert Appropriate Dialog Here");
-						};
-
-						controls.Add(button);
-						break;
-					}
-					case ObsPropertyType.Font:
-					{
-						Label label = new Label
-						{
-							Text = "font",
-							BorderStyle = BorderStyle.Fixed3D,
-							AutoSize = false,
-							TextAlign = ContentAlignment.MiddleCenter,
-							Font = new Font(FontFamily.GenericSansSerif, 25F),
-							Height = 60,
-							Width = 300
-						};
-
-						Button button = new Button
-						{
-							Text = "Browse..."
-						};
-
-						button.Click += delegate
-						{
-							var fontdialog = new FontDialog();
-							if (fontdialog.ShowDialog() == DialogResult.OK)
+							Button button = new Button
 							{
-								var font = fontdialog.Font;
-								font = new Font(font.FontFamily,25f);
-								label.Font = font;
-							}
-						};
+								Text = property.Description
+							};
 
-						controls.Add(label);
-						controls.Add(button);
-						break;
-					}
+							button.Click += (sender, args) => MessageBox.Show("Insert Appropriate Dialog Here");
+
+							controls.Add(button);
+							break;
+						}
+					case ObsPropertyType.Font:
+						{
+							Label label = new Label
+							{
+								Text = "font",
+								BorderStyle = BorderStyle.Fixed3D,
+								AutoSize = false,
+								TextAlign = ContentAlignment.MiddleCenter,
+								Font = new Font(FontFamily.GenericSansSerif, 25F),
+								Height = 60,
+								Width = 300
+							};
+
+							Button button = new Button
+							{
+								Text = "Browse..."
+							};
+
+							button.Click += (sender, args) =>
+							{
+								var fontdialog = new FontDialog();
+								if (fontdialog.ShowDialog() == DialogResult.OK)
+								{
+									var font = fontdialog.Font;
+									font = new Font(font.FontFamily, 25f);
+									label.Font = font;
+								}
+							};
+
+							controls.Add(label);
+							controls.Add(button);
+							break;
+						}
 					default:
-					{
-						MessageBox.Show(string.Format("Error while trying to create controls for property {0}", property.Description));
-						Close();
-						break;
-					}
+						{
+							MessageBox.Show(string.Format("Error while trying to create controls for property {0}", property.Description));
+							Close();
+							break;
+						}
 				}
 
 				var proppanel = new PropertyPanel(name, controls)
@@ -395,7 +420,7 @@ namespace test
 					Visible = property.Visible,
 					Tag = property.Name
 				};
-				
+
 				propertyPanel.Controls.Add(proppanel);
 			}
 			propertyPanel.Refresh();

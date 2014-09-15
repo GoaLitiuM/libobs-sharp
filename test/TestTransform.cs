@@ -85,30 +85,30 @@ namespace test
 			Alignment.Alignment = _oldAlignment;
 
 			// Delegates to change transform properties
-			xNumeric.ValueChanged += delegate { _selectedItem.SetPosition(ItemPosition); };
-			yNumeric.ValueChanged += delegate { _selectedItem.SetPosition(ItemPosition); };
+			xNumeric.ValueChanged += (sender, args) => _selectedItem.SetPosition(ItemPosition);
+			yNumeric.ValueChanged += (sender, args) => _selectedItem.SetPosition(ItemPosition);
 
-			wNumeric.ValueChanged += delegate { _selectedItem.SetScale(ItemScale); };
-			hNumeric.ValueChanged += delegate { _selectedItem.SetScale(ItemScale); };
+			wNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
+			hNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
 
 			Rotation.RotationChanged += rotation => _selectedItem.SetRotation(rotation);
 
 			Alignment.AlignmentChanged += alignment => _selectedItem.SetAlignment(alignment);
 
 			// Close form methods
-			cancelButton.Click += delegate
+			cancelButton.Click += (sender, args) =>
 			{
 				_cancel = true;
 				Close();
 			};
 
-			okButton.Click += delegate
+			okButton.Click += (sender, args) =>
 			{
 				_ok = true;
 				Close();
 			};
 
-			Closing += delegate
+			Closing += (sender, args) =>
 			{
 				// if neither button or cancel was clicked, reset transform to old settings
 				if (_cancel || !_ok)

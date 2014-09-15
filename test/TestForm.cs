@@ -192,7 +192,7 @@ namespace test
 				{
 					Text = displayname + " (" + filterType + ")"					
 				};
-				menuitem.Click += delegate
+				menuitem.Click += (sender, args) =>
 				{
 					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
 					_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
@@ -205,7 +205,7 @@ namespace test
 			{
 				Text = "Edit Tranform Options..."
 			};
-			transform.Click += delegate
+			transform.Click += (sender, args) =>
 			{
 				var transformfrm = new TestTransform(_sceneItems[_selectedScene][_selectedSource]);
 				transformfrm.ShowDialog(this);
@@ -230,7 +230,7 @@ namespace test
 					Text = displayname + " (" + type + ")"					
 				};
 				
-				menuitem.Click += delegate
+				menuitem.Click += (sender, args) =>
 				{
 					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
 					var prop = new TestProperties(source);
