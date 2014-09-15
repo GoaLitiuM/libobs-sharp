@@ -31,8 +31,7 @@ namespace test
 		private readonly float _oldRot;
 		private readonly ObsAlignment _oldAlignment;
 
-		private bool _ok;
-		private bool _cancel;
+		private bool _ok;		
 
 		private libobs.vec2 ItemPosition
 		{
@@ -51,6 +50,7 @@ namespace test
 			// Store scene item
 			_selectedItem = item;
 
+			// TODO: get some actual values here
 			// Set minmax on numerics
 			xNumeric.Minimum = decimal.MinValue;
 			xNumeric.Maximum = decimal.MaxValue;
