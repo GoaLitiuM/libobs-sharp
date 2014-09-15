@@ -122,6 +122,16 @@ namespace test
 				//select the first item
 				_sceneItems[0][0].Selected = true;
 			}
+			catch (System.BadImageFormatException exp)
+			{
+				MessageBox.Show("Platform target mismatch: "
+					+ (System.Environment.Is64BitProcess
+						? "Loading 32-bit OBS with 64-bit executable is not supported."
+						: "Loading 64-bit OBS with 32-bit executable is not supported.")
+					+ "\n\n" + exp.Message,
+					"Error", MessageBoxButtons.OK);
+				Close();
+			}
 			catch (Exception exp)
 			{
 				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
