@@ -136,7 +136,7 @@ namespace test.Controls
 				Refresh();
 				if (_loaded && RotationChanged != null)
 				{
-					RotationChanged(value);
+					RotationChanged(rot);
 				}
 			}
 		}
