@@ -133,7 +133,6 @@ namespace test
 			this.ShowInTaskbar = false;
 			this.Text = "TestProperties";
 			this.Load += new System.EventHandler(this.TestProperties_Load);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestProperties_FormClosed);
 			this.bottomPanel.ResumeLayout(false);
 			this.previewBackPanel.ResumeLayout(false);
 			this.ResumeLayout(false);

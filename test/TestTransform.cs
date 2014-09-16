@@ -31,7 +31,7 @@ namespace test
 		private readonly float _oldRot;
 		private readonly ObsAlignment _oldAlignment;
 
-		private bool _ok;		
+		private bool _ok;
 
 		private libobs.vec2 ItemPosition
 		{
@@ -50,19 +50,22 @@ namespace test
 			// Store scene item
 			_selectedItem = item;
 
-			// TODO: get some actual values here
-			// Set minmax on numerics
-			xNumeric.Minimum = decimal.MinValue;
-			xNumeric.Maximum = decimal.MaxValue;
+			// Set minmax on numerics 
+			// the rendercontext minmax are bigger than the decimal one so this is fine
+			const decimal min = decimal.MinValue;
+			const decimal max = decimal.MaxValue;
 
-			yNumeric.Minimum = decimal.MinValue;
-			yNumeric.Maximum = decimal.MaxValue;
+			xNumeric.Minimum = min;
+			xNumeric.Maximum = max;
 
-			wNumeric.Minimum = decimal.MinValue;
-			wNumeric.Maximum = decimal.MaxValue;
+			yNumeric.Minimum = min;
+			yNumeric.Maximum = max;
 
-			hNumeric.Minimum = decimal.MinValue;
-			hNumeric.Maximum = decimal.MaxValue;
+			wNumeric.Minimum = min;
+			wNumeric.Maximum = max;
+
+			hNumeric.Minimum = min;
+			hNumeric.Maximum = max;
 
 			// Populate Controls
 

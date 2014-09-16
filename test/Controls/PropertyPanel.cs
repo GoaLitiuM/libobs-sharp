@@ -15,20 +15,330 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using OBS;
 
 namespace test.Controls
 {
 	public partial class PropertyPanel : UserControl
 	{
-		public PropertyPanel(string name, IEnumerable<Control> controls)
+		public PropertyPanel(ObsProperty property)
 		{
 			InitializeComponent();
+			List<Control> controls = new List<Control>();
+			string name = property.Description;
+			switch (property.Type)
+			{
+				case ObsPropertyType.Bool:
+					{
+						name = String.Empty;
+						CheckBox checkbox = new CheckBox
+						{
+							Text = property.Description,
+							TextAlign = ContentAlignment.MiddleLeft,
+							Width = 300
+						};
+
+						controls.Add(checkbox);
+						break;
+					}
+				case ObsPropertyType.Int:
+					{
+						NumericUpDown numeric = new NumericUpDown
+						{
+							Minimum = property.IntMin,
+							Maximum = property.IntMax,
+							Increment = property.IntStep,
+							Width = 300,
+							DecimalPlaces = 0
+						};
+
+						controls.Add(numeric);
+						break;
+					}
+				case ObsPropertyType.Float:
+					{
+						NumericUpDown numeric = new NumericUpDown
+						{
+							Minimum = (decimal)property.FloatMin,
+							Maximum = (decimal)property.FloatMax,
+							Increment = (decimal)property.FloatStep,
+							Width = 300,
+							DecimalPlaces = 2
+						};
+
+						controls.Add(numeric);
+						break;
+					}
+				case ObsPropertyType.Text:
+					{
+						TextBox textbox = new TextBox
+						{
+							Width = 300,
+						};
+
+						switch (property.TextType)
+						{
+							case ObsTextType.Default:
+								{
+									// nothing?
+									break;
+								}
+							case ObsTextType.Password:
+								{
+									textbox.PasswordChar = '*';
+									break;
+								}
+							case ObsTextType.Multiline:
+								{
+									textbox.Multiline = true;
+									textbox.Height = 60;
+									break;
+								}
+						}
+
+						controls.Add(textbox);
+						break;
+					}
+				case ObsPropertyType.Path:
+					{
+						TextBox textbox = new TextBox
+						{
+							Width = 300
+						};
+
+						Button button = new Button
+						{
+							Text = "Browse..."
+						};
+
+						switch (property.PathType)
+						{
+							case ObsPathType.File:
+								{
+									// File Filter encoding
+									//
+									// obs encoding
+									// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"	
+									//
+									// .net encoding
+									// Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
+
+									string filter = String.Empty;
+									string[] filters = property.PathFilter.Split(
+										new[]
+									{
+										';'
+									},
+										StringSplitOptions.RemoveEmptyEntries);
+
+									foreach (var s in filters)
+									{
+										string mask = s.Split('(')[1].Split(')')[0].Replace(' ', ';');
+										filter += String.Format("{0}|{1}|", s, mask);
+									}
+									filter = filter.Remove(filter.LastIndexOf('|'));
+
+									// this is pretty yucky, someone make a nice regex!
+
+									OpenFileDialog filedialog = new OpenFileDialog
+									{
+										AutoUpgradeEnabled = true,
+										Filter = filter,
+										InitialDirectory = property.PathDefault,
+										FilterIndex = 1
+									};
+
+									button.Click += (sender, args) =>
+									{
+										if (filedialog.ShowDialog(this) == DialogResult.OK)
+										{
+											textbox.Text = filedialog.FileName;
+										}
+									};
+									break;
+								}
+							case ObsPathType.Directory:
+								{
+									FolderBrowserDialog folderdialog = new FolderBrowserDialog
+									{
+										SelectedPath = property.PathDefault
+									};
+
+									button.Click += (sender, args) =>
+									{
+										if (folderdialog.ShowDialog(this) == DialogResult.OK)
+										{
+											textbox.Text = folderdialog.SelectedPath;
+										}
+									};
+									break;
+								}
+						}
+
+						controls.Add(textbox);
+						controls.Add(button);
+						break;
+					}
+				case ObsPropertyType.List:
+					{
+						ComboBox combobox = new ComboBox();
+
+						string[] namelist = property.GetListItemNames();
+						string[] valuelist = property.GetListItemValues();
+
+						var items = new List<ComboboxItem>();
+
+						for (var index = 0; index < property.ListItemCount; index++)
+						{
+							ComboboxItem item = new ComboboxItem(namelist[index], valuelist[index]);
+							items.Add(item);
+						}
+
+						combobox.Items.AddRange(items.ToArray());
+
+						if (combobox.Items.Count > 0)
+						{
+							combobox.SelectedIndex = 0;
+						}
+
+						switch (property.ListType)
+						{
+							case ObsComboType.Invalid:
+								{
+									combobox = null;
+
+									break;
+								}
+							case ObsComboType.Editable:
+								{
+									combobox.Width = 300;
+
+									break;
+								}
+							case ObsComboType.List:
+								{
+									combobox.DropDownStyle = ComboBoxStyle.DropDownList;
+									combobox.Width = 300;
+
+									break;
+								}
+						}
+						controls.Add(combobox);
+						break;
+					}
+				case ObsPropertyType.Color:
+					{
+						TextBox textbox = new TextBox
+						{
+							Text = "#FFFFFF",
+							ForeColor = Color.Black,
+							Width = 300,
+							TextAlign = HorizontalAlignment.Center
+						};
+
+						Button button = new Button
+						{
+							Text = "Browse..."
+						};
+
+						var colordialog = new ColorDialog
+						{
+							AllowFullOpen = true,
+							AnyColor = true,
+							FullOpen = true,
+							Color = textbox.ForeColor
+						};
+
+						textbox.TextChanged += (sender, args) =>
+						{
+							try
+							{
+								var color = ColorTranslator.FromHtml(textbox.Text);
+								textbox.ForeColor = color;
+							}
+							catch
+							{
+								// do ~nothing~
+							}
+						};
+
+						button.Click += (sender, args) =>
+						{
+							if (colordialog.ShowDialog(this) == DialogResult.OK)
+							{
+								textbox.ForeColor = colordialog.Color;
+								textbox.Text = ColorTranslator.ToHtml(colordialog.Color);
+							}
+						};
+
+						controls.Add(textbox);
+						controls.Add(button);
+						break;
+					}
+				case ObsPropertyType.Button:
+					{
+						Button button = new Button
+						{
+							Text = property.Description
+						};
+
+						button.Click += (sender, args) => MessageBox.Show("Insert Appropriate Dialog Here");
+
+						controls.Add(button);
+						break;
+					}
+				case ObsPropertyType.Font:
+					{
+						Label label = new Label
+						{
+							Text = "font",
+							BorderStyle = BorderStyle.Fixed3D,
+							AutoSize = false,
+							TextAlign = ContentAlignment.MiddleCenter,
+							Font = new Font(FontFamily.GenericSansSerif, 25F),
+							Height = 60,
+							Width = 300
+						};
+
+						Button button = new Button
+						{
+							Text = "Browse..."
+						};
+
+						button.Click += (sender, args) =>
+						{
+							var fontdialog = new FontDialog();
+							if (fontdialog.ShowDialog() == DialogResult.OK)
+							{
+								var font = fontdialog.Font;
+								font = new Font(font.FontFamily, 25f);
+								label.Font = font;
+							}
+						};
+
+						controls.Add(label);
+						controls.Add(button);
+						break;
+					}
+				default:
+					{
+						throw new Exception(String.Format("Error while trying to create controls for property {0}", property.Description));
+					}
+			}
+			GenerateControls(name,controls);
+			Refresh();
+		}
+
+		void GenerateControls(string name, IEnumerable<Control> controls)
+		{
 			nameLabel.Text = name;
 			foreach (var control in controls)
 			{
-				controlPanel.Controls.Add(control);				
+				controlPanel.Controls.Add(control);
 			}
 
 			foreach (Control control in controlPanel.Controls)
@@ -40,5 +350,24 @@ namespace test.Controls
 				control.Margin = oldmargin;
 			}
 		}
+
+		private class ComboboxItem
+		{
+			public ComboboxItem(string text, object value)
+			{
+				Text = text;
+				Value = value;
+			}
+
+			public string Text { get; set; }
+			public object Value { get; set; }
+
+			public override string ToString()
+			{
+				return Text;
+			}
+		}
 	}
+
+
 }
