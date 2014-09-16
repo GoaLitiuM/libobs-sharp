@@ -130,14 +130,15 @@ namespace test.Controls
 					}
 				}
 
-				// internal value offset by 90 degress due to radians conversion
-				_rotation = rot - 90;
-				// repaint control
-				Refresh();
 				if (_loaded && RotationChanged != null)
 				{
 					RotationChanged(rot);
 				}
+
+				// internal value offset by 90 degress due to radians conversion
+				_rotation = rot - 90;
+				// repaint control
+				Refresh();				
 			}
 		}
 
