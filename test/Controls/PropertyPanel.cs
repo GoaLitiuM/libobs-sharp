@@ -329,13 +329,9 @@ namespace test.Controls
 						throw new Exception(String.Format("Error while trying to create controls for property {0}", property.Description));
 					}
 			}
-			GenerateControls(name,controls);
-			Refresh();
-		}
-
-		void GenerateControls(string name, IEnumerable<Control> controls)
-		{
+			
 			nameLabel.Text = name;
+			
 			foreach (var control in controls)
 			{
 				controlPanel.Controls.Add(control);
@@ -348,9 +344,9 @@ namespace test.Controls
 				oldmargin.Top = topmargin;
 				oldmargin.Bottom = topmargin;
 				control.Margin = oldmargin;
-			}
+			}			
 		}
-
+		
 		private class ComboboxItem
 		{
 			public ComboboxItem(string text, object value)
