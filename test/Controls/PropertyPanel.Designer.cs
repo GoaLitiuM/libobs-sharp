@@ -15,14 +15,18 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-namespace test
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace test.Controls
 {
-	sealed partial class RotationBox
+	partial class PropertyPanel
 	{
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private IContainer components = null;
 
 		/// <summary> 
 		/// Clean up any resources being used.
@@ -45,20 +49,46 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.nameLabel = new Label();
+			this.controlPanel = new FlowLayoutPanel();
 			this.SuspendLayout();
 			// 
-			// RotationBox
+			// nameLabel
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.MaximumSize = new System.Drawing.Size(400, 400);
-			this.MinimumSize = new System.Drawing.Size(50, 50);
-			this.Name = "RotationBox";
+			this.nameLabel.Dock = DockStyle.Left;
+			this.nameLabel.Location = new Point(0, 0);
+			this.nameLabel.Name = "nameLabel";
+			this.nameLabel.Size = new Size(150, 25);
+			this.nameLabel.TabIndex = 0;
+			this.nameLabel.TextAlign = ContentAlignment.MiddleRight;
+			// 
+			// controlPanel
+			// 
+			this.controlPanel.AutoSize = true;
+			this.controlPanel.Dock = DockStyle.Fill;
+			this.controlPanel.Location = new Point(150, 0);
+			this.controlPanel.Name = "controlPanel";
+			this.controlPanel.Size = new Size(450, 25);
+			this.controlPanel.TabIndex = 1;
+			// 
+			// PropertyPanel
+			// 
+			this.AutoScaleDimensions = new SizeF(6F, 13F);
+			this.AutoScaleMode = AutoScaleMode.Font;
+			this.AutoSize = true;
+			this.Controls.Add(this.controlPanel);
+			this.Controls.Add(this.nameLabel);
+			this.Margin = new Padding(0, 1, 0, 1);
+			this.Name = "PropertyPanel";
+			this.Size = new Size(600, 25);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
+		private Label nameLabel;
+		private FlowLayoutPanel controlPanel;
 	}
 }

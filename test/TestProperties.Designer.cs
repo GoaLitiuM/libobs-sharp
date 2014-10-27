@@ -47,16 +47,18 @@ namespace test
 		{
 			this.okButton = new System.Windows.Forms.Button();
 			this.cancelButton = new System.Windows.Forms.Button();
-			this.propertyPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.bottomPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.debugTextBox = new System.Windows.Forms.TextBox();
+			this.propertyPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.previewBackPanel = new System.Windows.Forms.Panel();
+			this.previewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel.SuspendLayout();
+			this.previewBackPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.Location = new System.Drawing.Point(645, 3);
+			this.okButton.Location = new System.Drawing.Point(506, 3);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 1;
@@ -66,47 +68,52 @@ namespace test
 			// cancelButton
 			// 
 			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.cancelButton.Location = new System.Drawing.Point(726, 3);
+			this.cancelButton.Location = new System.Drawing.Point(587, 3);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 2;
 			this.cancelButton.Text = "Cancel";
 			this.cancelButton.UseVisualStyleBackColor = true;
 			// 
-			// propertyPanel
-			// 
-			this.propertyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.propertyPanel.ColumnCount = 2;
-			this.propertyPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.propertyPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertyPanel.Location = new System.Drawing.Point(0, 0);
-			this.propertyPanel.Name = "propertyPanel";
-			this.propertyPanel.RowCount = 1;
-			this.propertyPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.propertyPanel.Size = new System.Drawing.Size(804, 407);
-			this.propertyPanel.TabIndex = 1;
-			// 
 			// bottomPanel
 			// 
 			this.bottomPanel.AutoSize = true;
 			this.bottomPanel.Controls.Add(this.cancelButton);
 			this.bottomPanel.Controls.Add(this.okButton);
-			this.bottomPanel.Controls.Add(this.debugTextBox);
 			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.bottomPanel.Location = new System.Drawing.Point(0, 407);
+			this.bottomPanel.Location = new System.Drawing.Point(0, 486);
 			this.bottomPanel.Name = "bottomPanel";
-			this.bottomPanel.Size = new System.Drawing.Size(804, 29);
+			this.bottomPanel.Size = new System.Drawing.Size(665, 29);
 			this.bottomPanel.TabIndex = 2;
 			// 
-			// debugTextBox
+			// propertyPanel
 			// 
-			this.debugTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-			this.debugTextBox.Location = new System.Drawing.Point(266, 4);
-			this.debugTextBox.Name = "debugTextBox";
-			this.debugTextBox.Size = new System.Drawing.Size(373, 20);
-			this.debugTextBox.TabIndex = 3;
+			this.propertyPanel.AutoSize = true;
+			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.propertyPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.propertyPanel.Location = new System.Drawing.Point(0, 225);
+			this.propertyPanel.Name = "propertyPanel";
+			this.propertyPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.propertyPanel.Size = new System.Drawing.Size(665, 261);
+			this.propertyPanel.TabIndex = 4;
+			// 
+			// previewBackPanel
+			// 
+			this.previewBackPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.previewBackPanel.Controls.Add(this.previewPanel);
+			this.previewBackPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.previewBackPanel.Location = new System.Drawing.Point(0, 0);
+			this.previewBackPanel.Name = "previewBackPanel";
+			this.previewBackPanel.Size = new System.Drawing.Size(665, 225);
+			this.previewBackPanel.TabIndex = 5;
+			// 
+			// previewPanel
+			// 
+			this.previewPanel.Location = new System.Drawing.Point(244, 77);
+			this.previewPanel.Name = "previewPanel";
+			this.previewPanel.Size = new System.Drawing.Size(200, 100);
+			this.previewPanel.TabIndex = 0;
 			// 
 			// TestProperties
 			// 
@@ -114,15 +121,19 @@ namespace test
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.ClientSize = new System.Drawing.Size(804, 436);
+			this.ClientSize = new System.Drawing.Size(665, 515);
+			this.ControlBox = false;
 			this.Controls.Add(this.propertyPanel);
+			this.Controls.Add(this.previewBackPanel);
 			this.Controls.Add(this.bottomPanel);
+			this.MinimumSize = new System.Drawing.Size(675, 525);
 			this.Name = "TestProperties";
+			this.ShowIcon = false;
+			this.ShowInTaskbar = false;
 			this.Text = "TestProperties";
 			this.Load += new System.EventHandler(this.TestProperties_Load);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestProperties_FormClosed);
 			this.bottomPanel.ResumeLayout(false);
-			this.bottomPanel.PerformLayout();
+			this.previewBackPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -132,8 +143,9 @@ namespace test
 
 		private System.Windows.Forms.Button okButton;
 		private System.Windows.Forms.Button cancelButton;
-		private System.Windows.Forms.TableLayoutPanel propertyPanel;
 		private System.Windows.Forms.FlowLayoutPanel bottomPanel;
-		private System.Windows.Forms.TextBox debugTextBox;
+		private System.Windows.Forms.FlowLayoutPanel propertyPanel;
+		private System.Windows.Forms.Panel previewBackPanel;
+		private System.Windows.Forms.Panel previewPanel;
 	}
 }

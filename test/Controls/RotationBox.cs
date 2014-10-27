@@ -24,21 +24,25 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 
-#endregion
+#endregion Usings
 
-namespace test
+namespace test.Controls
 {
 	public sealed partial class RotationBox : UserControl
 	{
-		private bool _mouseDown;
-
-		private int _rotation = -90;
-
 		public delegate void RotationChangedHandler(float f);
 
 		public event RotationChangedHandler RotationChanged;
 
-		private bool _loaded;
+		private readonly bool _loaded;
+
+		private bool _mouseDown;
+
+		private int _rotation = -90;
+
+		private int _snapAngle = 45;
+
+		private int _snapTolerance = 5;
 
 		public RotationBox()
 		{
@@ -47,24 +51,53 @@ namespace test
 
 			Paint += backPanel_Paint;
 
-			MouseDown += delegate(object sender, MouseEventArgs e)
+			MouseDown += (sender, e) =>
 			{
 				_mouseDown = true;
-				Rotation = (int) Math.Round(GetRotation(CenterPoint, e.Location)) + 90;
+				Rotation = (int)Math.Round(GetRotation(CenterPoint, e.Location)) + 90;
 			};
 
-			MouseUp += delegate { _mouseDown = false; };
+			MouseUp += (sender, args) => _mouseDown = false;
 
-			MouseMove += delegate(object sender, MouseEventArgs e)
+			MouseMove += (sender, e) =>
 			{
 				if (_mouseDown)
 				{
-					Rotation = (int) Math.Round(GetRotation(CenterPoint, e.Location)) + 90;
+					Rotation = (int)Math.Round(GetRotation(CenterPoint, e.Location)) + 90;
 				}
 			};
 			_loaded = true;
 		}
 
+		#region Public Properties
+
+		/// <summary>
+		/// Which angles to snap to
+		/// </summary>
+		public int SnapAngle
+		{
+			get { return _snapAngle; }
+			set { _snapAngle = value; }
+		}
+
+		/// <summary>
+		/// Amount of degrees to snap to within
+		/// </summary>
+		public int SnapTolerance
+		{
+			get { return _snapTolerance; }
+			set { _snapTolerance = value; }
+		}
+
+		/// <summary>
+		/// Enable snap to angle
+		/// </summary>
+		public bool SnapToAngle { get; set; }
+
+
+		/// <summary>
+		/// displays rotation value inside the rotation control
+		/// </summary>
 		public bool Debug { get; set; }
 
 		public int Rotation
@@ -73,6 +106,7 @@ namespace test
 			set
 			{
 				int rot = value;
+
 				// adjust value so it loops back to 0
 				if (rot > 359)
 				{
@@ -82,14 +116,33 @@ namespace test
 				{
 					rot = 360 - rot;
 				}
+
+				// Check if rotation is within snap distance
+				if (SnapToAngle && rot % SnapAngle != 0)
+				{
+					for (int i = rot - SnapTolerance; i < rot + SnapTolerance; i++)
+					{
+						if (i % SnapAngle == 0)
+						{
+							rot = i;
+							break;
+						}
+					}
+				}
+
+				if (_loaded && RotationChanged != null)
+				{
+					RotationChanged(rot);
+				}
+
 				// internal value offset by 90 degress due to radians conversion
 				_rotation = rot - 90;
 				// repaint control
-				Refresh();
-				if (_loaded && RotationChanged != null) RotationChanged(value);
+				Refresh();				
 			}
 		}
 
+		#endregion Public Properties
 		private void backPanel_Paint(object sender, PaintEventArgs e)
 		{
 			List<int> pipped = new List<int>();
@@ -97,7 +150,7 @@ namespace test
 			Graphics graphics = e.Graphics;
 			graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-			int radius = (int) Math.Round(((float) Width/2)*0.90);
+			int radius = (int)Math.Round(((float)Width / 2) * 0.90);
 
 			#region Pips
 
@@ -126,17 +179,17 @@ namespace test
 				graphics.FillEllipse(new SolidBrush(Color.Black), piprect);
 			}
 
-			#endregion
+			#endregion Pips
 
 			#region Rotation Indicator
 
-			int indicatorradius = (int) Math.Floor(((float) Width/2)*0.70);
+			int indicatorradius = (int)Math.Floor(((float)Width / 2) * 0.70);
 			Pen indicatorpen = new Pen(Color.Black, 3);
 			Point p2 = GetPosition(DegreeToRadian(_rotation), indicatorradius);
 
 			graphics.DrawLine(indicatorpen, CenterPoint, p2);
 
-			#endregion
+			#endregion Rotation Indicator
 
 			// Paint degrees in control
 			if (Debug)
@@ -167,11 +220,12 @@ namespace test
 			int y = Math.Abs(qy);
 
 			// Get Degrees
-			float ratio = (float) x/y;
+			float ratio = (float)x / y;
 
 			// Calculate degrees
-			float degrees = RadianToDegree((float) Math.Atan(ratio));
+			float degrees = RadianToDegree((float)Math.Atan(ratio));
 
+			// Offset angle based on quadrant
 			if (qx != x)
 			{
 				if (qy != y)
@@ -202,32 +256,32 @@ namespace test
 		{
 			return new Point
 			{
-				Y = (int) Math.Round(CenterPoint.Y + radius*Math.Sin(radians)),
-				X = (int) Math.Round(CenterPoint.X + radius*Math.Cos(radians))
+				Y = (int)Math.Round(CenterPoint.Y + radius * Math.Sin(radians)),
+				X = (int)Math.Round(CenterPoint.X + radius * Math.Cos(radians))
 			};
 		}
 
 		private Point GetOffsetPosition(Point position, Size b)
 		{
-			Point offset = new Point(b.Width/2, b.Height/2);
+			Point offset = new Point(b.Width / 2, b.Height / 2);
 			return new Point(position.X - offset.X, position.Y - offset.Y);
 		}
 
 		private Point GetCenter(Control p)
 		{
-			return new Point(p.Width/2, p.Height/2);
+			return new Point(p.Width / 2, p.Height / 2);
 		}
 
 		private float DegreeToRadian(float angle)
 		{
-			return (float) (Math.PI*angle/180.0);
+			return (float)(Math.PI * angle / 180.0);
 		}
 
 		private float RadianToDegree(float angle)
 		{
-			return (float) (angle*(180.0/Math.PI));
+			return (float)(angle * (180.0 / Math.PI));
 		}
 
-		#endregion
+		#endregion Helpers
 	}
 }

@@ -29,8 +29,8 @@ namespace test
 {
 	public partial class TestForm : Form
 	{
-		private GSVertexBuffer boxPrimitive;
-		private GSVertexBuffer circlePrimitive;
+		private GSVertexBuffer _boxPrimitive;
+		private GSVertexBuffer _circlePrimitive;
 		public float MainViewWidth = 1;
 		public float MainViewHeight = 1;
 
@@ -49,7 +49,7 @@ namespace test
 			GS.Vertex2f(1.0f, 1.0f);
 			GS.Vertex2f(1.0f, 0.0f);
 			GS.Vertex2f(0.0f, 0.0f);
-			boxPrimitive = GS.RenderSave();
+			_boxPrimitive = GS.RenderSave();
 
 			//circle from vertices
 			GS.RenderStart(true);
@@ -58,7 +58,7 @@ namespace test
 				double pos = Math.PI * (double)i / 180.0;
 				GS.Vertex2f((float)Math.Cos(pos), (float)Math.Sin(pos));
 			}
-			circlePrimitive = GS.RenderSave();
+			_circlePrimitive = GS.RenderSave();
 
 			GS.LeaveGraphics();
 		}
@@ -130,7 +130,7 @@ namespace test
 			GS.MatrixIdentity();
 			GS.MatrixScale3f((float)cx, (float)cy, 1.0f);
 
-			GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(_boxPrimitive);
 
 			//draw solid black color over the scene
 			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
@@ -172,7 +172,7 @@ namespace test
 			TestForm window = Control.FromHandle(data) as TestForm;
 			float previewScale = MainViewWidth / MainWidth;
 
-			GS.LoadVertexBuffer(circlePrimitive);
+			GS.LoadVertexBuffer(_circlePrimitive);
 
 			libobs.matrix4 boxTransform;
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
@@ -185,7 +185,7 @@ namespace test
 
 			//render the main selection rectangle
 
-			GS.LoadVertexBuffer(boxPrimitive);
+			GS.LoadVertexBuffer(_boxPrimitive);
 
 			GS.MatrixPush();
 			GS.MatrixScale3f(previewScale, previewScale, 1.0f);

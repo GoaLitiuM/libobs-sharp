@@ -16,10 +16,7 @@
 ***************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace OBS
 {
@@ -38,6 +35,66 @@ namespace OBS
 			Release();
 		}
 
+		#region Geometry
+		public int X
+		{
+			get { return Position.X; }
+		}
+
+		public int Y
+		{
+			get { return Position.Y; }
+		}
+
+		/// <summary>
+		/// Absolute width of scene item
+		/// </summary>
+		public int Width
+		{
+			get { return Size.Width; }
+		}
+
+		/// <summary>
+		/// Absolute heigth of scene item
+		/// </summary>
+		public int Height
+		{
+			get { return Size.Height; }
+		}
+
+		public Point Position
+		{
+			get
+			{
+				libobs.vec2 pos = GetPosition();
+				return new Point((int)pos.x, (int)pos.y);
+			}
+		}
+
+		/// <summary>
+		/// Absolute Size of scene item
+		/// </summary>
+		public Size Size
+		{
+			get
+			{
+				var source = GetSource();
+				var scale = GetScale();
+				return new Size((int) (source.Width * scale.x),(int) (source.Height * scale.y));
+			}
+		}
+		/// <summary>
+		/// Scene item bounds
+		/// </summary>
+		public Rectangle Bounds
+		{
+			get
+			{
+				return new Rectangle(Position, Size);
+			}
+		}
+		#endregion
+
 		public string Name()
 		{
 			return GetSource().Name;
@@ -54,7 +111,6 @@ namespace OBS
 			libobs.obs_sceneitem_remove((IntPtr)instance);	//remove also removes it from sources
 			instance = null;
 		}
-
 		public unsafe libobs.obs_scene_item* GetPointer()
 		{
 			return instance;
@@ -65,8 +121,6 @@ namespace OBS
 			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_sceneitem_get_source((IntPtr)instance);
 			return new ObsSource(source);
 		}
-
-
 		public unsafe bool Selected
 		{
 			get
@@ -81,7 +135,7 @@ namespace OBS
 
 		public unsafe libobs.vec2 GetPosition()
 		{
-			libobs.vec2 position = new libobs.vec2();
+			libobs.vec2 position;
 			libobs.obs_sceneitem_get_pos((IntPtr)instance, out position);
 			return position;
 		}
@@ -93,7 +147,7 @@ namespace OBS
 
 		public unsafe libobs.vec2 GetScale()
 		{
-			libobs.vec2 scale = new libobs.vec2();
+			libobs.vec2 scale;
 			libobs.obs_sceneitem_get_scale((IntPtr)instance, out scale);
 			return scale;
 		}
@@ -125,7 +179,7 @@ namespace OBS
 
 		public unsafe void SetAlignment(ObsAlignment alignment)
 		{
-			libobs.obs_sceneitem_set_alignment((IntPtr) instance, (uint)alignment);
+			libobs.obs_sceneitem_set_alignment((IntPtr)instance, (uint)alignment);
 		}
 	}
 }

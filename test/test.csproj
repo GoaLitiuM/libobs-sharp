@@ -49,19 +49,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\PropertyPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyPanel.Designer.cs">
+      <DependentUpon>PropertyPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="TestForm_Rendering.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AlignmentBox.cs">
+    <Compile Include="Controls\AlignmentBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AlignmentBox.Designer.cs">
+    <Compile Include="Controls\AlignmentBox.Designer.cs">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="RotationBox.cs">
+    <Compile Include="Controls\RotationBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RotationBox.Designer.cs">
+    <Compile Include="Controls\RotationBox.Designer.cs">
       <DependentUpon>RotationBox.cs</DependentUpon>
     </Compile>
     <Compile Include="TestConfig.cs">
@@ -93,10 +99,13 @@
     <Compile Include="TestTransform.Designer.cs">
       <DependentUpon>TestTransform.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AlignmentBox.resx">
+    <EmbeddedResource Include="Controls\AlignmentBox.resx">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RotationBox.resx">
+    <EmbeddedResource Include="Controls\PropertyPanel.resx">
+      <DependentUpon>PropertyPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RotationBox.resx">
       <DependentUpon>RotationBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TestConfig.resx">

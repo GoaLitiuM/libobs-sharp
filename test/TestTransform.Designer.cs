@@ -15,6 +15,8 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using test.Controls;
+
 namespace test
 {
 	partial class TestTransform
@@ -59,8 +61,8 @@ namespace test
 			this.sizeLabel = new System.Windows.Forms.Label();
 			this.rotationLabel = new System.Windows.Forms.Label();
 			this.positionalalignmentLabel = new System.Windows.Forms.Label();
-			this.Alignment = new test.AlignmentBox();
-			this.Rotation = new test.RotationBox();
+			this.Alignment = new test.Controls.AlignmentBox();
+			this.Rotation = new test.Controls.RotationBox();
 			this.bottomPanel.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
@@ -252,6 +254,9 @@ namespace test
 			this.Rotation.Name = "Rotation";
 			this.Rotation.Rotation = 0;
 			this.Rotation.Size = new System.Drawing.Size(72, 72);
+			this.Rotation.SnapAngle = 45;
+			this.Rotation.SnapToAngle = true;
+			this.Rotation.SnapTolerance = 10;
 			this.Rotation.TabIndex = 3;
 			// 
 			// TestTransform
