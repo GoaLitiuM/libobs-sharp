@@ -440,8 +440,19 @@ namespace OBS
         [DllImport(importLibrary, CallingConvention = importCall)]
         public static extern void obs_data_release(obs_data_t data);
 
-        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-        public static extern string obs_data_get_json(obs_data_t data);
+        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_data_get_json")]
+        private static extern IntPtr import_obs_data_get_json(obs_data_t data);
+
+        public static string obs_data_get_json(obs_data_t data)
+        {
+            string str = null;
+            IntPtr strPtr = import_obs_data_get_json(data);
+
+            if (strPtr != IntPtr.Zero)
+                str = Marshal.PtrToStringAnsi(strPtr);
+
+            return str;
+        }
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         public static extern void obs_data_apply(obs_data_t target, obs_data_t apply_data);
@@ -501,8 +512,19 @@ namespace OBS
         public static extern void obs_data_set_autoselect_obj(obs_data_t data, string name, obs_data_t obj);
 
 
-        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-        public static extern string obs_data_get_string(obs_data_t data, string name);
+        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_data_get_string")]
+        private static extern IntPtr import_obs_data_get_string(obs_data_t data, string name);
+
+        public static string obs_data_get_string(obs_data_t data, string name)
+        {
+            string str = null;
+            IntPtr strPtr = import_obs_data_get_string(data, name);
+
+            if (strPtr != IntPtr.Zero)
+                str = Marshal.PtrToStringAnsi(strPtr);
+
+            return str;
+        }
 
         [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
         public static extern int64_t obs_data_get_int(obs_data_t data, string name);
@@ -521,8 +543,19 @@ namespace OBS
         public static extern obs_data_array_t obs_data_get_array(obs_data_t data, string name);
 
 
-        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-        public static extern string obs_data_get_default_string(obs_data_t data, string name);
+        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_data_get_default_string")]
+        private static extern IntPtr import_obs_data_get_default_string(obs_data_t data, string name);
+
+        public static string obs_data_get_default_string(obs_data_t data, string name)
+        {
+            string str = null;
+            IntPtr strPtr = import_obs_data_get_default_string(data, name);
+
+            if (strPtr != IntPtr.Zero)
+                str = Marshal.PtrToStringAnsi(strPtr);
+
+            return str;
+        }
 
         [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
         public static extern int64_t obs_data_get_default_int(obs_data_t data, string name);
@@ -541,8 +574,19 @@ namespace OBS
         public static extern obs_data_array_t obs_data_get_default_array(obs_data_t data, string name);
 
 
-        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-        public static extern string obs_data_get_autoselect_string(obs_data_t data, string name);
+        [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_data_get_autoselect_string")]
+        private static extern IntPtr import_obs_data_get_autoselect_string(obs_data_t data, string name);
+
+        public static string obs_data_get_autoselect_string(obs_data_t data, string name)
+        {
+            string str = null;
+            IntPtr strPtr = import_obs_data_get_autoselect_string(data, name);
+
+            if (strPtr != IntPtr.Zero)
+                str = Marshal.PtrToStringAnsi(strPtr);
+
+            return str;
+        }
 
         [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
         public static extern int64_t obs_data_get_autoselect_int(obs_data_t data, string name);
