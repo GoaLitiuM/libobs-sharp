@@ -189,6 +189,10 @@ namespace OBS
 		public static extern obs_source_t obs_get_source_by_name(string name);
 
 
+        /** Updates settings for this source */
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_source_update(obs_source_t source, obs_data_t settings);
+
 		/** Renders a video source. */
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_video_render(obs_source_t source);

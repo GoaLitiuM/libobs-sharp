@@ -243,6 +243,14 @@ namespace test
 				menuitem.Click += delegate
 				{
 					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
+
+                    if (type == "monitor_capture")  //REMOVEME: testing
+                    {
+                        ObsData settings = source.GetSettings();
+                        settings.SetInt("monitor", 1);
+                        source.Update(settings);
+                    }
+
 					var prop = new TestProperties(source);
 					prop.Show();
 				};

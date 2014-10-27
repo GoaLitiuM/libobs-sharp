@@ -99,6 +99,11 @@ namespace OBS
 			libobs.obs_source_filter_add((IntPtr)instance, (IntPtr)filter.GetPointer());
 		}
 
+        public unsafe void Update(ObsData settings)
+        {
+            libobs.obs_source_update((IntPtr)instance, (IntPtr)settings.GetPointer());
+        }
+
 		public unsafe void Render()
 		{
 			libobs.obs_source_video_render((IntPtr)instance);
