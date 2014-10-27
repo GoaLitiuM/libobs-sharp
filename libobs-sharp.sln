@@ -4,13 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libobs-sharp", "libobs-sharp\libobs-sharp.csproj", "{910FAB21-9D79-4CF2-AB70-47291BABA41E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6} = {77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{1763A94E-68CF-4BC4-8B56-E844DF4726F4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libobs", "..\build\libobs\libobs.vcxproj", "{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,26 +63,6 @@ Global
 		{1763A94E-68CF-4BC4-8B56-E844DF4726F4}.RelWithDebInfo|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1763A94E-68CF-4BC4-8B56-E844DF4726F4}.RelWithDebInfo|Mixed Platforms.Build.0 = Release|Any CPU
 		{1763A94E-68CF-4BC4-8B56-E844DF4726F4}.RelWithDebInfo|Win32.ActiveCfg = Release|Any CPU
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Debug|Win32.Build.0 = Debug|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.MinSizeRel|Any CPU.ActiveCfg = MinSizeRel|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.MinSizeRel|Mixed Platforms.ActiveCfg = MinSizeRel|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.MinSizeRel|Mixed Platforms.Build.0 = MinSizeRel|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Release|Any CPU.ActiveCfg = Release|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Release|Win32.ActiveCfg = Release|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.Release|Win32.Build.0 = Release|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.RelWithDebInfo|Any CPU.ActiveCfg = RelWithDebInfo|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.RelWithDebInfo|Mixed Platforms.ActiveCfg = RelWithDebInfo|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.RelWithDebInfo|Mixed Platforms.Build.0 = RelWithDebInfo|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
-		{77B1A541-DB6F-4EE3-B46F-D6B99E90F9F6}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

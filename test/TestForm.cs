@@ -122,6 +122,16 @@ namespace test
 				//select the first item
 				_sceneItems[0][0].Selected = true;
 			}
+			catch (System.BadImageFormatException exp)
+			{
+				MessageBox.Show("Platform target mismatch: "
+					+ (System.Environment.Is64BitProcess
+						? "Loading 32-bit OBS with 64-bit executable is not supported."
+						: "Loading 64-bit OBS with 32-bit executable is not supported.")
+					+ "\n\n" + exp.Message,
+					"Error", MessageBoxButtons.OK);
+				Close();
+			}
 			catch (Exception exp)
 			{
 				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
@@ -233,6 +243,14 @@ namespace test
 				menuitem.Click += (sender, args) =>
 				{
 					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
+
+                    if (type == "monitor_capture")  //REMOVEME: testing
+                    {
+                        ObsData settings = source.GetSettings();
+                        settings.SetInt("monitor", 1);
+                        source.Update(settings);
+                    }
+
 					var prop = new TestProperties(source);
 					prop.Show();
 				};

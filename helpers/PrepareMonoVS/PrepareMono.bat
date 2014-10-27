@@ -29,7 +29,7 @@ SET TARGETLOCATION=%TARGETLOCATION32%
 goto check_mono
 
 :check_mono
-IF EXIST %MONOLOCATION% GOTO prepare
+IF EXIST "%MONOLOCATION%" GOTO prepare
 echo Error: Could not find Mono installation at default install location "%MONOLOCATION%"
 pause
 goto end
