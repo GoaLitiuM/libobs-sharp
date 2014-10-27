@@ -84,6 +84,16 @@ namespace OBS
 		}
 
 
+        public unsafe ObsData GetSettings()
+        {
+            IntPtr ptr = libobs.obs_source_get_settings((IntPtr)instance);
+
+            if (ptr == IntPtr.Zero)
+                return null;
+
+            return new ObsData(ptr);
+        }
+
 		public unsafe void AddFilter(ObsSource filter)
 		{
 			libobs.obs_source_filter_add((IntPtr)instance, (IntPtr)filter.GetPointer());

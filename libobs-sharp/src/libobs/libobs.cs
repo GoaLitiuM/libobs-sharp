@@ -177,6 +177,10 @@ namespace OBS
 			return Marshal.PtrToStringAnsi(strPtr);
 		}
 
+        /* Gets the settings string for a source */
+        [DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_data_t obs_source_get_settings(obs_source_t source);
+
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_filter_add(obs_source_t source, obs_source_t filter);
@@ -1060,7 +1064,7 @@ namespace OBS
 		public unsafe struct obs_data
 		{
 			public int refs;
-			public IntPtr json;
+			public char* json;
 			public obs_data_item_t first_item;
 		};
 

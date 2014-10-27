@@ -49,6 +49,7 @@ namespace test
 		private void TestProperties_Load(object sender, EventArgs e)
 		{
 			GenerateControls();
+            LoadPropertyValues();
 			InitPreview(propertyPanel.Controls[0].Width, propertyPanel.Controls[0].Width, this.Handle);
 		}
 		public class ComboboxItem
@@ -105,7 +106,7 @@ namespace test
 						{
 							CheckBox checkbox = new CheckBox
 							{
-								Text = ""
+								Text = property.Description
 							};
 
 							control = checkbox;
@@ -258,6 +259,8 @@ namespace test
 					case ObsPropertyType.List:
 						{
 							ComboBox combobox = new ComboBox();
+                            combobox.DisplayMember = "Text";
+                            combobox.ValueMember = "Value";
 
 							string[] namelist = property.GetListItemNames();
 							string[] valuelist = property.GetListItemValues();
@@ -270,12 +273,7 @@ namespace test
 								items.Add(item);
 							}
 
-							combobox.Items.AddRange(items.ToArray());
-							
-							if (combobox.Items.Count > 0)
-							{
-								combobox.SelectedIndex = 0;
-							}
+                            combobox.DataSource = items;
 
 							switch (property.ListType)
 							{
@@ -305,8 +303,13 @@ namespace test
 							{
 								combobox.MouseHover += delegate
 								{
-									debugTextBox.Text =
-										((ComboboxItem) combobox.Items[combobox.SelectedIndex]).Value.ToString();
+                                    if (combobox.SelectedIndex != -1)
+                                    {
+                                        debugTextBox.Text =
+                                            ((ComboboxItem)combobox.Items[combobox.SelectedIndex]).Value.ToString();
+                                    }
+                                    else
+                                        debugTextBox.Text = "";
 								};
 								control = combobox;
 							}
@@ -392,6 +395,113 @@ namespace test
 			propertyPanel.RowStyles.Add(new RowStyle());
 			propertyPanel.Refresh();
 		}
+
+        private void LoadPropertyValues()
+        {
+            ObsData settings = Source.GetSettings();
+
+            foreach (ObsProperty property in _properties)
+            {
+                foreach (Control control in propertyPanel.Controls)
+                {
+                    if ((string)control.Tag == property.Name)
+                    {
+                        switch (property.Type)
+                        {
+                            case ObsPropertyType.Bool:
+                                {
+                                    CheckBox checkbox = control as CheckBox;
+                                    checkbox.Checked = settings.GetBool(property.Name);
+                                    break;
+                                }
+                            case ObsPropertyType.Int:
+                            case ObsPropertyType.Float:
+                                {
+                                    NumericUpDown numeric = control as NumericUpDown;
+                                    numeric.Value = settings.GetInt(property.Name);
+                                    break;
+                                }
+                            case ObsPropertyType.Text:
+                                {
+                                    TextBox textbox = control as TextBox;
+                                    textbox.Text = settings.GetString(property.Name);
+                                    break;
+                                }
+                            case ObsPropertyType.Path:
+                                {
+                                    Panel panel = control as Panel;
+                                    foreach (Control panelControl in panel.Controls)
+                                    {
+                                        if (panelControl is TextBox)
+                                        {
+                                            TextBox textbox = panelControl as TextBox;
+                                            textbox.Text = settings.GetString(property.Name);
+                                        }
+                                    }
+                                    break;
+                                }
+                            case ObsPropertyType.List:
+                                {
+                                    string value = null;
+                                    ComboBox combobox = control as ComboBox;
+                                    switch (property.ListFormat)
+                                    {
+                                        case ObsComboFormat.Float:
+                                            {
+                                                value = settings.GetDouble(property.Name).ToString();
+                                                break;
+                                            }
+                                        case ObsComboFormat.Int:
+                                            {
+                                                value = settings.GetInt(property.Name).ToString();
+                                                break;
+                                            }
+                                        case ObsComboFormat.String:
+                                            {
+                                                value = settings.GetString(property.Name);
+                                                break;
+                                            }
+                                    }
+
+                                    if (property.ListType == ObsComboType.Editable)
+                                        combobox.SelectedText = value;
+                                    else
+                                        combobox.SelectedValue = value;
+
+                                    break;
+                                }
+                            case ObsPropertyType.Color:
+                                {
+                                    int color = (int)settings.GetInt(property.Name);
+
+                                    Panel panel = control as Panel;
+                                    foreach (Control panelControl in panel.Controls)
+                                    {
+                                        if (panelControl is Label)
+                                        {
+                                            Label label = panelControl as Label;
+                                            label.Text = color.ToString();
+                                            label.ForeColor = Color.FromArgb(color);
+                                        }
+                                    }
+                                    
+                                    break;
+                                }
+                            case ObsPropertyType.Button:
+                            case ObsPropertyType.Font:
+                            case ObsPropertyType.Invalid:
+                            default:
+                                {
+                                    //no values to set
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+        }
 
 		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
 		{
