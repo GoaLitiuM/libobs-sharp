@@ -63,6 +63,8 @@ namespace test
 		{
 			TestProperties window = Control.FromHandle(data) as TestProperties;
 
+			if (window == null) return;
+
 			//TODO: proper source size handling
 			int panelWidth = window.previewPanel.Width;
 			int panelHeight = window.previewPanel.Height;

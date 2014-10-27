@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using OBS;
 
@@ -25,9 +26,10 @@ namespace test.Controls
 {
 	public partial class PropertyPanel : UserControl
 	{
-		public PropertyPanel(ObsProperty property)
+		public PropertyPanel(ObsProperty property, ObsData data)
 		{
 			InitializeComponent();
+
 			List<Control> controls = new List<Control>();
 			string name = property.Description;
 			switch (property.Type)
@@ -39,8 +41,10 @@ namespace test.Controls
 						{
 							Text = property.Description,
 							TextAlign = ContentAlignment.MiddleLeft,
-							Width = 300
+							Width = 300,
+							Checked = data.GetBool(property.Name)
 						};
+						checkbox.CheckedChanged += (sender, args) => data.SetBool(property.Name, checkbox.Checked);
 
 						controls.Add(checkbox);
 						break;
@@ -53,9 +57,10 @@ namespace test.Controls
 							Maximum = property.IntMax,
 							Increment = property.IntStep,
 							Width = 300,
-							DecimalPlaces = 0
+							DecimalPlaces = 0,
+							Value = data.GetInt(property.Name)
 						};
-
+						numeric.ValueChanged += (sender, args) => data.SetInt(property.Name, (int)numeric.Value);
 						controls.Add(numeric);
 						break;
 					}
@@ -67,9 +72,10 @@ namespace test.Controls
 							Maximum = (decimal)property.FloatMax,
 							Increment = (decimal)property.FloatStep,
 							Width = 300,
-							DecimalPlaces = 2
+							DecimalPlaces = 2,
+							Value = (decimal)data.GetDouble(property.Name)
 						};
-
+						numeric.ValueChanged += (sender, args) => data.SetDouble(property.Name, (double)numeric.Value);
 						controls.Add(numeric);
 						break;
 					}
@@ -99,7 +105,8 @@ namespace test.Controls
 									break;
 								}
 						}
-
+						textbox.Text = data.GetString(property.Name);
+						textbox.TextChanged += (sender, args) => data.SetString(property.Name, textbox.Text);
 						controls.Add(textbox);
 						break;
 					}
@@ -107,9 +114,9 @@ namespace test.Controls
 					{
 						TextBox textbox = new TextBox
 						{
-							Width = 300
+							Width = 300,
+							Text = data.GetString(property.Name)
 						};
-
 						Button button = new Button
 						{
 							Text = "Browse..."
@@ -178,7 +185,7 @@ namespace test.Controls
 									break;
 								}
 						}
-
+						textbox.TextChanged += (sender, args) => data.SetString(property.Name, textbox.Text);
 						controls.Add(textbox);
 						controls.Add(button);
 						break;
@@ -190,28 +197,22 @@ namespace test.Controls
 						string[] namelist = property.GetListItemNames();
 						string[] valuelist = property.GetListItemValues();
 
-						var items = new List<ComboboxItem>();
-
-						for (var index = 0; index < property.ListItemCount; index++)
+						if (namelist.Length > 0)
 						{
-							ComboboxItem item = new ComboboxItem(namelist[index], valuelist[index]);
-							items.Add(item);
-						}
-
-						combobox.Items.AddRange(items.ToArray());
-
-						if (combobox.Items.Count > 0)
-						{
+							combobox.Items.AddRange(namelist.ToArray());
 							combobox.SelectedIndex = 0;
+						}
+						else
+						{
+							controls.Add(combobox);
+							break;
 						}
 
 						switch (property.ListType)
 						{
 							case ObsComboType.Invalid:
 								{
-									combobox = null;
-
-									break;
+									return;
 								}
 							case ObsComboType.Editable:
 								{
@@ -227,15 +228,41 @@ namespace test.Controls
 									break;
 								}
 						}
+
+						// TODO: this set goes ok, but window capture doesnt properly grab the window soooo i dunno? :P
+						switch (property.ListFormat)
+						{
+							case ObsComboFormat.Float:
+								{
+									combobox.SelectedIndex = Array.IndexOf(valuelist, data.GetDouble(property.Name));
+									combobox.SelectedIndexChanged += (sender, args) => data.SetDouble(property.Name, Convert.ToDouble(valuelist[combobox.SelectedIndex]));
+									break;
+								}
+							case ObsComboFormat.Int:
+								{
+									combobox.SelectedIndex = Array.IndexOf(valuelist, data.GetInt(property.Name));
+									combobox.SelectedIndexChanged += (sender, args) => data.SetInt(property.Name, Convert.ToInt32(valuelist[combobox.SelectedIndex]));
+									break;
+								}
+							case ObsComboFormat.String:
+								{
+									var value = data.GetString(property.Name);
+									combobox.SelectedIndex = !string.IsNullOrEmpty(value) ? Array.IndexOf(valuelist, value) : 0;
+									combobox.SelectedIndexChanged += (sender, args) => data.SetString(property.Name, valuelist[combobox.SelectedIndex]);
+									break;
+								}
+						}
+
 						controls.Add(combobox);
 						break;
 					}
 				case ObsPropertyType.Color:
 					{
+						Color color = Color.FromArgb((int)data.GetInt(property.Name));
 						TextBox textbox = new TextBox
 						{
 							Text = "#FFFFFF",
-							ForeColor = Color.Black,
+							ForeColor = color,
 							Width = 300,
 							TextAlign = HorizontalAlignment.Center
 						};
@@ -257,8 +284,9 @@ namespace test.Controls
 						{
 							try
 							{
-								var color = ColorTranslator.FromHtml(textbox.Text);
+								color = ColorTranslator.FromHtml(textbox.Text);
 								textbox.ForeColor = color;
+								data.SetInt(property.Name, color.ToArgb());
 							}
 							catch
 							{
@@ -285,7 +313,7 @@ namespace test.Controls
 						{
 							Text = property.Description
 						};
-
+						// TODO: how do i get the apropriate dll call here and fire it!
 						button.Click += (sender, args) => MessageBox.Show("Insert Appropriate Dialog Here");
 
 						controls.Add(button);
@@ -293,6 +321,7 @@ namespace test.Controls
 					}
 				case ObsPropertyType.Font:
 					{
+						// TODO: need a GetFont / SetFont here i think :?
 						Label label = new Label
 						{
 							Text = "font",
@@ -315,8 +344,10 @@ namespace test.Controls
 							if (fontdialog.ShowDialog() == DialogResult.OK)
 							{
 								var font = fontdialog.Font;
-								font = new Font(font.FontFamily, 25f);
+								data.SetString(property.Name, font.Name);
+								font = new Font(font.Name, 25f);
 								label.Font = font;
+								label.Text = font.Name;
 							}
 						};
 
@@ -329,9 +360,9 @@ namespace test.Controls
 						throw new Exception(String.Format("Error while trying to create controls for property {0}", property.Description));
 					}
 			}
-			
+
 			nameLabel.Text = name;
-			
+
 			foreach (var control in controls)
 			{
 				controlPanel.Controls.Add(control);
@@ -344,26 +375,7 @@ namespace test.Controls
 				oldmargin.Top = topmargin;
 				oldmargin.Bottom = topmargin;
 				control.Margin = oldmargin;
-			}			
-		}
-		
-		private class ComboboxItem
-		{
-			public ComboboxItem(string text, object value)
-			{
-				Text = text;
-				Value = value;
-			}
-
-			public string Text { get; set; }
-			public object Value { get; set; }
-
-			public override string ToString()
-			{
-				return Text;
 			}
 		}
 	}
-
-
 }

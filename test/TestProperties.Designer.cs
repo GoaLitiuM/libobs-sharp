@@ -48,9 +48,9 @@ namespace test
 			this.okButton = new System.Windows.Forms.Button();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.bottomPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.previewPanel = new System.Windows.Forms.Panel();
 			this.propertyPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.previewBackPanel = new System.Windows.Forms.Panel();
+			this.previewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel.SuspendLayout();
 			this.previewBackPanel.SuspendLayout();
 			this.SuspendLayout();
@@ -58,7 +58,7 @@ namespace test
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.Location = new System.Drawing.Point(500, 3);
+			this.okButton.Location = new System.Drawing.Point(506, 3);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 1;
@@ -68,7 +68,7 @@ namespace test
 			// cancelButton
 			// 
 			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.cancelButton.Location = new System.Drawing.Point(581, 3);
+			this.cancelButton.Location = new System.Drawing.Point(587, 3);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 2;
@@ -82,18 +82,10 @@ namespace test
 			this.bottomPanel.Controls.Add(this.okButton);
 			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.bottomPanel.Location = new System.Drawing.Point(0, 457);
+			this.bottomPanel.Location = new System.Drawing.Point(0, 486);
 			this.bottomPanel.Name = "bottomPanel";
-			this.bottomPanel.Size = new System.Drawing.Size(659, 29);
+			this.bottomPanel.Size = new System.Drawing.Size(665, 29);
 			this.bottomPanel.TabIndex = 2;
-			// 
-			// previewPanel
-			// 
-			this.previewPanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.previewPanel.Location = new System.Drawing.Point(12, 12);
-			this.previewPanel.Name = "previewPanel";
-			this.previewPanel.Size = new System.Drawing.Size(407, 137);
-			this.previewPanel.TabIndex = 3;
 			// 
 			// propertyPanel
 			// 
@@ -103,7 +95,7 @@ namespace test
 			this.propertyPanel.Location = new System.Drawing.Point(0, 225);
 			this.propertyPanel.Name = "propertyPanel";
 			this.propertyPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.propertyPanel.Size = new System.Drawing.Size(659, 232);
+			this.propertyPanel.Size = new System.Drawing.Size(665, 261);
 			this.propertyPanel.TabIndex = 4;
 			// 
 			// previewBackPanel
@@ -113,8 +105,15 @@ namespace test
 			this.previewBackPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.previewBackPanel.Location = new System.Drawing.Point(0, 0);
 			this.previewBackPanel.Name = "previewBackPanel";
-			this.previewBackPanel.Size = new System.Drawing.Size(659, 225);
+			this.previewBackPanel.Size = new System.Drawing.Size(665, 225);
 			this.previewBackPanel.TabIndex = 5;
+			// 
+			// previewPanel
+			// 
+			this.previewPanel.Location = new System.Drawing.Point(244, 77);
+			this.previewPanel.Name = "previewPanel";
+			this.previewPanel.Size = new System.Drawing.Size(200, 100);
+			this.previewPanel.TabIndex = 0;
 			// 
 			// TestProperties
 			// 
@@ -122,7 +121,7 @@ namespace test
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.ClientSize = new System.Drawing.Size(659, 486);
+			this.ClientSize = new System.Drawing.Size(665, 515);
 			this.ControlBox = false;
 			this.Controls.Add(this.propertyPanel);
 			this.Controls.Add(this.previewBackPanel);
@@ -145,8 +144,8 @@ namespace test
 		private System.Windows.Forms.Button okButton;
 		private System.Windows.Forms.Button cancelButton;
 		private System.Windows.Forms.FlowLayoutPanel bottomPanel;
-		private System.Windows.Forms.Panel previewPanel;
 		private System.Windows.Forms.FlowLayoutPanel propertyPanel;
 		private System.Windows.Forms.Panel previewBackPanel;
+		private System.Windows.Forms.Panel previewPanel;
 	}
 }
