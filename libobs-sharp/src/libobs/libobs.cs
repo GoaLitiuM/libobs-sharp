@@ -16,39 +16,37 @@
 ***************************************************************************/
 
 using System;
-using System.Drawing;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
-namespace OBS.Graphics
+namespace OBS
 {
-	public class GSEffectTechnique
+    using uint8_t = Byte;
+
+	public static partial class libobs
 	{
-        internal IntPtr instance;   //pointer to unmanaged object
+		public const string importLibrary = "obs";	//extension is handled automatically
+		public const CallingConvention importCall = CallingConvention.Cdecl;
+		public const CharSet importCharSet = CharSet.Ansi;
 
-		public GSEffectTechnique(IntPtr ptr)
+		/*
+		 * helper functions
+		 */
+
+		//must be a null-terminated string
+		private static string MarshalUTF8String(IntPtr strPtr)
 		{
-            instance = ptr;
-		}
+			var bytes = new List<byte>();
+			int offset = 0;
+			uint8_t chr = 0;
 
-		~GSEffectTechnique()
-		{
-			Release();
-		}
+			do
+			{
+				if ((chr = Marshal.ReadByte(strPtr, offset++)) != 0)
+					bytes.Add(chr);
+			} while (chr != 0);
 
-		public void Release()
-		{
-            if (instance == IntPtr.Zero)
-				return;
-
-			instance = IntPtr.Zero;
-		}
-
-		public IntPtr GetPointer()
-		{
-			return instance;
+			return System.Text.Encoding.UTF8.GetString(bytes.ToArray());
 		}
 	}
 }

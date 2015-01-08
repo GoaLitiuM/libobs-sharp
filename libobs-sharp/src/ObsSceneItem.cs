@@ -22,12 +22,12 @@ namespace OBS
 {
 	public class ObsSceneItem
 	{
-		internal unsafe libobs.obs_scene_item* instance;    //pointer to unmanaged object
+        internal IntPtr instance;    //pointer to unmanaged object
 
-		public unsafe ObsSceneItem(libobs.obs_scene_item* instance)
+        public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
-			this.instance = instance;
-			libobs.obs_sceneitem_addref((IntPtr)instance);
+			instance = sceneItem;
+			libobs.obs_sceneitem_addref(instance);
 		}
 
 		~ObsSceneItem()
@@ -102,70 +102,70 @@ namespace OBS
 
 		public unsafe void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
 			ObsSource source = GetSource();
 			source.Release();
 
-			libobs.obs_sceneitem_remove((IntPtr)instance);	//remove also removes it from sources
-			instance = null;
+			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
+            instance = IntPtr.Zero;
 		}
-		public unsafe libobs.obs_scene_item* GetPointer()
+        public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
 
 		public unsafe ObsSource GetSource()
 		{
-			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_sceneitem_get_source((IntPtr)instance);
+            IntPtr source = libobs.obs_sceneitem_get_source(instance);
 			return new ObsSource(source);
 		}
 		public unsafe bool Selected
 		{
 			get
 			{
-				return libobs.obs_sceneitem_selected((IntPtr)instance);
+				return libobs.obs_sceneitem_selected(instance);
 			}
 			set
 			{
-				libobs.obs_sceneitem_select((IntPtr)instance, value);
+				libobs.obs_sceneitem_select(instance, value);
 			}
 		}
 
 		public unsafe libobs.vec2 GetPosition()
 		{
 			libobs.vec2 position;
-			libobs.obs_sceneitem_get_pos((IntPtr)instance, out position);
+			libobs.obs_sceneitem_get_pos(instance, out position);
 			return position;
 		}
 
 		public unsafe float GetRotation()
 		{
-			return libobs.obs_sceneitem_get_rot((IntPtr)instance);
+			return libobs.obs_sceneitem_get_rot(instance);
 		}
 
 		public unsafe libobs.vec2 GetScale()
 		{
 			libobs.vec2 scale;
-			libobs.obs_sceneitem_get_scale((IntPtr)instance, out scale);
+			libobs.obs_sceneitem_get_scale(instance, out scale);
 			return scale;
 		}
 
 		public unsafe ObsAlignment GetAlignment()
 		{
-			return (ObsAlignment)libobs.obs_sceneitem_get_alignment((IntPtr)instance);
+			return (ObsAlignment)libobs.obs_sceneitem_get_alignment(instance);
 		}
 
 
 		public unsafe void SetPosition(libobs.vec2 position)
 		{
-			libobs.obs_sceneitem_set_pos((IntPtr)instance, out position);
+			libobs.obs_sceneitem_set_pos(instance, out position);
 		}
 
 		public unsafe void SetRotation(float rotation)
 		{
-			libobs.obs_sceneitem_set_rot((IntPtr)instance, rotation);
+			libobs.obs_sceneitem_set_rot(instance, rotation);
 		}
 
 		/// <summary>
@@ -174,12 +174,12 @@ namespace OBS
 		/// <param name="scale">1f = original size</param>
 		public unsafe void SetScale(libobs.vec2 scale)
 		{
-			libobs.obs_sceneitem_set_scale((IntPtr)instance, out scale);
+			libobs.obs_sceneitem_set_scale(instance, out scale);
 		}
 
 		public unsafe void SetAlignment(ObsAlignment alignment)
 		{
-			libobs.obs_sceneitem_set_alignment((IntPtr)instance, (uint)alignment);
+			libobs.obs_sceneitem_set_alignment(instance, (uint)alignment);
 		}
 	}
 }

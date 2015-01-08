@@ -26,7 +26,7 @@ namespace OBS.Graphics
 {
 	public class GSVertexBuffer
 	{
-		internal IntPtr instance = IntPtr.Zero;    //pointer to unmanaged object
+        internal IntPtr instance = IntPtr.Zero; //pointer to unmanaged object
 
 		public unsafe GSVertexBuffer(libobs.gs_vb_data data, UInt32 flags)
 		{
@@ -51,7 +51,10 @@ namespace OBS.Graphics
 			if (instance == IntPtr.Zero)
 				return;
 
+            libobs.obs_enter_graphics();
 			libobs.gs_vertexbuffer_destroy(instance);
+            libobs.obs_leave_graphics();
+
 			instance = IntPtr.Zero;
 		}
 

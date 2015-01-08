@@ -21,16 +21,16 @@ namespace OBS
 {
 	public class ObsSource
 	{
-		internal unsafe libobs.obs_source* instance;    //pointer to unmanaged object
+        internal IntPtr instance;    //pointer to unmanaged object
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name/*, obs_data settings*/)
 		{
-			instance = (libobs.obs_source*)libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero);
+			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
 
-			libobs.obs_source_addref((IntPtr)instance);
+			libobs.obs_source_addref(instance);
 		}
 
 		~ObsSource()
@@ -40,20 +40,20 @@ namespace OBS
 
 		public unsafe void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
-			libobs.obs_source_release((IntPtr)instance);
-			instance = null;
+			libobs.obs_source_release(instance);
+            instance = IntPtr.Zero;
 		}
 
-		public unsafe ObsSource(libobs.obs_source* instance)
+        public unsafe ObsSource(IntPtr instance)
 		{
 			this.instance = instance;
-			libobs.obs_source_addref((IntPtr)instance);
+			libobs.obs_source_addref(instance);
 		}
 
-		public unsafe libobs.obs_source* GetPointer()
+        public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
@@ -63,7 +63,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_source_get_name((IntPtr)instance);
+				return libobs.obs_source_get_name(instance);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_source_get_width((IntPtr)instance);
+				return libobs.obs_source_get_width(instance);
 			}
 		}
 
@@ -79,14 +79,14 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_source_get_height((IntPtr)instance);
+				return libobs.obs_source_get_height(instance);
 			}
 		}
 
 
         public unsafe ObsData GetSettings()
         {
-            IntPtr ptr = libobs.obs_source_get_settings((IntPtr)instance);
+            IntPtr ptr = libobs.obs_source_get_settings(instance);
 
             if (ptr == IntPtr.Zero)
                 return null;
@@ -96,22 +96,22 @@ namespace OBS
 
 		public unsafe void AddFilter(ObsSource filter)
 		{
-			libobs.obs_source_filter_add((IntPtr)instance, (IntPtr)filter.GetPointer());
+			libobs.obs_source_filter_add(instance, filter.GetPointer());
 		}
 
         public unsafe void Update()
         {
-            libobs.obs_source_update((IntPtr)instance, libobs.obs_source_get_settings((IntPtr)instance));
+            libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
         }
 
         public unsafe void Update(ObsData settings)
         {
-            libobs.obs_source_update((IntPtr)instance, (IntPtr)settings.GetPointer());
+            libobs.obs_source_update(instance, settings.GetPointer());
         }
 
 		public unsafe void Render()
 		{
-			libobs.obs_source_video_render((IntPtr)instance);
+			libobs.obs_source_video_render(instance);
 		}
 	}
 

@@ -23,16 +23,16 @@ namespace OBS
 {
 	public class ObsScene
 	{
-		internal unsafe libobs.obs_scene* instance;    //pointer to unmanaged object
+        internal IntPtr instance;    //pointer to unmanaged object
 
 		public unsafe ObsScene(string name)
 		{
-			instance = (libobs.obs_scene*)libobs.obs_scene_create(name);
+			instance = libobs.obs_scene_create(name);
 
 			if (instance == null)
 				throw new ApplicationException("obs_scene_create failed");
 
-			libobs.obs_scene_addref((IntPtr)instance);
+			libobs.obs_scene_addref(instance);
 		}
 
 		~ObsScene()
@@ -42,17 +42,19 @@ namespace OBS
 
 		public unsafe void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
-			ObsSource source = GetSource();
-			source.Release();
+            IntPtr source = libobs.obs_scene_get_source(instance);
+            libobs.obs_source_release(source);
+			//ObsSource source = GetSource();
+			//source.Release();
 
-			libobs.obs_scene_release((IntPtr)instance);
-			instance = null;
+			libobs.obs_scene_release(instance);
+            instance = IntPtr.Zero;
 		}
 
-		public unsafe libobs.obs_scene* GetPointer()
+        public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
@@ -62,26 +64,26 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_source_get_name((IntPtr)(libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance));
+				return libobs.obs_source_get_name(libobs.obs_scene_get_source(instance));
 			}
 		}
 
 		public unsafe ObsSource GetSource()
 		{
-			libobs.obs_source* source = (libobs.obs_source*)libobs.obs_scene_get_source((IntPtr)instance);
+            IntPtr source = libobs.obs_scene_get_source(instance);
 			return new ObsSource(source);
 		}
 
 		public unsafe ObsSceneItem Add(ObsSource source)
 		{
-			libobs.obs_scene_item* sceneItem = (libobs.obs_scene_item*)libobs.obs_scene_add((IntPtr)instance, (IntPtr)source.GetPointer());
+            IntPtr sceneItem = libobs.obs_scene_add(instance, source.GetPointer());
 			return new ObsSceneItem(sceneItem);
 		}
 
 		
 		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)
 		{
-			libobs.obs_scene_enum_items((IntPtr)instance, callback, param);
+			libobs.obs_scene_enum_items(instance, callback, param);
 		}
 
 

@@ -11,7 +11,8 @@
     <AssemblyName>libobs-sharp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Mono</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,11 +46,26 @@
     <Compile Include="src\GSEffect.cs" />
     <Compile Include="src\GSEffectTechnique.cs" />
     <Compile Include="src\GSVertexBuffer.cs" />
-    <Compile Include="src\libobs\libobs.cs" />
-    <Compile Include="src\libobs\libobs_callback.cs" />
-    <Compile Include="src\libobs\libobs_graphics.cs" />
-    <Compile Include="src\libobs\libobs_media-io.cs" />
-    <Compile Include="src\libobs\libobs_util.cs" />
+    <Compile Include="src\libobs\graphics\graphics.cs" />
+    <Compile Include="src\libobs\graphics\matrix3.cs" />
+    <Compile Include="src\libobs\graphics\matrix4.cs" />
+    <Compile Include="src\libobs\graphics\vec2.cs" />
+    <Compile Include="src\libobs\graphics\vec3.cs" />
+    <Compile Include="src\libobs\graphics\vec4.cs" />
+    <Compile Include="src\libobs\libobs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\libobs\libobs\data.cs" />
+    <Compile Include="src\libobs\libobs\display.cs" />
+    <Compile Include="src\libobs\libobs\encoder.cs" />
+    <Compile Include="src\libobs\libobs\obs.cs" />
+    <Compile Include="src\libobs\libobs\output.cs" />
+    <Compile Include="src\libobs\libobs\property.cs" />
+    <Compile Include="src\libobs\libobs\scene.cs" />
+    <Compile Include="src\libobs\libobs\service.cs" />
+    <Compile Include="src\libobs\libobs\source.cs" />
+    <Compile Include="src\libobs\libobs\view.cs" />
+    <Compile Include="src\libobs\medio-io\medio-io.cs" />
     <Compile Include="src\Obs.cs" />
     <Compile Include="src\GS.cs" />
     <Compile Include="src\ObsData.cs" />

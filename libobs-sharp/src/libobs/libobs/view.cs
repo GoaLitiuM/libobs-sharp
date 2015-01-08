@@ -1,4 +1,4 @@
-﻿/***************************************************************************
+/***************************************************************************
 	Copyright (C) 2014 by Ari Vuollet <ari.vuollet@kapsi.fi>
 	
 	This program is free software; you can redistribute it and/or
@@ -16,39 +16,20 @@
 ***************************************************************************/
 
 using System;
-using System.Drawing;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
-namespace OBS.Graphics
+namespace OBS
 {
-	public class GSEffectTechnique
-	{
-        internal IntPtr instance;   //pointer to unmanaged object
+    public static partial class libobs
+    {
+        /* ------------------------------------------------------------------------- */
+        /* View context */
 
-		public GSEffectTechnique(IntPtr ptr)
-		{
-            instance = ptr;
-		}
-
-		~GSEffectTechnique()
-		{
-			Release();
-		}
-
-		public void Release()
-		{
-            if (instance == IntPtr.Zero)
-				return;
-
-			instance = IntPtr.Zero;
-		}
-
-		public IntPtr GetPointer()
-		{
-			return instance;
-		}
-	}
+        //EXPORT obs_view_t *obs_view_create(void);
+        //EXPORT void obs_view_destroy(obs_view_t *view);
+        //EXPORT void obs_view_set_source(obs_view_t *view, uint32_t channel, obs_source_t *source);
+        //EXPORT obs_source_t *obs_view_get_source(obs_view_t *view, uint32_t channel);
+        //EXPORT void obs_view_render(obs_view_t *view);
+    }
 }

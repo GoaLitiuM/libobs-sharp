@@ -160,32 +160,30 @@ namespace OBS
 
 		public static unsafe ObsProperty[] GetSourceProperties(ObsSourceType type, string id)
 		{
-			return GetPropertyList(
-				(libobs.obs_properties*)libobs.obs_get_source_properties((libobs.obs_source_type)type, id));
+			return GetPropertyList(libobs.obs_get_source_properties((libobs.obs_source_type)type, id));
 		}
 
 		public static unsafe ObsProperty[] GetSourceProperties(ObsSource source)
 		{
-			return GetPropertyList(
-				(libobs.obs_properties*)libobs.obs_source_properties((IntPtr)source.GetPointer()));
+			return GetPropertyList(libobs.obs_source_properties((IntPtr)source.GetPointer()));
 		}
 
-		private static unsafe ObsProperty[] GetPropertyList(libobs.obs_properties* properties)
+		private static unsafe ObsProperty[] GetPropertyList(IntPtr properties)
 		{
 			List<ObsProperty> propertyList = new List<ObsProperty>();
 
 			ObsProperties props = new ObsProperties(properties);
 			props.AddRef();
 
-			libobs.obs_property* property = (libobs.obs_property*)libobs.obs_properties_first((IntPtr)properties);
+            IntPtr property = libobs.obs_properties_first(properties);
 
-			while (property != null)
+            while (property != IntPtr.Zero)
 			{
 				propertyList.Add(new ObsProperty(property, props));
 
 				IntPtr next = (IntPtr)property;
 				libobs.obs_property_next(out next);
-				property = (libobs.obs_property*)next;
+				property = next;
 			}
 
 			props.Release();

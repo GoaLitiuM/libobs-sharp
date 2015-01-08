@@ -25,13 +25,13 @@ namespace OBS
 {
     public class ObsData
     {
-        internal unsafe libobs.obs_data* instance;    //pointer to unmanaged object
+        internal IntPtr instance;    //pointer to unmanaged object
 
-		public unsafe ObsData(IntPtr ptr)
+		public ObsData(IntPtr ptr)
 		{
-            instance = (libobs.obs_data*)ptr;
+            instance = ptr;
 
-            libobs.obs_data_addref((IntPtr)instance);
+            libobs.obs_data_addref(instance);
 		}
 
         ~ObsData()
@@ -39,17 +39,17 @@ namespace OBS
 			Release();
 		}
 
-		public unsafe void Release()
+		public void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
-            libobs.obs_data_release((IntPtr)instance);
+            libobs.obs_data_release(instance);
 
-			instance = null;
+            instance = IntPtr.Zero;
 		}
 
-        public unsafe libobs.obs_data* GetPointer()
+        public IntPtr GetPointer()
 		{
 			return instance;
 		}

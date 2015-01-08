@@ -26,11 +26,11 @@ namespace OBS.Graphics
 {
 	public class GSEffect
 	{
-		internal unsafe libobs.gs_effect* instance;    //pointer to unmanaged object
+        internal IntPtr instance;   //pointer to unmanaged object
 
-		public unsafe GSEffect(IntPtr ptr)
+		public GSEffect(IntPtr ptr)
 		{
-			instance = (libobs.gs_effect*)ptr;
+            instance = ptr;
 		}
 
 		~GSEffect()
@@ -38,22 +38,22 @@ namespace OBS.Graphics
 			Release();
 		}
 
-		public unsafe void Release()
+		public void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
-			instance = null;
+			instance = IntPtr.Zero;
 		}
 
-		public unsafe libobs.gs_effect* GetPointer()
+		public IntPtr GetPointer()
 		{
 			return instance;
 		}
 
 		public unsafe GSEffectTechnique GetTechnique(string name)
 		{
-			IntPtr ptr = libobs.gs_effect_get_technique((IntPtr)instance, name);
+			IntPtr ptr = libobs.gs_effect_get_technique(instance, name);
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -63,7 +63,7 @@ namespace OBS.Graphics
 
 		public unsafe void SetParameterValue(string parameter, libobs.vec4 value)
 		{
-			IntPtr ptr = libobs.gs_effect_get_param_by_name((IntPtr)instance, parameter);
+			IntPtr ptr = libobs.gs_effect_get_param_by_name(instance, parameter);
 			libobs.gs_effect_set_vec4(ptr, out value);
 		}
 	}

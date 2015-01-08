@@ -25,10 +25,10 @@ namespace OBS
 {
 	public class ObsProperty
 	{
-		internal unsafe libobs.obs_property* instance;    //pointer to unmanaged object
+        internal IntPtr instance;   //pointer to unmanaged object
 		internal ObsProperties properties = null;
 
-		public unsafe ObsProperty(libobs.obs_property* pointer, ObsProperties props)
+        public unsafe ObsProperty(IntPtr pointer, ObsProperties props)
 		{
 			instance = pointer;
 			properties = props;
@@ -37,13 +37,13 @@ namespace OBS
 
 		unsafe ~ObsProperty()
 		{
-			instance = null;
+            instance = IntPtr.Zero;
 
-			if (properties == null)
+            if (properties == null)
 				return;
 
 			properties.Release();
-			properties = null;
+            properties = null;
 		}
 
 
@@ -51,7 +51,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_name((IntPtr)instance);
+				return libobs.obs_property_name(instance);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_description((IntPtr)instance);
+				return libobs.obs_property_description(instance);
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace OBS
 		{
 			get
 			{
-				return (ObsPropertyType)libobs.obs_property_get_type((IntPtr)instance);
+				return (ObsPropertyType)libobs.obs_property_get_type(instance);
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_enabled((IntPtr)instance);
+				return libobs.obs_property_enabled(instance);
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_visible((IntPtr)instance);
+				return libobs.obs_property_visible(instance);
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_int_min((IntPtr)instance);
+				return libobs.obs_property_int_min(instance);
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_int_max((IntPtr)instance);
+				return libobs.obs_property_int_max(instance);
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_int_step((IntPtr)instance);
+				return libobs.obs_property_int_step(instance);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_float_min((IntPtr)instance);
+				return libobs.obs_property_float_min(instance);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_float_max((IntPtr)instance);
+				return libobs.obs_property_float_max(instance);
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_float_step((IntPtr)instance);
+				return libobs.obs_property_float_step(instance);
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace OBS
 		{
 			get
 			{
-				return (ObsTextType)libobs.obs_proprety_text_type((IntPtr)instance);
+				return (ObsTextType)libobs.obs_proprety_text_type(instance);
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace OBS
 		{
 			get
 			{
-				return (ObsPathType)libobs.obs_property_path_type((IntPtr)instance);
+				return (ObsPathType)libobs.obs_property_path_type(instance);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_path_filter((IntPtr)instance);
+				return libobs.obs_property_path_filter(instance);
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace OBS
 		{
 			get
 			{
-				return libobs.obs_property_path_default_path((IntPtr)instance);
+				return libobs.obs_property_path_default_path(instance);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace OBS
 		{
 			get
 			{
-				return (ObsComboType)libobs.obs_property_list_type((IntPtr)instance);
+				return (ObsComboType)libobs.obs_property_list_type(instance);
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace OBS
 		{
 			get
 			{
-				return (ObsComboFormat)libobs.obs_property_list_format((IntPtr)instance);
+				return (ObsComboFormat)libobs.obs_property_list_format(instance);
 			}
 		}
 
@@ -188,7 +188,7 @@ namespace OBS
 		{
 			get
 			{
-				return (int)libobs.obs_property_list_item_count((IntPtr)instance);
+				return (int)libobs.obs_property_list_item_count(instance);
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace OBS
 			List<string> names = new List<string>();
 
 			for (int i=0; i<count; i++)
-				names.Add(libobs.obs_property_list_item_name((IntPtr)instance, (IntPtr)i));
+				names.Add(libobs.obs_property_list_item_name(instance, (IntPtr)i));
 
 			return names.ToArray();
 		}
@@ -213,11 +213,11 @@ namespace OBS
 			for (int i = 0; i < count; i++)
 			{
 				if (format == ObsComboFormat.Int)
-					values.Add(libobs.obs_property_list_item_int((IntPtr)instance, (IntPtr)i).ToString());
+					values.Add(libobs.obs_property_list_item_int(instance, (IntPtr)i).ToString());
 				else if (format == ObsComboFormat.Float)
-					values.Add(libobs.obs_property_list_item_float((IntPtr)instance, (IntPtr)i).ToString());
+					values.Add(libobs.obs_property_list_item_float(instance, (IntPtr)i).ToString());
 				else if (format == ObsComboFormat.String)
-					values.Add(libobs.obs_property_list_item_string((IntPtr)instance, (IntPtr)i));
+					values.Add(libobs.obs_property_list_item_string(instance, (IntPtr)i));
 			}
 
 			return values.ToArray();
@@ -226,10 +226,10 @@ namespace OBS
 
 	public class ObsProperties
 	{
-		internal unsafe libobs.obs_properties* instance;    //pointer to unmanaged object
+        internal IntPtr instance;    //pointer to unmanaged object
 		internal int refs = 0;
 
-		public unsafe ObsProperties(libobs.obs_properties* pointer)
+        public unsafe ObsProperties(IntPtr pointer)
 		{
 			instance = pointer;
 		}
@@ -241,7 +241,7 @@ namespace OBS
 
 		public unsafe void AddRef()
 		{
-			if (instance == null)
+			if (instance == IntPtr.Zero)
 				return;
 
 			refs++;
@@ -251,11 +251,11 @@ namespace OBS
 		{
 			refs--;
 
-			if (refs > 0 || instance == null)
+            if (refs > 0 || instance == IntPtr.Zero)
 				return;
 
 			libobs.obs_properties_destroy((IntPtr)instance);
-			instance = null;
+            instance = IntPtr.Zero;
 		}
 	}
 

@@ -25,18 +25,18 @@ namespace OBS
 {
 	public class ObsDisplay
 	{
-		internal unsafe libobs.obs_display* instance;    //pointer to unmanaged object
+        internal IntPtr instance;   //pointer to unmanaged object
 
-		public unsafe ObsDisplay(libobs.gs_init_data graphicsData)
+		public ObsDisplay(libobs.gs_init_data graphicsData)
 		{
-			instance = (libobs.obs_display*)libobs.obs_display_create(ref graphicsData);
+			instance = libobs.obs_display_create(ref graphicsData);
 			if (instance == null)
 				throw new ApplicationException("obs_display_create failed");
 		}
 
-		public unsafe ObsDisplay(IntPtr ptr)
+		public ObsDisplay(IntPtr ptr)
 		{
-			instance = (libobs.obs_display*)ptr;
+			instance = ptr;
 		}
 
 		~ObsDisplay()
@@ -44,17 +44,17 @@ namespace OBS
 			Release();
 		}
 
-		public unsafe void Release()
+		public void Release()
 		{
-			if (instance == null)
+            if (instance == IntPtr.Zero)
 				return;
 
-			libobs.obs_display_destroy((IntPtr)instance);
+			libobs.obs_display_destroy(instance);
 
-			instance = null;
+            instance = IntPtr.Zero;
 		}
 
-		public unsafe libobs.obs_display* GetPointer()
+        public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
