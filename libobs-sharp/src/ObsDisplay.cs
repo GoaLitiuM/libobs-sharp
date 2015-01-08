@@ -1,5 +1,5 @@
 ﻿/***************************************************************************
-	Copyright (C) 2014 by Ari Vuollet <ari.vuollet@kapsi.fi>
+	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
 	
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
