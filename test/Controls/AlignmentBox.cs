@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Nick Thijssen <lamah83@gmail.com>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -17,10 +17,10 @@
 
 #region Usings
 
+using OBS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using OBS;
 
 #endregion Usings
 

@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -18,11 +18,6 @@
 using OBS;
 using OBS.Graphics;
 using System;
-using System.Collections;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace test
@@ -85,7 +80,7 @@ namespace test
 
 			//render source content
 			window.Source.Render();
-			
+
 			GS.ProjectionPop();
 			GS.ViewportPop();
 

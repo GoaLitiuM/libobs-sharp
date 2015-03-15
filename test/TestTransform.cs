@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Nick Thijssen <lamah83@gmail.com>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -14,7 +14,6 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
-
 
 using OBS;
 using System;
@@ -50,7 +49,7 @@ namespace test
 			// Store scene item
 			_selectedItem = item;
 
-			// Set minmax on numerics 
+			// Set minmax on numerics
 			// the rendercontext minmax are bigger than the decimal one so this is fine
 			const decimal min = decimal.MinValue;
 			const decimal max = decimal.MaxValue;

@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -16,17 +16,12 @@
 ***************************************************************************/
 
 using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OBS.Graphics
 {
 	public class GSVertexBuffer
 	{
-        internal IntPtr instance = IntPtr.Zero; //pointer to unmanaged object
+		internal IntPtr instance = IntPtr.Zero; //pointer to unmanaged object
 
 		public unsafe GSVertexBuffer(libobs.gs_vb_data data, UInt32 flags)
 		{
@@ -51,9 +46,9 @@ namespace OBS.Graphics
 			if (instance == IntPtr.Zero)
 				return;
 
-            libobs.obs_enter_graphics();
+			libobs.obs_enter_graphics();
 			libobs.gs_vertexbuffer_destroy(instance);
-            libobs.obs_leave_graphics();
+			libobs.obs_leave_graphics();
 
 			instance = IntPtr.Zero;
 		}

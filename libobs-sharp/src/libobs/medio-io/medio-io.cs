@@ -1,6 +1,6 @@
 /***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -30,30 +30,29 @@ namespace OBS
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public unsafe struct resample_info
 		{
-			private uint32_t 		samples_per_sec;
-			private audio_format 	format;
-			private speaker_layout 	speakers;
+			private uint32_t samples_per_sec;
+			private audio_format format;
+			private speaker_layout speakers;
 		};
 
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public unsafe struct audio_output_info
 		{
-			public string 			name;
+			public string name;
 
-			public uint32_t 		samples_per_sec;
-			public audio_format 	format;
-			public speaker_layout 	speakers;
-			public uint64_t 		buffer_ms;
+			public uint32_t samples_per_sec;
+			public audio_format format;
+			public speaker_layout speakers;
+			public uint64_t buffer_ms;
 		};
-		
+
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct obs_audio_info
 		{
-			public uint32_t         samples_per_sec;
-			public speaker_layout   speakers;
-			public uint64_t         buffer_ms;
+			public uint32_t samples_per_sec;
+			public speaker_layout speakers;
+			public uint64_t buffer_ms;
 		};
-
 
 		public enum video_format : int
 		{
@@ -61,15 +60,18 @@ namespace OBS
 
 			//planar 420 format
 			VIDEO_FORMAT_I420, //three-plane
+
 			VIDEO_FORMAT_NV12, //two-plane, luma and packed chroma
 
 			//packed 422 formats
 			VIDEO_FORMAT_YVYU,
+
 			VIDEO_FORMAT_YUY2, //YUYV
 			VIDEO_FORMAT_UYVY,
 
 			//packed uncompressed formats
 			VIDEO_FORMAT_RGBA,
+
 			VIDEO_FORMAT_BGRA,
 			VIDEO_FORMAT_BGRX,
 		};
@@ -104,19 +106,18 @@ namespace OBS
 			SPEAKERS_SURROUND,
 		};
 
-        public enum video_colorspace : int
-        {
-            VIDEO_CS_DEFAULT,
-            VIDEO_CS_601,
-            VIDEO_CS_709,
-        };
+		public enum video_colorspace : int
+		{
+			VIDEO_CS_DEFAULT,
+			VIDEO_CS_601,
+			VIDEO_CS_709,
+		};
 
-        public enum video_range_type : int
-        {
-            VIDEO_RANGE_DEFAULT,
-            VIDEO_RANGE_PARTIAL,
-            VIDEO_RANGE_FULL
-        };
-
+		public enum video_range_type : int
+		{
+			VIDEO_RANGE_DEFAULT,
+			VIDEO_RANGE_PARTIAL,
+			VIDEO_RANGE_FULL
+		};
 	}
 }

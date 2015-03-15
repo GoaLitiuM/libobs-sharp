@@ -1,6 +1,6 @@
 /***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -16,33 +16,32 @@
 ***************************************************************************/
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OBS
 {
-    using obs_display_t = IntPtr;
+	using obs_display_t = IntPtr;
 
-    using uint32_t = UInt32;
+	using uint32_t = UInt32;
 
-    public static partial class libobs
-    {
-        /* ------------------------------------------------------------------------- */
-        /* Display context */
+	public static partial class libobs
+	{
+		/* ------------------------------------------------------------------------- */
+		/* Display context */
 
-        [DllImport(importLibrary, CallingConvention = importCall)]
-        public static extern obs_display_t obs_display_create(ref gs_init_data graphics_data);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_display_t obs_display_create(ref gs_init_data graphics_data);
 
-        [DllImport(importLibrary, CallingConvention = importCall)]
-        public static extern void obs_display_destroy(obs_display_t display);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_destroy(obs_display_t display);
 
-        [DllImport(importLibrary, CallingConvention = importCall)]
-        public static extern void obs_display_resize(obs_display_t display, uint32_t cx, uint32_t cy);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_resize(obs_display_t display, uint32_t cx, uint32_t cy);
 
-        [DllImport(importLibrary, CallingConvention = importCall)]
-        public static extern void obs_display_add_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_add_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
 
-        [DllImport(importLibrary, CallingConvention = importCall)]
-        public static extern void obs_display_remove_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
-    }
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_remove_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
+	}
 }

@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -17,10 +17,6 @@
 
 using System;
 using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OBS.Graphics
 {
@@ -57,12 +53,10 @@ namespace OBS.Graphics
 			return vb;
 		}
 
-
 		public static unsafe void Vertex2f(float x, float y)
 		{
 			libobs.gs_vertex2f(x, y);
 		}
-
 
 		public static unsafe void Clear(GSClearFlags clear_flags, libobs.vec4 color, float depth, Byte stencil)
 		{
@@ -79,7 +73,6 @@ namespace OBS.Graphics
 
 			libobs.gs_clear((UInt32)clear_flags, out vec, depth, stencil);
 		}
-
 
 		public static unsafe void ViewportPush()
 		{
@@ -101,7 +94,6 @@ namespace OBS.Graphics
 			libobs.gs_projection_pop();
 		}
 
-
 		public static unsafe void Ortho(float left, float right, float top, float bottom, float znear, float zfar)
 		{
 			libobs.gs_ortho(left, right, top, bottom, znear, zfar);
@@ -111,7 +103,6 @@ namespace OBS.Graphics
 		{
 			libobs.gs_frustum(left, right, top, bottom, znear, zfar);
 		}
-
 
 		public static unsafe void SetViewport(int x, int y, int width, int height)
 		{
@@ -142,7 +133,6 @@ namespace OBS.Graphics
 		{
 			libobs.gs_set_3d_mode(fovy, znear, zvar);
 		}
-
 
 		public static unsafe void LoadVertexBuffer(GSVertexBuffer vertexBuffer)
 		{
@@ -204,7 +194,6 @@ namespace OBS.Graphics
 			libobs.gs_load_pixelshader(ptr);
 		}
 
-
 		public static unsafe void TechniqueBegin(GSEffectTechnique tech)
 		{
 			libobs.gs_technique_begin((IntPtr)tech.GetPointer());
@@ -224,7 +213,6 @@ namespace OBS.Graphics
 		{
 			libobs.gs_technique_end_pass((IntPtr)tech.GetPointer());
 		}
-
 
 		public static unsafe void MatrixPush()
 		{
@@ -276,7 +264,6 @@ namespace OBS.Graphics
 			libobs.gs_matrix_mul(out matrix);
 		}
 
-		
 		public static unsafe void Draw(GSDrawMode drawMode, uint startVert, uint numVerts)
 		{
 			libobs.gs_draw((libobs.gs_draw_mode)drawMode, startVert, numVerts);
@@ -285,9 +272,9 @@ namespace OBS.Graphics
 
 	public enum GSClearFlags : uint
 	{
-		Color = (1<<0),
-		Depth = (1<<1),
-		Stencil = (1<<2),
+		Color = (1 << 0),
+		Depth = (1 << 1),
+		Stencil = (1 << 2),
 		All = Color | Depth | Stencil,
 	}
 
@@ -300,7 +287,6 @@ namespace OBS.Graphics
 		TrisStrip,
 	};
 
-	
 	public class GSIndexBuffer
 	{
 		internal IntPtr instance = IntPtr.Zero;    //pointer to unmanaged object
@@ -320,7 +306,7 @@ namespace OBS.Graphics
 			return instance;
 		}
 	}
-	
+
 	public class GSSamplerState
 	{
 		internal IntPtr instance = IntPtr.Zero;    //pointer to unmanaged object
@@ -340,5 +326,4 @@ namespace OBS.Graphics
 			return instance;
 		}
 	}
-
 }

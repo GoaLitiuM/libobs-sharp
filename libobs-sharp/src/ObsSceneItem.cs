@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -35,6 +35,27 @@ namespace OBS
 		~ObsSceneItem()
 		{
 			Release();
+		}
+
+		public unsafe void Release()
+		{
+			if (instance == IntPtr.Zero)
+				return;
+
+			source.Release();
+
+			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
+			instance = IntPtr.Zero;
+		}
+
+		public unsafe IntPtr GetPointer()
+		{
+			return instance;
+		}
+
+		public unsafe ObsSource GetSource()
+		{
+			return source;
 		}
 
 		#region Geometry
@@ -83,9 +104,10 @@ namespace OBS
 			{
 				var source = GetSource();
 				var scale = GetScale();
-				return new Size((int) (source.Width * scale.x),(int) (source.Height * scale.y));
+				return new Size((int)(source.Width * scale.x), (int)(source.Height * scale.y));
 			}
 		}
+
 		/// <summary>
 		/// Scene item bounds
 		/// </summary>
@@ -102,27 +124,6 @@ namespace OBS
 		public string Name()
 		{
 			return source.Name;
-		}
-
-		public unsafe void Release()
-		{
-			if (instance == IntPtr.Zero)
-				return;
-
-			source.Release();
-
-			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
-			instance = IntPtr.Zero;
-		}
-
-		public unsafe IntPtr GetPointer()
-		{
-			return instance;
-		}
-
-		public unsafe ObsSource GetSource()
-		{
-			return source;
 		}
 
 		public unsafe bool Selected
@@ -160,7 +161,6 @@ namespace OBS
 		{
 			return (ObsAlignment)libobs.obs_sceneitem_get_alignment(instance);
 		}
-
 
 		public unsafe void SetPosition(libobs.vec2 position)
 		{

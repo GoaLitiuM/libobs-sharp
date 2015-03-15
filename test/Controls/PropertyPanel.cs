@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Nick Thijssen <lamah83@gmail.com>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -15,12 +15,12 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using OBS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using OBS;
 
 namespace test.Controls
 {
@@ -129,7 +129,7 @@ namespace test.Controls
 									// File Filter encoding
 									//
 									// obs encoding
-									// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"	
+									// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"
 									//
 									// .net encoding
 									// Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*

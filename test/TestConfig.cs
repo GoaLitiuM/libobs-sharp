@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Nick Thijssen <lamah83@gmail.com>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -33,7 +33,7 @@ namespace test
 			if (this.DialogResult == DialogResult.OK)
 			{
 				// pump settings to obslib
-			}						
+			}
 		}
 
 		private void PopulateForm()
@@ -43,7 +43,7 @@ namespace test
 			// insert video adapter retrieval
 
 			// dont wanna do databinding
-			// just populate the dropdown box with the service / server objects 
+			// just populate the dropdown box with the service / server objects
 			// give it a ToString() override to return the service display name
 		}
 

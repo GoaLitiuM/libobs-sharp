@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -16,21 +16,16 @@
 ***************************************************************************/
 
 using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OBS.Graphics
 {
 	public class GSEffect
 	{
-        internal IntPtr instance;   //pointer to unmanaged object
+		internal IntPtr instance;   //pointer to unmanaged object
 
 		public GSEffect(IntPtr ptr)
 		{
-            instance = ptr;
+			instance = ptr;
 		}
 
 		~GSEffect()
@@ -40,7 +35,7 @@ namespace OBS.Graphics
 
 		public void Release()
 		{
-            if (instance == IntPtr.Zero)
+			if (instance == IntPtr.Zero)
 				return;
 
 			instance = IntPtr.Zero;

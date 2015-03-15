@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Nick Thijssen <lamah83@gmail.com>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -94,7 +94,6 @@ namespace test.Controls
 		/// </summary>
 		public bool SnapToAngle { get; set; }
 
-
 		/// <summary>
 		/// displays rotation value inside the rotation control
 		/// </summary>
@@ -138,11 +137,12 @@ namespace test.Controls
 				// internal value offset by 90 degress due to radians conversion
 				_rotation = rot - 90;
 				// repaint control
-				Refresh();				
+				Refresh();
 			}
 		}
 
 		#endregion Public Properties
+
 		private void backPanel_Paint(object sender, PaintEventArgs e)
 		{
 			List<int> pipped = new List<int>();

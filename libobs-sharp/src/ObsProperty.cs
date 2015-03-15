@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -17,18 +17,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OBS
 {
 	public class ObsProperty
 	{
-        internal IntPtr instance;   //pointer to unmanaged object
+		internal IntPtr instance;   //pointer to unmanaged object
 		internal ObsProperties properties = null;
 
-        public unsafe ObsProperty(IntPtr pointer, ObsProperties props)
+		public unsafe ObsProperty(IntPtr pointer, ObsProperties props)
 		{
 			instance = pointer;
 			properties = props;
@@ -37,15 +34,14 @@ namespace OBS
 
 		unsafe ~ObsProperty()
 		{
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 
-            if (properties == null)
+			if (properties == null)
 				return;
 
 			properties.Release();
-            properties = null;
+			properties = null;
 		}
-
 
 		public unsafe String Name
 		{
@@ -86,7 +82,6 @@ namespace OBS
 				return libobs.obs_property_visible(instance);
 			}
 		}
-
 
 		public unsafe int IntMin
 		{
@@ -192,13 +187,12 @@ namespace OBS
 			}
 		}
 
-
 		public unsafe string[] GetListItemNames()
 		{
 			int count = ListItemCount;
 			List<string> names = new List<string>();
 
-			for (int i=0; i<count; i++)
+			for (int i = 0; i < count; i++)
 				names.Add(libobs.obs_property_list_item_name(instance, (IntPtr)i));
 
 			return names.ToArray();
@@ -226,10 +220,10 @@ namespace OBS
 
 	public class ObsProperties
 	{
-        internal IntPtr instance;    //pointer to unmanaged object
+		internal IntPtr instance;    //pointer to unmanaged object
 		internal int refs = 0;
 
-        public unsafe ObsProperties(IntPtr pointer)
+		public unsafe ObsProperties(IntPtr pointer)
 		{
 			instance = pointer;
 		}
@@ -251,11 +245,11 @@ namespace OBS
 		{
 			refs--;
 
-            if (refs > 0 || instance == IntPtr.Zero)
+			if (refs > 0 || instance == IntPtr.Zero)
 				return;
 
 			libobs.obs_properties_destroy((IntPtr)instance);
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 		}
 	}
 

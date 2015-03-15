@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -18,11 +18,6 @@
 using OBS;
 using OBS.Graphics;
 using System;
-using System.Collections;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace test
@@ -34,9 +29,9 @@ namespace test
 		public float MainViewWidth = 1;
 		public float MainViewHeight = 1;
 
-		const float HANDLE_RADIUS = 5.0f;
-		const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
-		const float CLAMP_DISTANCE = 10.0f;
+		private const float HANDLE_RADIUS = 5.0f;
+		private const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
+		private const float CLAMP_DISTANCE = 10.0f;
 
 		private void InitPrimitives()
 		{
@@ -196,7 +191,7 @@ namespace test
 			return true;
 		}
 
-		static void DrawPrimitive(float x, float y, libobs.matrix4 matrix, float previewScale)
+		private static void DrawPrimitive(float x, float y, libobs.matrix4 matrix, float previewScale)
 		{
 			libobs.vec3 pos = new libobs.vec3(x, y, 0.0f);
 			libobs.vec3_transform(out pos, out pos, out matrix);

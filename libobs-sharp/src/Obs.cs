@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ namespace OBS
 
 		public static bool ResetVideo(libobs.obs_video_info ovi)
 		{
-            return (libobs.obs_reset_video(ref ovi) == (int)ObsVideoErrorCode.Success);
+			return (libobs.obs_reset_video(ref ovi) == (int)ObsVideoErrorCode.Success);
 		}
 
 		public static bool ResetAudio(libobs.obs_audio_info ai)
@@ -95,7 +95,6 @@ namespace OBS
 			libobs.obs_resize((UInt32)width, (UInt32)height);
 		}
 
-
 		public static unsafe void AddDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
 		{
 			libobs.obs_display_add_draw_callback((IntPtr)display.GetPointer(), callback, param);
@@ -105,7 +104,6 @@ namespace OBS
 		{
 			libobs.obs_display_remove_draw_callback((IntPtr)display.GetPointer(), callback, param);
 		}
-
 
 		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
 		{
@@ -148,7 +146,6 @@ namespace OBS
 			return idList.ToArray();
 		}
 
-
 		public static unsafe ObsProperty[] GetSourceProperties(ObsSourceType type, string id)
 		{
 			return GetPropertyList(libobs.obs_get_source_properties((libobs.obs_source_type)type, id));
@@ -166,9 +163,9 @@ namespace OBS
 			ObsProperties props = new ObsProperties(properties);
 			props.AddRef();
 
-            IntPtr property = libobs.obs_properties_first(properties);
+			IntPtr property = libobs.obs_properties_first(properties);
 
-            while (property != IntPtr.Zero)
+			while (property != IntPtr.Zero)
 			{
 				propertyList.Add(new ObsProperty(property, props));
 
@@ -181,7 +178,6 @@ namespace OBS
 
 			return propertyList.ToArray();
 		}
-
 
 		public static unsafe GSEffect GetDefaultEffect()
 		{
@@ -204,7 +200,6 @@ namespace OBS
 		}
 	}
 
-
 	[Flags]
 	public enum ObsAlignment : uint
 	{
@@ -215,7 +210,7 @@ namespace OBS
 		Bottom = (1 << 3),
 	};
 
-    public enum ObsModuleErrorCode : int
+	public enum ObsModuleErrorCode : int
 	{
 		Success = 0,
 		Error = -1,
@@ -224,24 +219,23 @@ namespace OBS
 		IncompatibleVersion = -4,
 	};
 
-    public enum ObsOutputErrorCode : int
+	public enum ObsOutputErrorCode : int
 	{
 		Success = 0,
 		BadPath = -1,
 		ConnectFailed = -2,
 		InvalidStream = -3,
 		Error = -4,
-        Disconnected = -5,
+		Disconnected = -5,
 	};
 
-    public enum ObsVideoErrorCode : int
+	public enum ObsVideoErrorCode : int
 	{
 		Success = 0,
 		Fail = -1,
 		NotSupported = -2,
 		InvalidParam = -3,
 		CurrentlyActive = -4,
-        ModuleNotFound = -5,
+		ModuleNotFound = -5,
 	};
-
 }

@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -85,31 +85,30 @@ namespace OBS
 			}
 		}
 
+		public unsafe ObsData GetSettings()
+		{
+			IntPtr ptr = libobs.obs_source_get_settings(instance);
 
-        public unsafe ObsData GetSettings()
-        {
-            IntPtr ptr = libobs.obs_source_get_settings(instance);
+			if (ptr == IntPtr.Zero)
+				return null;
 
-            if (ptr == IntPtr.Zero)
-                return null;
-
-            return new ObsData(ptr);
-        }
+			return new ObsData(ptr);
+		}
 
 		public unsafe void AddFilter(ObsSource filter)
 		{
 			libobs.obs_source_filter_add(instance, filter.GetPointer());
 		}
 
-        public unsafe void Update()
-        {
-            libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
-        }
+		public unsafe void Update()
+		{
+			libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
+		}
 
-        public unsafe void Update(ObsData settings)
-        {
-            libobs.obs_source_update(instance, settings.GetPointer());
-        }
+		public unsafe void Update(ObsData settings)
+		{
+			libobs.obs_source_update(instance, settings.GetPointer());
+		}
 
 		public unsafe void Render()
 		{

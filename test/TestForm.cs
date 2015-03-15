@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -17,9 +17,9 @@
 
 using OBS;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace test
 {
@@ -41,7 +41,7 @@ namespace test
 		private string[] _inputTypes;
 		private string[] _filterTypes;
 		private string[] _transitionTypes;
-		
+
 		public TestForm()
 		{
 			InitializeComponent();
@@ -50,35 +50,35 @@ namespace test
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Obs.RemoveDrawCallback(_RenderMain, this.Handle);
-            RemoveScenesAndSources();
+			RemoveScenesAndSources();
 
-            if (_boxPrimitive != null)
-                _boxPrimitive.Release();
-            if (_circlePrimitive != null)
-                _circlePrimitive.Release();
+			if (_boxPrimitive != null)
+				_boxPrimitive.Release();
+			if (_circlePrimitive != null)
+				_circlePrimitive.Release();
 
-            Obs.Shutdown();
+			Obs.Shutdown();
 		}
 
-        private void RemoveScenesAndSources()
-        {
-            foreach (var scene in _sceneItems)
-                foreach (var item in scene)
-                    item.Release();
+		private void RemoveScenesAndSources()
+		{
+			foreach (var scene in _sceneItems)
+				foreach (var item in scene)
+					item.Release();
 
-            foreach (var scene in _sceneSources)
-                foreach (var source in scene)
-                    source.Release();
+			foreach (var scene in _sceneSources)
+				foreach (var source in scene)
+					source.Release();
 
-            foreach (var scene in _scenes)
-                scene.Release();
+			foreach (var scene in _scenes)
+				scene.Release();
 
-            _sceneSources.Clear();
-            _sceneItems.Clear();
-            _scenes.Clear();
-            sceneListBox.Items.Clear();
-            sourceListBox.Items.Clear();
-        }
+			_sceneSources.Clear();
+			_sceneItems.Clear();
+			_scenes.Clear();
+			sceneListBox.Items.Clear();
+			sourceListBox.Items.Clear();
+		}
 
 		private void TestForm_Load(object sender, EventArgs e)
 		{
@@ -108,13 +108,12 @@ namespace test
 					},
 				};
 
-                libobs.obs_audio_info avi = new libobs.obs_audio_info
+				libobs.obs_audio_info avi = new libobs.obs_audio_info
 				{
 					samples_per_sec = 44100,
 					speakers = libobs.speaker_layout.SPEAKERS_STEREO,
 					buffer_ms = 1000
 				};
-                
 
 				if (!Obs.Startup("en-US"))
 					throw new ApplicationException("Startup failed.");
@@ -198,10 +197,10 @@ namespace test
 			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
 
 			ObsSceneItem item = _scenes[_selectedScene].Add(source);
-			
+
 			item.SetScale(new libobs.vec2(1f, 1f));
 			item.SetPosition(new libobs.vec2(0f, 0f));
-			
+
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
 			sourceListBox.Items.Add(source.Name);
@@ -218,10 +217,10 @@ namespace test
 				string type = filterType;
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
 				int index = _sceneSources[_selectedScene].Count + 1;
-				
+
 				MenuItem menuitem = new MenuItem
 				{
-					Text = displayname + " (" + filterType + ")"					
+					Text = displayname + " (" + filterType + ")"
 				};
 				menuitem.Click += (sender, args) =>
 				{
@@ -242,7 +241,7 @@ namespace test
 				transformfrm.ShowDialog(this);
 			};
 			filtermenu.MenuItems.Add(transform);
-			
+
 			filtermenu.Show(this, PointToClient(Cursor.Position));
 		}
 
@@ -253,24 +252,24 @@ namespace test
 			foreach (string inputType in _inputTypes)
 			{
 				// The variable dissapears when the loop ends so it needs to be copied
-				string type = inputType; 
+				string type = inputType;
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
-				
+
 				MenuItem menuitem = new MenuItem
 				{
-					Text = displayname + " (" + type + ")"					
+					Text = displayname + " (" + type + ")"
 				};
-				
+
 				menuitem.Click += (sender, args) =>
 				{
 					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
 
-                    if (type == "monitor_capture")  //REMOVEME: testing
-                    {
-                        ObsData settings = source.GetSettings();
-                        settings.SetInt("monitor", 1);
-                        source.Update(settings);
-                    }
+					if (type == "monitor_capture")  //REMOVEME: testing
+					{
+						ObsData settings = source.GetSettings();
+						settings.SetInt("monitor", 1);
+						source.Update(settings);
+					}
 
 					var prop = new TestProperties(source);
 					prop.Show();
@@ -281,12 +280,11 @@ namespace test
 
 			inputmenu.Show(this, PointToClient(Cursor.Position));
 		}
-		
+
 		private void DelScene(int index)
 		{
 			if (_scenes.Count <= 1)
 				return;
-
 
 			foreach (ObsSceneItem item in _sceneItems[index])
 				item.Release();
@@ -325,7 +323,6 @@ namespace test
 
 			sourceListBox.SelectedIndex = sourceListBox.Items.Count - 1;
 		}
-
 
 		private void mainViewPanel_SizeChanged(object sender, EventArgs e)
 		{
@@ -382,7 +379,5 @@ namespace test
 				DisplayFilterSourceMenu();
 			}
 		}
-
-		
 	}
 }

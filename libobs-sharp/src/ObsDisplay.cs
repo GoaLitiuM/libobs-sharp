@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
 	Copyright (C) 2014-2015 by Ari Vuollet <ari.vuollet@kapsi.fi>
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -16,20 +16,17 @@
 ***************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OBS
 {
 	public class ObsDisplay
 	{
-        internal IntPtr instance;   //pointer to unmanaged object
+		internal IntPtr instance;   //pointer to unmanaged object
 
 		public ObsDisplay(libobs.gs_init_data graphicsData)
 		{
 			instance = libobs.obs_display_create(ref graphicsData);
+
 			if (instance == null)
 				throw new ApplicationException("obs_display_create failed");
 		}
@@ -46,15 +43,15 @@ namespace OBS
 
 		public void Release()
 		{
-            if (instance == IntPtr.Zero)
+			if (instance == IntPtr.Zero)
 				return;
 
 			libobs.obs_display_destroy(instance);
 
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 		}
 
-        public unsafe IntPtr GetPointer()
+		public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
