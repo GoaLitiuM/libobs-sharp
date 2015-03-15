@@ -45,6 +45,8 @@ namespace OBS
         public static extern obs_property_t obs_properties_first(obs_properties_t props);
 
         //EXPORT obs_property_t *obs_properties_get(obs_properties_t *propsconst char *property);
+		//EXPORT void obs_properties_apply_settings(obs_properties_t *props, obs_data_t *settings);
+
 
         /* ------------------------------------------------------------------------- */
 

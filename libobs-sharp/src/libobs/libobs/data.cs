@@ -63,6 +63,9 @@ namespace OBS
 
         [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
         public static extern void obs_data_erase(obs_data_t data, string name);
+		
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+        public static extern void obs_data_clear(obs_data_t data);
 
         [DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
         public static extern void obs_data_set_string(obs_data_t data, string name, string val);

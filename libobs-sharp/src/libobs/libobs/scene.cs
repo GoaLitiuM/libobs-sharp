@@ -93,6 +93,7 @@ namespace OBS
         public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
 
         //EXPORT void obs_sceneitem_set_order(obs_sceneitem_t *item, enum obs_order_movement movement);
+		//EXPORT void obs_sceneitem_set_order_position(obs_sceneitem_t *item, int position);
         //EXPORT void obs_sceneitem_set_bounds_type(obs_sceneitem_t *item, enum obs_bounds_type type);
         //EXPORT void obs_sceneitem_set_bounds_alignment(obs_sceneitem_t *item, uint32_t alignment);
         //EXPORT void obs_sceneitem_set_bounds(obs_sceneitem_t *item, const struct vec2 *bounds);

@@ -33,12 +33,13 @@ namespace OBS
         //EXPORT obs_data_t *obs_service_defaults(const char *id);
         //EXPORT obs_properties_t *obs_get_service_properties(const char *id);
         //EXPORT obs_properties_t *obs_service_properties(const obs_service_t *service);
-        //EXPORT const char *obs_service_gettype(const obs_service_t *service);
+        //EXPORT const char *obs_service_get_type(const obs_service_t *service);
         //EXPORT void obs_service_update(obs_service_t *service, obs_data_t *settings);
         //EXPORT obs_data_t *obs_service_get_settings(const obs_service_t *service);
         //EXPORT const char *obs_service_get_url(const obs_service_t *service);
         //EXPORT const char *obs_service_get_key(const obs_service_t *service);
         //EXPORT const char *obs_service_get_username(const obs_service_t *service);
         //EXPORT const char *obs_service_get_password(const obs_service_t *service);
+		//EXPORT void obs_service_apply_encoder_settings(obs_service_t *service, obs_data_t *video_encoder_settings, obs_data_t *audio_encoder_settings);
     }
 }

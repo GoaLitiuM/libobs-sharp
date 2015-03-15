@@ -28,10 +28,15 @@ namespace OBS
 
         //EXPORT const char *obs_encoder_get_display_name(const char *id);
         //EXPORT obs_encoder_t *obs_video_encoder_create(const char *id, const char *name, obs_data_t *settings);
-        //EXPORT obs_encoder_t *obs_audio_encoder_create(const char *id, const char *name, obs_data_t *settings);
+        //EXPORT obs_encoder_t *obs_audio_encoder_create(const char *id, const char *name, obs_data_t *settings, size_t mixer_idx);
         //EXPORT void obs_encoder_destroy(obs_encoder_t *encoder);
+		
+		//EXPORT void obs_encoder_set_name(obs_encoder_t *encoder, const char *name);
         //EXPORT const char *obs_encoder_get_name(const obs_encoder_t *encoder);
+		//EXPORT const char *obs_get_encoder_codec(const char *id);
+		//EXPORT enum obs_encoder_type obs_get_encoder_type(const char *id);
         //EXPORT const char *obs_encoder_get_codec(const obs_encoder_t *encoder);
+		//EXPORT enum obs_encoder_type obs_encoder_get_type(const obs_encoder_t *encoder);
         //EXPORT void obs_encoder_set_scaled_size(obs_encoder_t *encoder, uint32_t width, uint32_t height);
         //EXPORT uint32_t obs_encoder_get_width(const obs_encoder_t *encoder);
         //EXPORT uint32_t obs_encoder_get_height(const obs_encoder_t *encoder);

@@ -85,22 +85,21 @@ namespace test
 					},
 				};
 
-				libobs.audio_output_info ai = new libobs.audio_output_info
+                libobs.obs_audio_info avi = new libobs.obs_audio_info
 				{
-					name = "Audio Output",
-					format = libobs.audio_format.AUDIO_FORMAT_FLOAT,
 					samples_per_sec = 44100,
 					speakers = libobs.speaker_layout.SPEAKERS_STEREO,
 					buffer_ms = 1000
 				};
+                
 
 				if (!Obs.Startup("en-US"))
 					throw new ApplicationException("Startup failed.");
 
-				if (Obs.ResetVideo(ovi) != 0)
+				if (!Obs.ResetVideo(ovi))
 					throw new ApplicationException("ResetVideo failed.");
 
-				if (!Obs.ResetAudio(ai))
+				if (!Obs.ResetAudio(avi))
 					throw new ApplicationException("ResetAudio failed.");
 
 				Obs.LoadAllModules();

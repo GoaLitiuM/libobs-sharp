@@ -38,12 +38,12 @@ namespace OBS
 			libobs.obs_load_all_modules();
 		}
 
-		public static int ResetVideo(libobs.obs_video_info ovi)
+		public static bool ResetVideo(libobs.obs_video_info ovi)
 		{
-			return libobs.obs_reset_video(ref ovi);
+            return (libobs.obs_reset_video(ref ovi) == (int)ObsVideoErrorCode.Success);
 		}
 
-		public static bool ResetAudio(libobs.audio_output_info ai)
+		public static bool ResetAudio(libobs.obs_audio_info ai)
 		{
 			return libobs.obs_reset_audio(ref ai);
 		}
@@ -59,9 +59,9 @@ namespace OBS
 			return ovi;
 		}
 
-		public static libobs.audio_output_info GetAudioInfo()
+		public static libobs.obs_audio_info GetAudioInfo()
 		{
-			libobs.audio_output_info ai = new libobs.audio_output_info();
+			libobs.obs_audio_info ai = new libobs.obs_audio_info();
 			bool ret = libobs.obs_get_audio_info(ref ai);
 
 			if (!ret)
@@ -223,4 +223,34 @@ namespace OBS
 		Top = (1 << 2),
 		Bottom = (1 << 3),
 	};
+
+    public enum ObsModuleErrorCode : int
+	{
+		Success = 0,
+		Error = -1,
+		FileNotFound = -2,
+		MissingExports = -3,
+		IncompatibleVersion = -4,
+	};
+
+    public enum ObsOutputErrorCode : int
+	{
+		Success = 0,
+		BadPath = -1,
+		ConnectFailed = -2,
+		InvalidStream = -3,
+		Error = -4,
+        Disconnected = -5,
+	};
+
+    public enum ObsVideoErrorCode : int
+	{
+		Success = 0,
+		Fail = -1,
+		NotSupported = -2,
+		InvalidParam = -3,
+		CurrentlyActive = -4,
+        ModuleNotFound = -5,
+	};
+
 }

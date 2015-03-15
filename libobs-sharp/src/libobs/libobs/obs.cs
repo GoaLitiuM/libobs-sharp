@@ -51,7 +51,7 @@ namespace OBS
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool obs_reset_audio(ref audio_output_info ai);
+        public static extern bool obs_reset_audio(ref obs_audio_info ai);
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         [return: MarshalAs(UnmanagedType.I1)]
@@ -59,7 +59,7 @@ namespace OBS
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool obs_get_audio_info(ref audio_output_info ai);
+        public static extern bool obs_get_audio_info(ref obs_audio_info ai);
 
         //EXPORT int obs_open_module(obs_module_t **module, const char *path, const char *data_path);
         //EXPORT bool obs_init_module(obs_module_t *module);
@@ -166,7 +166,11 @@ namespace OBS
         [DllImport(importLibrary, CallingConvention = importCall)]
         public static extern gs_effect_t obs_get_default_effect();
 
-        //EXPORT gs_effect_t *obs_get_default_rect_effect(void);
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern gs_effect_t obs_get_default_rect_effect();
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern gs_effect_t obs_get_opaque_effect();
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         public static extern gs_effect_t obs_get_solid_effect();

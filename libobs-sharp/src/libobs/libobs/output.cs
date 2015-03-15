@@ -46,10 +46,12 @@ namespace OBS
         //EXPORT void obs_output_set_media(obs_output_t *output, video_t *video, audio_t *audio);
         //EXPORT video_t *obs_output_video(const obs_output_t *output);
         //EXPORT audio_t *obs_output_audio(const obs_output_t *output);
+		//EXPORT void obs_output_set_mixer(obs_output_t *output, size_t mixer_idx);
+		//EXPORT size_t obs_output_get_mixer(const obs_output_t *output);
         //EXPORT void obs_output_set_video_encoder(obs_output_t *output, obs_encoder_t *encoder);
-        //EXPORT void obs_output_set_audio_encoder(obs_output_t *output, obs_encoder_t *encoder);
+        //EXPORT void obs_output_set_audio_encoder(obs_output_t *output, obs_encoder_t *encoder, size_t idx);
         //EXPORT obs_encoder_t *obs_output_get_video_encoder(const obs_output_t *output);
-        //EXPORT obs_encoder_t *obs_output_get_audio_encoder(const obs_output_t *output);
+        //EXPORT obs_encoder_t *obs_output_get_audio_encoder(const obs_output_t *output, size_t idx);
         //EXPORT void obs_output_set_service(obs_output_t *output, obs_service_t *service);
         //EXPORT obs_service_t *obs_output_get_service(const obs_output_t *output);
         //EXPORT void obs_output_set_reconnect_settings(obs_output_t *output, int retry_count, int retry_sec);

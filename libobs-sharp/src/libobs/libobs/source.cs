@@ -120,6 +120,13 @@ namespace OBS
         //EXPORT void obs_source_load(obs_source_t *source);
         //EXPORT void obs_source_set_flags(obs_source_t *source, uint32_t flags);
         //EXPORT uint32_t obs_source_get_flags(const obs_source_t *source);
+		//EXPORT void obs_source_set_audio_mixers(obs_source_t *source, uint32_t mixers);
+		//EXPORT uint32_t obs_source_get_audio_mixers(const obs_source_t *source);
+		//EXPORT void obs_source_inc_showing(obs_source_t *source);
+		//EXPORT void obs_source_dec_showing(obs_source_t *source);
+		//EXPORT void obs_source_enum_filters(obs_source_t *source, obs_source_enum_proc_t callback, void *param);
+		//EXPORT obs_source_t *obs_source_get_filter_by_name(obs_source_t *source, const char *name);
+
 
         /* ------------------------------------------------------------------------- */
         /* Functions used by sources */
@@ -131,7 +138,11 @@ namespace OBS
         //EXPORT void obs_source_update_properties(obs_source_t *source);
         //EXPORT struct obs_source_frame *obs_source_get_frame(obs_source_t *source);
         //EXPORT void obs_source_release_frame(obs_source_t *source, struct obs_source_frame *frame);
-        //EXPORT void obs_source_process_filter(obs_source_t *filter, gs_effect_t *effect, uint32_t width, uint32_t height, enum gs_color_format format, enum obs_allow_direct_render allow_direct);
+		
+		//EXPORT void obs_source_process_filter_begin(obs_source_t *filter, enum gs_color_format format, enum obs_allow_direct_render allow_direct);
+		//EXPORT void obs_source_process_filter_end(obs_source_t *filter, gs_effect_t *effect, uint32_t width, uint32_t height);
+		//EXPORT void obs_source_skip_video_filter(obs_source_t *filter);
+		
         //EXPORT bool obs_source_add_child(obs_source_t *parent, obs_source_t *child);
         //EXPORT void obs_source_remove_child(obs_source_t *parent, obs_source_t *child);
         //EXPORT void obs_source_send_mouse_click(obs_source_t *source, const struct obs_mouse_event *event, int32_t type, bool mouse_up, uint32_t click_count);
@@ -140,6 +151,9 @@ namespace OBS
         //EXPORT void obs_source_send_focus(obs_source_t *source, bool focus);
         //EXPORT void obs_source_send_key_click(obs_source_t *source, const struct obs_key_event *event, bool key_up);
         //EXPORT void obs_source_set_default_flags(obs_source_t *source, uint32_t flags);
+		//EXPORT uint32_t obs_source_get_base_width(obs_source_t *source);
+		//EXPORT uint32_t obs_source_get_base_height(obs_source_t *source);
+		//EXPORT void obs_source_reset_video_cache(obs_source_t *source);
 
         /* ------------------------------------------------------------------------- */
         /* Source frame allocation functions */

@@ -156,6 +156,8 @@ namespace OBS
 
         //EXPORT const char *gs_get_device_name(void);
         //EXPORT int gs_get_device_type(void);
+		//EXPORT void gs_enum_adapters(bool (*callback)(void *param, const char *name, uint32_t id), void *param);
+
 
         //EXPORT int gs_create(graphics_t **graphics, const char *module, const struct gs_init_data *data);
         //EXPORT void gs_destroy(graphics_t *graphics);
@@ -282,6 +284,9 @@ namespace OBS
         //EXPORT void gs_cubetexture_set_image(gs_texture_t *cubetex, uint32_t side, const void *data, uint32_t linesize, bool invert);
 
         //EXPORT void gs_perspective(float fovy, float aspect, float znear, float zfar);
+
+		//EXPORT void gs_blend_state_push(void);
+		//EXPORT void gs_blend_state_pop(void);
         //EXPORT void gs_reset_blend_state(void);
 
         //EXPORT gs_swapchain_t *gs_swapchain_create(const struct gs_init_data *data);
