@@ -16,14 +16,13 @@
 ***************************************************************************/
 
 using System;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace OBS
 {
 	public class ObsScene
 	{
-        internal IntPtr instance;    //pointer to unmanaged object
+		internal IntPtr instance;    //pointer to unmanaged object
+		internal ObsSource source;
 
 		public unsafe ObsScene(string name)
 		{
@@ -32,7 +31,7 @@ namespace OBS
 			if (instance == null)
 				throw new ApplicationException("obs_scene_create failed");
 
-			libobs.obs_scene_addref(instance);
+			source = new ObsSource(libobs.obs_scene_get_source(instance));
 		}
 
 		~ObsScene()
@@ -42,23 +41,19 @@ namespace OBS
 
 		public unsafe void Release()
 		{
-            if (instance == IntPtr.Zero)
+			if (instance == IntPtr.Zero)
 				return;
 
-            IntPtr source = libobs.obs_scene_get_source(instance);
-            libobs.obs_source_release(source);
-			//ObsSource source = GetSource();
-			//source.Release();
+			source.Release();
 
 			libobs.obs_scene_release(instance);
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 		}
 
-        public unsafe IntPtr GetPointer()
+		public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
-
 
 		public unsafe String Name
 		{
@@ -70,22 +65,18 @@ namespace OBS
 
 		public unsafe ObsSource GetSource()
 		{
-            IntPtr source = libobs.obs_scene_get_source(instance);
-			return new ObsSource(source);
+			return source;
 		}
 
 		public unsafe ObsSceneItem Add(ObsSource source)
 		{
-            IntPtr sceneItem = libobs.obs_scene_add(instance, source.GetPointer());
+			IntPtr sceneItem = libobs.obs_scene_add(instance, source.GetPointer());
 			return new ObsSceneItem(sceneItem);
 		}
 
-		
 		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)
 		{
 			libobs.obs_scene_enum_items(instance, callback, param);
 		}
-
-
 	}
 }

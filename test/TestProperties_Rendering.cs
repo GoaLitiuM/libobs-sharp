@@ -57,6 +57,7 @@ namespace test
 		private void ClosePreview()
 		{
 			Obs.RemoveDisplayDrawCallback(_display, _RenderPreview, this.Handle);
+			_display.Release();
 		}
 
 		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)

@@ -22,12 +22,14 @@ namespace OBS
 {
 	public class ObsSceneItem
 	{
-        internal IntPtr instance;    //pointer to unmanaged object
+		internal IntPtr instance;    //pointer to unmanaged object
+		internal ObsSource source;
 
-        public unsafe ObsSceneItem(IntPtr sceneItem)
+		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
 			instance = sceneItem;
-			libobs.obs_sceneitem_addref(instance);
+
+			source = new ObsSource(libobs.obs_sceneitem_get_source(instance));
 		}
 
 		~ObsSceneItem()
@@ -36,6 +38,7 @@ namespace OBS
 		}
 
 		#region Geometry
+
 		public int X
 		{
 			get { return Position.X; }
@@ -93,34 +96,35 @@ namespace OBS
 				return new Rectangle(Position, Size);
 			}
 		}
-		#endregion
+
+		#endregion Geometry
 
 		public string Name()
 		{
-			return GetSource().Name;
+			return source.Name;
 		}
 
 		public unsafe void Release()
 		{
-            if (instance == IntPtr.Zero)
+			if (instance == IntPtr.Zero)
 				return;
 
-			ObsSource source = GetSource();
 			source.Release();
 
 			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 		}
-        public unsafe IntPtr GetPointer()
+
+		public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
 
 		public unsafe ObsSource GetSource()
 		{
-            IntPtr source = libobs.obs_sceneitem_get_source(instance);
-			return new ObsSource(source);
+			return source;
 		}
+
 		public unsafe bool Selected
 		{
 			get

@@ -62,12 +62,17 @@ namespace test
 			};
 			cancelButton.Click += (o, args) => Close();
 		}
-		
+
+		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			ClosePreview();
+		}
+
 		private void GenerateControls()
 		{
 			// Add property controls
 			ObsData settings = Source.GetSettings();
-			foreach (var proppanel in _properties.Select(property => new PropertyPanel(property,settings)
+			foreach (var proppanel in _properties.Select(property => new PropertyPanel(property, settings)
 			{
 				Enabled = property.Enabled,
 				Visible = property.Visible,

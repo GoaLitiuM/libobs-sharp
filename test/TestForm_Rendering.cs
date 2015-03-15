@@ -154,7 +154,7 @@ namespace test
 			GS.TechniqueBeginPass(tech, 0);
 
 			//enum every sceneitem in scene
-			ObsScene scene = _scenes[_selectedScene];
+			ObsScene scene = (_scenes.Count <= _selectedScene) ? null : _scenes[_selectedScene];
 			if (scene != null)
 				scene.EnumItems(_EnumSceneItem, data);
 

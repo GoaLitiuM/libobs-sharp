@@ -19,9 +19,9 @@ using System;
 
 namespace OBS
 {
-	public class ObsSource
+	public class ObsSource : IDisposable
 	{
-        internal IntPtr instance;    //pointer to unmanaged object
+		internal IntPtr instance;    //pointer to unmanaged object
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name/*, obs_data settings*/)
 		{
@@ -29,8 +29,6 @@ namespace OBS
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
-
-			libobs.obs_source_addref(instance);
 		}
 
 		~ObsSource()
@@ -38,26 +36,30 @@ namespace OBS
 			Release();
 		}
 
+		public void Dispose()
+		{
+			Release();
+		}
+
 		public unsafe void Release()
 		{
-            if (instance == IntPtr.Zero)
+			if (instance == IntPtr.Zero)
 				return;
 
 			libobs.obs_source_release(instance);
-            instance = IntPtr.Zero;
+			instance = IntPtr.Zero;
 		}
 
-        public unsafe ObsSource(IntPtr instance)
+		public unsafe ObsSource(IntPtr instance)
 		{
 			this.instance = instance;
 			libobs.obs_source_addref(instance);
 		}
 
-        public unsafe IntPtr GetPointer()
+		public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
-
 
 		public unsafe String Name
 		{

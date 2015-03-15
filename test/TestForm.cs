@@ -47,15 +47,38 @@ namespace test
 			InitializeComponent();
 		}
 
-		~TestForm()
-		{
-			Obs.Shutdown();	//FIXME: finalizer is never called
-		}
-
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Obs.RemoveDrawCallback(_RenderMain, this.Handle);
+            RemoveScenesAndSources();
+
+            if (_boxPrimitive != null)
+                _boxPrimitive.Release();
+            if (_circlePrimitive != null)
+                _circlePrimitive.Release();
+
+            Obs.Shutdown();
 		}
+
+        private void RemoveScenesAndSources()
+        {
+            foreach (var scene in _sceneItems)
+                foreach (var item in scene)
+                    item.Release();
+
+            foreach (var scene in _sceneSources)
+                foreach (var source in scene)
+                    source.Release();
+
+            foreach (var scene in _scenes)
+                scene.Release();
+
+            _sceneSources.Clear();
+            _sceneItems.Clear();
+            _scenes.Clear();
+            sceneListBox.Items.Clear();
+            sourceListBox.Items.Clear();
+        }
 
 		private void TestForm_Load(object sender, EventArgs e)
 		{
@@ -119,7 +142,7 @@ namespace test
 				Obs.ResizeMainView(mainViewPanel.Width, mainViewPanel.Height);
 
 				//select the first item
-				_sceneItems[0][0].Selected = true;
+				//_sceneItems[0][0].Selected = true;
 			}
 			catch (System.BadImageFormatException exp)
 			{
@@ -158,13 +181,12 @@ namespace test
 
 			ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source" + (_sceneSources[_selectedScene].Count + 1));
 
-			ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
-			source.AddFilter(filter);
+			//ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
+			//source.AddFilter(filter);
 
 			ObsSceneItem item = _scenes[_selectedScene].Add(source);
 			item.SetScale(new libobs.vec2(20.0f, 20.0f));
 			item.SetPosition(new libobs.vec2(10 * _sceneSources[_selectedScene].Count, 10 * _sceneSources[_selectedScene].Count));
-
 
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
