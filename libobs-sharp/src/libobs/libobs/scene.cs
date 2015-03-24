@@ -122,6 +122,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_get_box_transform(obs_sceneitem_t item, out matrix4 transform);
 
+		//EXPORT bool obs_sceneitem_visible(const obs_sceneitem_t *item);
+		//EXPORT void obs_sceneitem_set_visible(obs_sceneitem_t *item, bool visible);
+
 		public enum obs_bounds_type : int
 		{
 			OBS_BOUNDS_NONE,            /**< no bounds */

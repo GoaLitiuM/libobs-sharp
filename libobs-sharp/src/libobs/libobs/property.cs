@@ -36,6 +36,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_properties_destroy(obs_properties_t props);
 
+		//EXPORT void obs_properties_set_flags(obs_properties_t *props, uint32_t flags);
+		//EXPORT uint32_t obs_properties_get_flags(obs_properties_t *props);
+
 		//EXPORT void obs_properties_set_param(obs_properties_t *propsvoid *param, void (*destroy)(void *param));
 		//EXPORT void *obs_properties_get_param(obs_properties_t *props);
 
@@ -50,6 +53,8 @@ namespace OBS
 		//EXPORT obs_property_t *obs_properties_add_bool(obs_properties_t *propsconst char *name, const char *description);
 		//EXPORT obs_property_t *obs_properties_add_int(obs_properties_t *propsconst char *name, const char *descriptionint min, int max, int step);
 		//EXPORT obs_property_t *obs_properties_add_float(obs_properties_t *propsconst char *name, const char *descriptiondouble min, double max, double step);
+		//EXPORT obs_property_t *obs_properties_add_int_slider(obs_properties_t *props, const char *name, const char *description, int min, int max, int step);
+		//EXPORT obs_property_t *obs_properties_add_float_slider(obs_properties_t *props, const char *name, const char *description, double min, double max, double step);
 		//EXPORT obs_property_t *obs_properties_add_text(obs_properties_t *propsconst char *name, const char *descriptionenum obs_text_type type);
 		//EXPORT obs_property_t *obs_properties_add_path(obs_properties_t *propsconst char *name, const char *descriptionenum obs_path_type type, const char *filterconst char *default_path);
 		//EXPORT obs_property_t *obs_properties_add_list(obs_properties_t *propsconst char *name, const char *descriptionenum obs_combo_type type, enum obs_combo_format format);
@@ -109,6 +114,9 @@ namespace OBS
 		public static extern int obs_property_int_step(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_number_type obs_property_int_type(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern double obs_property_float_min(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
@@ -116,6 +124,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern double obs_property_float_step(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_number_type obs_property_float_type(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_text_type obs_proprety_text_type(obs_property_t p);
@@ -226,6 +237,12 @@ namespace OBS
 			OBS_TEXT_DEFAULT,
 			OBS_TEXT_PASSWORD,
 			OBS_TEXT_MULTILINE,
+		};
+
+		public enum obs_number_type : int
+		{
+			OBS_NUMBER_SCROLLER,
+			OBS_NUMBER_SLIDER
 		};
 	}
 }

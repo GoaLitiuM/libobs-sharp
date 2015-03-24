@@ -58,6 +58,7 @@ namespace OBS
 		//EXPORT void obs_source_remove(obs_source_t *source);
 		//EXPORT bool obs_source_removed(const obs_source_t *source);
 		//EXPORT uint32_t obs_source_get_output_flags(const obs_source_t *source);
+		//EXPORT uint32_t obs_get_source_output_flags(enum obs_source_type type, const char *id);
 		//EXPORT obs_data_t *obs_get_source_defaults(enum obs_source_type type, const char *id);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
@@ -124,6 +125,12 @@ namespace OBS
 		//EXPORT void obs_source_dec_showing(obs_source_t *source);
 		//EXPORT void obs_source_enum_filters(obs_source_t *source, obs_source_enum_proc_t callback, void *param);
 		//EXPORT obs_source_t *obs_source_get_filter_by_name(obs_source_t *source, const char *name);
+
+		//EXPORT bool obs_source_enabled(const obs_source_t *source);
+		//EXPORT void obs_source_set_enabled(obs_source_t *source, bool enabled);
+
+		//EXPORT bool obs_source_muted(const obs_source_t *source);
+		//EXPORT void obs_source_set_muted(obs_source_t *source, bool muted);
 
 		/* ------------------------------------------------------------------------- */
 		/* Functions used by sources */
