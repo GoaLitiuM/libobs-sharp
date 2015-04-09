@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace test.Controls
@@ -31,12 +32,15 @@ namespace test.Controls
 			InitializeComponent();
 
 			List<Control> controls = new List<Control>();
-			string name = property.Description;
-			switch (property.Type)
+
+			string description = property.Description;
+			ObsPropertyType type = property.Type;
+
+			switch (type)
 			{
 				case ObsPropertyType.Bool:
 					{
-						name = String.Empty;
+						description = String.Empty;
 						CheckBox checkbox = new CheckBox
 						{
 							Text = property.Description,
@@ -50,33 +54,51 @@ namespace test.Controls
 						break;
 					}
 				case ObsPropertyType.Int:
-					{
-						NumericUpDown numeric = new NumericUpDown
-						{
-							Minimum = property.IntMin,
-							Maximum = property.IntMax,
-							Increment = property.IntStep,
-							Width = 300,
-							DecimalPlaces = 0,
-							Value = data.GetInt(property.Name)
-						};
-						numeric.ValueChanged += (sender, args) => data.SetInt(property.Name, (int)numeric.Value);
-						controls.Add(numeric);
-						break;
-					}
 				case ObsPropertyType.Float:
 					{
 						NumericUpDown numeric = new NumericUpDown
 						{
-							Minimum = (decimal)property.FloatMin,
-							Maximum = (decimal)property.FloatMax,
-							Increment = (decimal)property.FloatStep,
 							Width = 300,
-							DecimalPlaces = 2,
-							Value = (decimal)data.GetDouble(property.Name)
+							DecimalPlaces = 0
 						};
-						numeric.ValueChanged += (sender, args) => data.SetDouble(property.Name, (double)numeric.Value);
+
+						if (type == ObsPropertyType.Int)
+						{
+							int intMin = property.IntMin;
+							int intMax = property.IntMax;
+							long intValue = data.GetInt(property.Name);
+							intValue = Math.Max(Math.Min(intValue, intMax), intMin);
+
+							numeric.Minimum = intMin;
+							numeric.Maximum = intMax;
+							numeric.Increment = property.IntStep;
+							numeric.Value = intValue;
+
+							numeric.ValueChanged += (sender, args) => data.SetInt(property.Name, (int)numeric.Value);
+						}
+						else if (type == ObsPropertyType.Float)
+						{
+							double floatMin = property.FloatMin;
+							double floatMax = property.FloatMax;
+							double floatValue = data.GetDouble(property.Name);
+							floatValue = Math.Max(Math.Min(floatValue, floatMax), floatMin);
+
+							numeric.DecimalPlaces = 2;
+							numeric.Minimum = (decimal)floatMin;
+							numeric.Maximum = (decimal)floatMax;
+							numeric.Increment = (decimal)property.FloatStep;
+							numeric.Value = (decimal)floatValue;
+
+							numeric.ValueChanged += (sender, args) => data.SetDouble(property.Name, (double)numeric.Value);
+						}
+
+						if (property.IntType == ObsNumberType.Slider)
+						{
+							//TODO: implement horizontal slider + numeric box control setup, insert slider before numeric box
+						}
+
 						controls.Add(numeric);
+
 						break;
 					}
 				case ObsPropertyType.Text:
@@ -128,28 +150,32 @@ namespace test.Controls
 								{
 									// File Filter encoding
 									//
-									// obs encoding
-									// *   "Example types 1 and 2 (*.ex1 *.ex2);;Example type 3 (*.ex3)"
+									// Qt encoding examples
+									// "Image Files (*.BMP *.JPG *.GIF);;All files (*.*)"
+									// "Image Files (*.BMP;*.JPG;*.GIF);;*.*"
 									//
-									// .net encoding
-									// Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
+									// .NET encoding example
+									// "Image Files (*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*"
 
 									string filter = String.Empty;
-									string[] filters = property.PathFilter.Split(
-										new[]
-									{
-										';'
-									},
-										StringSplitOptions.RemoveEmptyEntries);
+									string[] groups = property.PathFilter.Split(new string[] { ";;" }, StringSplitOptions.RemoveEmptyEntries);
 
-									foreach (var s in filters)
+									foreach (string group in groups)
 									{
-										string mask = s.Split('(')[1].Split(')')[0].Replace(' ', ';');
-										filter += String.Format("{0}|{1}|", s, mask);
+										//captures description and pattern from Qt-encoded file filter group
+										Match match = new Regex(@"^([^\(]+)\(([^)]+)").Match(group);
+										if (match.Success)
+										{
+											string pattern = match.Groups[2].Value.Replace(' ', ';');
+											filter += String.Format("{0}|{1}|", group, pattern);
+										}
+										else
+										{
+											//group itself is the pattern
+											filter += String.Format("{0}|{0}|", group);
+										}
 									}
 									filter = filter.Remove(filter.LastIndexOf('|'));
-
-									// this is pretty yucky, someone make a nice regex!
 
 									OpenFileDialog filedialog = new OpenFileDialog
 									{
@@ -357,11 +383,11 @@ namespace test.Controls
 					}
 				default:
 					{
-						throw new Exception(String.Format("Error while trying to create controls for property {0}", property.Description));
+						throw new Exception(String.Format("Error, unimplemented property type for property {0}", property.Description));
 					}
 			}
 
-			nameLabel.Text = name;
+			nameLabel.Text = description;
 
 			foreach (var control in controls)
 			{
