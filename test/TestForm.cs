@@ -45,6 +45,9 @@ namespace test
 		public TestForm()
 		{
 			InitializeComponent();
+
+			if (System.Environment.Is64BitProcess)
+				Text += " (64-bit)";
 		}
 
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -150,13 +153,13 @@ namespace test
 						? "Loading 32-bit OBS with 64-bit executable is not supported."
 						: "Loading 64-bit OBS with 32-bit executable is not supported.")
 					+ "\n\n" + exp.Message,
-					"Error", MessageBoxButtons.OK);
-				Close();
+					"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Environment.Exit(1);
 			}
 			catch (Exception exp)
 			{
-				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK);
-				Close();
+				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Environment.Exit(1);
 			}
 		}
 

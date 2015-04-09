@@ -25,7 +25,7 @@ namespace OBS
 
 	public static partial class libobs
 	{
-		public const string importLibrary = "obs";	//extension is handled automatically
+		public const string importLibrary = "obs.dll";	//extension is handled automatically
 		public const CallingConvention importCall = CallingConvention.Cdecl;
 		public const CharSet importCharSet = CharSet.Ansi;
 
