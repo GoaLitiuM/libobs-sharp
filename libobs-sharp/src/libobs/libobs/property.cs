@@ -21,10 +21,13 @@ using System.Runtime.InteropServices;
 namespace OBS
 {
 	using int64_t = Int64;
-	using obs_properties_t = IntPtr;
+	using obs_data_t = IntPtr;
 
+	using obs_properties_t = IntPtr;
 	using obs_property_t = IntPtr;
 	using size_t = IntPtr;	//UIntPtr?
+
+	using uint32_t = UInt32;
 
 	public static partial class libobs
 	{
@@ -36,8 +39,11 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_properties_destroy(obs_properties_t props);
 
-		//EXPORT void obs_properties_set_flags(obs_properties_t *props, uint32_t flags);
-		//EXPORT uint32_t obs_properties_get_flags(obs_properties_t *props);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_properties_set_flags(obs_properties_t props, uint32_t flags);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern uint32_t obs_properties_get_flags(obs_properties_t props);
 
 		//EXPORT void obs_properties_set_param(obs_properties_t *propsvoid *param, void (*destroy)(void *param));
 		//EXPORT void *obs_properties_get_param(obs_properties_t *props);
@@ -45,7 +51,7 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_property_t obs_properties_first(obs_properties_t props);
 
-		//EXPORT obs_property_t *obs_properties_get(obs_properties_t *propsconst char *property);
+		//EXPORT obs_property_t *obs_properties_get(obs_properties_t *props, const char *property);
 		//EXPORT void obs_properties_apply_settings(obs_properties_t *props, obs_data_t *settings);
 
 		/* ------------------------------------------------------------------------- */
@@ -65,11 +71,23 @@ namespace OBS
 		/* ------------------------------------------------------------------------- */
 
 		//EXPORT void obs_property_set_modified_callback(obs_property_t *pobs_property_modified_t modified);
-		//EXPORT bool obs_property_modified(obs_property_t *p, obs_data_t *settings);
-		//EXPORT bool obs_property_button_clicked(obs_property_t *p, void *obj);
-		//EXPORT void obs_property_set_visible(obs_property_t *p, bool visible);
-		//EXPORT void obs_property_set_enabled(obs_property_t *p, bool enabled);
-		//EXPORT void obs_property_set_description(obs_property_t *p, const char *description);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_modified(obs_property_t p, obs_data_t settings);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_button_clicked(obs_property_t p, IntPtr obj);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_property_set_visible(obs_property_t p, bool visible);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_property_set_enabled(obs_property_t p, bool enabled);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern void obs_property_set_description(obs_property_t p, string description);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_name")]
 		private static extern IntPtr import_obs_property_name(obs_property_t p);

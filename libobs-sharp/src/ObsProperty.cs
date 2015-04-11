@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace OBS
 {
-	public class ObsProperty
+	public class ObsProperty : IDisposable
 	{
 		internal IntPtr instance;   //pointer to unmanaged object
 		internal ObsProperties properties = null;
@@ -32,159 +32,128 @@ namespace OBS
 			properties.AddRef();
 		}
 
-		unsafe ~ObsProperty()
+		public unsafe void Dispose()
 		{
 			instance = IntPtr.Zero;
 
 			if (properties == null)
 				return;
 
-			properties.Release();
+			properties.Dispose();
 			properties = null;
 		}
 
 		public unsafe String Name
 		{
-			get
-			{
-				return libobs.obs_property_name(instance);
-			}
+			get { return libobs.obs_property_name(instance); }
 		}
 
 		public unsafe String Description
 		{
-			get
-			{
-				return libobs.obs_property_description(instance);
-			}
+			get { return libobs.obs_property_description(instance); }
+			set { libobs.obs_property_set_description(instance, value); }
 		}
 
 		public unsafe ObsPropertyType Type
 		{
-			get
-			{
-				return (ObsPropertyType)libobs.obs_property_get_type(instance);
-			}
+			get { return (ObsPropertyType)libobs.obs_property_get_type(instance); }
 		}
 
 		public unsafe bool Enabled
 		{
-			get
-			{
-				return libobs.obs_property_enabled(instance);
-			}
+			get { return libobs.obs_property_enabled(instance); }
+			set { libobs.obs_property_set_enabled(instance, value); }
 		}
 
 		public unsafe bool Visible
 		{
-			get
-			{
-				return libobs.obs_property_visible(instance);
-			}
+			get { return libobs.obs_property_visible(instance); }
+			set { libobs.obs_property_set_visible(instance, value); }
 		}
 
 		public unsafe int IntMin
 		{
-			get
-			{
-				return libobs.obs_property_int_min(instance);
-			}
+			get { return libobs.obs_property_int_min(instance); }
 		}
 
 		public unsafe int IntMax
 		{
-			get
-			{
-				return libobs.obs_property_int_max(instance);
-			}
+			get { return libobs.obs_property_int_max(instance); }
 		}
 
 		public unsafe int IntStep
 		{
-			get
-			{
-				return libobs.obs_property_int_step(instance);
-			}
+			get { return libobs.obs_property_int_step(instance); }
+		}
+
+		public unsafe ObsNumberType IntType
+		{
+			get { return (ObsNumberType)libobs.obs_property_int_type(instance); }
 		}
 
 		public unsafe double FloatMin
 		{
-			get
-			{
-				return libobs.obs_property_float_min(instance);
-			}
+			get { return libobs.obs_property_float_min(instance); }
 		}
 
 		public unsafe double FloatMax
 		{
-			get
-			{
-				return libobs.obs_property_float_max(instance);
-			}
+			get { return libobs.obs_property_float_max(instance); }
 		}
 
 		public unsafe double FloatStep
 		{
-			get
-			{
-				return libobs.obs_property_float_step(instance);
-			}
+			get { return libobs.obs_property_float_step(instance); }
+		}
+
+		public unsafe ObsNumberType FloatType
+		{
+			get { return (ObsNumberType)libobs.obs_property_float_type(instance); }
 		}
 
 		public unsafe ObsTextType TextType
 		{
-			get
-			{
-				return (ObsTextType)libobs.obs_proprety_text_type(instance);
-			}
+			get { return (ObsTextType)libobs.obs_proprety_text_type(instance); }
 		}
 
 		public unsafe ObsPathType PathType
 		{
-			get
-			{
-				return (ObsPathType)libobs.obs_property_path_type(instance);
-			}
+			get { return (ObsPathType)libobs.obs_property_path_type(instance); }
 		}
 
 		public unsafe string PathFilter
 		{
-			get
-			{
-				return libobs.obs_property_path_filter(instance);
-			}
+			get { return libobs.obs_property_path_filter(instance); }
 		}
 
 		public unsafe string PathDefault
 		{
-			get
-			{
-				return libobs.obs_property_path_default_path(instance);
-			}
+			get { return libobs.obs_property_path_default_path(instance); }
 		}
 
 		public unsafe ObsComboType ListType
 		{
-			get
-			{
-				return (ObsComboType)libobs.obs_property_list_type(instance);
-			}
+			get { return (ObsComboType)libobs.obs_property_list_type(instance); }
 		}
 
 		public unsafe ObsComboFormat ListFormat
 		{
-			get
-			{
-				return (ObsComboFormat)libobs.obs_property_list_format(instance);
-			}
+			get { return (ObsComboFormat)libobs.obs_property_list_format(instance); }
 		}
 
 		public unsafe int ListItemCount
 		{
-			get
-			{
-				return (int)libobs.obs_property_list_item_count(instance);
-			}
+			get { return (int)libobs.obs_property_list_item_count(instance); }
+		}
+
+		public unsafe bool Modified(ObsData settings)
+		{
+			return libobs.obs_property_modified(instance, settings.GetPointer());
+		}
+
+		public unsafe bool ButtonClicked(IntPtr obj)
+		{
+			return libobs.obs_property_modified(instance, obj);
 		}
 
 		public unsafe string[] GetListItemNames()
@@ -215,41 +184,6 @@ namespace OBS
 			}
 
 			return values.ToArray();
-		}
-	}
-
-	public class ObsProperties
-	{
-		internal IntPtr instance;    //pointer to unmanaged object
-		internal int refs = 0;
-
-		public unsafe ObsProperties(IntPtr pointer)
-		{
-			instance = pointer;
-		}
-
-		unsafe ~ObsProperties()
-		{
-			Release();
-		}
-
-		public unsafe void AddRef()
-		{
-			if (instance == IntPtr.Zero)
-				return;
-
-			refs++;
-		}
-
-		public unsafe void Release()
-		{
-			refs--;
-
-			if (refs > 0 || instance == IntPtr.Zero)
-				return;
-
-			libobs.obs_properties_destroy((IntPtr)instance);
-			instance = IntPtr.Zero;
 		}
 	}
 
@@ -293,5 +227,11 @@ namespace OBS
 		Default,
 		Password,
 		Multiline,
+	};
+
+	public enum ObsNumberType : int
+	{
+		Scroller,
+		Slider
 	};
 }

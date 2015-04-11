@@ -56,9 +56,9 @@ namespace test
 			RemoveScenesAndSources();
 
 			if (_boxPrimitive != null)
-				_boxPrimitive.Release();
+				_boxPrimitive.Dispose();
 			if (_circlePrimitive != null)
-				_circlePrimitive.Release();
+				_circlePrimitive.Dispose();
 
 			Obs.Shutdown();
 		}
@@ -67,14 +67,14 @@ namespace test
 		{
 			foreach (var scene in _sceneItems)
 				foreach (var item in scene)
-					item.Release();
+					item.Dispose();
 
 			foreach (var scene in _sceneSources)
 				foreach (var source in scene)
-					source.Release();
+					source.Dispose();
 
 			foreach (var scene in _scenes)
-				scene.Release();
+				scene.Dispose();
 
 			_sceneSources.Clear();
 			_sceneItems.Clear();
@@ -290,13 +290,13 @@ namespace test
 				return;
 
 			foreach (ObsSceneItem item in _sceneItems[index])
-				item.Release();
+				item.Dispose();
 
 			foreach (ObsSource source in _sceneSources[index])
-				source.Release();
+				source.Dispose();
 
 			ObsScene scene = _scenes[index];
-			scene.Release();
+			scene.Dispose();
 
 			_sceneSources.RemoveAt(index);
 			_scenes.RemoveAt(index);
@@ -315,10 +315,10 @@ namespace test
 				return;
 
 			ObsSource source = _sceneSources[_selectedScene][index];
-			source.Release();
+			source.Dispose();
 
 			ObsSceneItem item = _sceneItems[_selectedScene][index];
-			item.Release();
+			item.Dispose();
 
 			_sceneSources[_selectedScene].RemoveAt(index);
 			_sceneItems[_selectedScene].RemoveAt(index);

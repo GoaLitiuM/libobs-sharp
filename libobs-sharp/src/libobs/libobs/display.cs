@@ -43,5 +43,15 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_display_remove_draw_callback(obs_display_t display, draw_callback draw, IntPtr param);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_set_enabled(obs_display_t display, [MarshalAs(UnmanagedType.I1)] bool enable);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_display_enabled(obs_display_t display);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_display_set_background_color(obs_display_t display, uint32_t color);
 	}
 }

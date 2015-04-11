@@ -90,6 +90,7 @@
     <Compile Include="src\GS.cs" />
     <Compile Include="src\ObsData.cs" />
     <Compile Include="src\ObsDisplay.cs" />
+    <Compile Include="src\ObsProperties.cs" />
     <Compile Include="src\ObsProperty.cs" />
     <Compile Include="src\ObsScene.cs" />
     <Compile Include="src\ObsSceneItem.cs" />

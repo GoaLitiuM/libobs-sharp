@@ -19,7 +19,7 @@ using System;
 
 namespace OBS.Graphics
 {
-	public class GSEffectTechnique
+	public class GSEffectTechnique : IDisposable
 	{
 		internal IntPtr instance;   //pointer to unmanaged object
 
@@ -28,12 +28,7 @@ namespace OBS.Graphics
 			instance = ptr;
 		}
 
-		~GSEffectTechnique()
-		{
-			Release();
-		}
-
-		public void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;

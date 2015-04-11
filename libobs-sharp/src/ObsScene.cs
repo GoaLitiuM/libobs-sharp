@@ -19,7 +19,7 @@ using System;
 
 namespace OBS
 {
-	public class ObsScene
+	public class ObsScene : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 		internal ObsSource source;
@@ -34,17 +34,12 @@ namespace OBS
 			source = new ObsSource(libobs.obs_scene_get_source(instance));
 		}
 
-		~ObsScene()
-		{
-			Release();
-		}
-
-		public unsafe void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;
 
-			source.Release();
+			source.Dispose();
 
 			libobs.obs_scene_release(instance);
 			instance = IntPtr.Zero;

@@ -19,7 +19,7 @@ using System;
 
 namespace OBS.Graphics
 {
-	public class GSVertexBuffer
+	public class GSVertexBuffer : IDisposable
 	{
 		internal IntPtr instance = IntPtr.Zero; //pointer to unmanaged object
 
@@ -36,12 +36,7 @@ namespace OBS.Graphics
 			this.instance = instance;
 		}
 
-		~GSVertexBuffer()
-		{
-			Release();
-		}
-
-		public void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;

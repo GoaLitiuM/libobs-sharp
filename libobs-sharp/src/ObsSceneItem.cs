@@ -20,7 +20,7 @@ using System.Drawing;
 
 namespace OBS
 {
-	public class ObsSceneItem
+	public class ObsSceneItem : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 		internal ObsSource source;
@@ -32,17 +32,12 @@ namespace OBS
 			source = new ObsSource(libobs.obs_sceneitem_get_source(instance));
 		}
 
-		~ObsSceneItem()
-		{
-			Release();
-		}
-
-		public unsafe void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;
 
-			source.Release();
+			source.Dispose();
 
 			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
 			instance = IntPtr.Zero;

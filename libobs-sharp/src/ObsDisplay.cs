@@ -19,7 +19,7 @@ using System;
 
 namespace OBS
 {
-	public class ObsDisplay
+	public class ObsDisplay : IDisposable
 	{
 		internal IntPtr instance;   //pointer to unmanaged object
 
@@ -36,12 +36,7 @@ namespace OBS
 			instance = ptr;
 		}
 
-		~ObsDisplay()
-		{
-			Release();
-		}
-
-		public void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;

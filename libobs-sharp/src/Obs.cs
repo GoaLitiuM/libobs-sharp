@@ -117,7 +117,8 @@ namespace OBS
 			List<string> idList = new List<string>();
 
 			while (libobs.obs_enum_input_types(idx++, out id))
-				idList.Add(id);
+				if (id != "scene")
+					idList.Add(id);
 
 			return idList.ToArray();
 		}
@@ -174,7 +175,7 @@ namespace OBS
 				property = next;
 			}
 
-			props.Release();
+			props.Dispose();
 
 			return propertyList.ToArray();
 		}

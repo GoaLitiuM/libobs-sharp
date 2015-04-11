@@ -31,17 +31,7 @@ namespace OBS
 				throw new ApplicationException("obs_source_create failed");
 		}
 
-		~ObsSource()
-		{
-			Release();
-		}
-
-		public void Dispose()
-		{
-			Release();
-		}
-
-		public unsafe void Release()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;
@@ -93,6 +83,26 @@ namespace OBS
 				return null;
 
 			return new ObsData(ptr);
+		}
+
+		public unsafe static ObsProperties GetProperties(ObsSourceType type, string id)
+		{
+			IntPtr ptr = libobs.obs_get_source_properties((libobs.obs_source_type)type, id);
+
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsProperties(ptr);
+		}
+
+		public unsafe ObsProperties GetProperties()
+		{
+			IntPtr ptr = libobs.obs_source_properties(instance);
+
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsProperties(ptr);
 		}
 
 		public unsafe void AddFilter(ObsSource filter)

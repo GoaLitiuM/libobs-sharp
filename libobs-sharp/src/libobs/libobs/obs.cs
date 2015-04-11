@@ -182,6 +182,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern gs_effect_t obs_get_lanczos_effect();
 
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern gs_effect_t obs_get_bilinear_lowres_effect();
+
 		//EXPORT signal_handler_t *obs_get_signal_handler(void);
 		//EXPORT proc_handler_t *obs_get_proc_handler(void);
 
@@ -216,6 +219,13 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_array_t obs_save_sources();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_preview_set_enabled([MarshalAs(UnmanagedType.I1)] bool enable);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_preview_enabled();
 
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public struct obs_video_info

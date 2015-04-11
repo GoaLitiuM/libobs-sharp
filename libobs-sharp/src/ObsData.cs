@@ -19,9 +19,14 @@ using System;
 
 namespace OBS
 {
-	public class ObsData
+	public class ObsData : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
+
+		public ObsData()
+		{
+			instance = libobs.obs_data_create();
+		}
 
 		public ObsData(IntPtr ptr)
 		{
@@ -30,12 +35,18 @@ namespace OBS
 			libobs.obs_data_addref(instance);
 		}
 
-		~ObsData()
+		public ObsData(string json)
 		{
-			Release();
+			instance = libobs.obs_data_create_from_json(json);
 		}
 
-		public void Release()
+		public ObsData(ObsData data)
+			: this()
+		{
+			libobs.obs_data_apply(instance, data.GetPointer());
+		}
+
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;
@@ -48,6 +59,16 @@ namespace OBS
 		public IntPtr GetPointer()
 		{
 			return instance;
+		}
+
+		public unsafe void Erase(string name)
+		{
+			libobs.obs_data_erase((IntPtr)instance, name);
+		}
+
+		public unsafe void Clear()
+		{
+			libobs.obs_data_clear((IntPtr)instance);
 		}
 
 		//Getters
