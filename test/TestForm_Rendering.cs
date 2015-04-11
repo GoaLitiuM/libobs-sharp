@@ -26,8 +26,7 @@ namespace test
 	{
 		private GSVertexBuffer _boxPrimitive;
 		private GSVertexBuffer _circlePrimitive;
-		public float MainViewWidth = 1;
-		public float MainViewHeight = 1;
+		public float PreviewScale = 1;
 
 		private const float HANDLE_RADIUS = 5.0f;
 		private const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
@@ -60,49 +59,52 @@ namespace test
 
 		private static void RenderMain(IntPtr data, UInt32 cx, UInt32 cy)
 		{
+			TestForm window = Control.FromHandle(data) as TestForm;
+			if (window == null)
+				return;
+
+			libobs.obs_video_info ovi = Obs.GetVideoInfo();
+
+			int newW = (int)cx;
+			int newH = (int)cy;
+			uint baseWidth = ovi.base_width;
+			uint baseHeight = ovi.base_height;
+			float previewAspect = (float)cx / cy;
+			float baseAspect = (float)baseWidth / baseHeight;
+
+			//calculate new width and height for source to make it fit inside the preview area
+			if (previewAspect > baseAspect)
+				newW = (int)(cy * baseAspect);
+			else
+				newH = (int)(cx / baseAspect);
+
+			int centerX = ((int)cx - newW) / 2;
+			int centerY = ((int)cy - newH) / 2;
+
+			window.PreviewScale = (float)newW / newH;
+
 			GS.ViewportPush();
 			GS.ProjectionPush();
 
-			TestForm window = Control.FromHandle(data) as TestForm;
-			libobs.obs_video_info ovi = Obs.GetVideoInfo();
-
-			int previewCX = window.mainViewPanel.Width;
-			int previewCY = window.mainViewPanel.Height;
-			double previewAspect = (double)previewCX / previewCY;
-			double baseAspect = (double)ovi.base_width / (double)ovi.base_height;
-
-			//adjust either width or height to match base aspect ratio
-			if (previewAspect < baseAspect)
-				previewCY = (int)((double)previewCX / baseAspect);
-			else
-				previewCX = (int)((double)previewCY * baseAspect);
-
-			//calculate viewport top-left corner in panel to place the scene in center of it
-			int previewX = (int)(((double)window.mainViewPanel.Width - previewCX) / 2);
-			int previewY = (int)(((double)window.mainViewPanel.Height - previewCY) / 2);
-			//window._previewScale = (float)previewCX / ovi.base_width;
-			window.MainViewWidth = previewCX;
-			window.MainViewHeight = previewCY;
-
 			//setup orthographic projection of the whole scene to be presented on viewport
-			GS.Ortho(0.0f, (float)ovi.base_width, 0.0f, (float)ovi.base_height, -100.0f, 100.0f);
-			GS.SetViewport(previewX, previewY, previewCX, previewCY);
+			GS.Ortho(0.0f, baseWidth, 0.0f, baseHeight, -100.0f, 100.0f);
+			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//draw scene background
-			window.ClearBackground(ovi.base_width, ovi.base_height);
+			window.ClearBackground(baseWidth, baseHeight);
 
-			//render main view including all visible sources
+			//render all visible sources
 			Obs.RenderMainView();
 
 			//calculate bottom-right corner on scene space
-			int right = window.mainViewPanel.Width - previewX;
-			int bottom = window.mainViewPanel.Height - previewY;
+			int right = newW - centerX;
+			int bottom = newH - centerY;
 
 			//ortho for the outer area which would normally not appear on scene
-			GS.Ortho(-previewX, right, -previewY, bottom, -100.0f, 100.0f);
+			GS.Ortho(-centerX, right, -centerY, bottom, -100.0f, 100.0f);
 			GS.ResetViewport();
 
-			//TODO: render everything related to scene editing here like source outlines
+			//render editing overlays
 			window.RenderSceneEditing(data);
 
 			GS.ProjectionPop();
@@ -165,7 +167,6 @@ namespace test
 				return true;
 
 			TestForm window = Control.FromHandle(data) as TestForm;
-			float previewScale = MainViewWidth / MainWidth;
 
 			GS.LoadVertexBuffer(_circlePrimitive);
 
@@ -173,17 +174,17 @@ namespace test
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
 
 			//render the tiny circles on corners
-			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);
-			DrawPrimitive(0.0f, 1.0f, boxTransform, previewScale);
-			DrawPrimitive(1.0f, 1.0f, boxTransform, previewScale);
-			DrawPrimitive(1.0f, 0.0f, boxTransform, previewScale);
+			DrawPrimitive(0.0f, 0.0f, boxTransform, PreviewScale);
+			DrawPrimitive(0.0f, 1.0f, boxTransform, PreviewScale);
+			DrawPrimitive(1.0f, 1.0f, boxTransform, PreviewScale);
+			DrawPrimitive(1.0f, 0.0f, boxTransform, PreviewScale);
 
 			//render the main selection rectangle
 
 			GS.LoadVertexBuffer(_boxPrimitive);
 
 			GS.MatrixPush();
-			GS.MatrixScale3f(previewScale, previewScale, 1.0f);
+			GS.MatrixScale3f(PreviewScale, PreviewScale, 1.0f);
 			GS.MatrixMul(boxTransform);
 			GS.Draw(GSDrawMode.LineStrip, 0, 0);
 			GS.MatrixPop();
@@ -205,11 +206,6 @@ namespace test
 			GS.MatrixScale3f(HANDLE_RADIUS, HANDLE_RADIUS, 1.0f);
 			GS.Draw(GSDrawMode.LineStrip, 0, 0);
 			GS.MatrixPop();
-		}
-
-		public float GetPreviewScale()
-		{
-			return (float)MainViewWidth / MainWidth;
 		}
 	}
 }

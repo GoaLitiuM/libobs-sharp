@@ -38,7 +38,7 @@ namespace test.Controls
 			List<Control> controls = new List<Control>();
 
 			string description = property.Description;
-			ObsPropertyType type = property.Type;	
+			ObsPropertyType type = property.Type;
 
 			switch (type)
 			{
@@ -102,8 +102,8 @@ namespace test.Controls
 							numeric.Increment = (decimal)property.FloatStep;
 							numeric.Value = (decimal)floatValue;
 
-							numeric.ValueChanged += (sender, args) => 
-							{ 
+							numeric.ValueChanged += (sender, args) =>
+							{
 								setting.SetDouble(property.Name, (double)numeric.Value);
 								PropertyChanged(property, setting);
 							};
@@ -380,7 +380,7 @@ namespace test.Controls
 						{
 							Text = property.Description
 						};
-						
+
 						button.Click += (sender, args) =>
 						{
 							//TODO: proper handling for property.ButtonClicked and callbacks
@@ -439,7 +439,7 @@ namespace test.Controls
 									fontData.SetInt("size", (int)font.SizeInPoints);
 									fontData.SetInt("flags", (int)font.Style);
 								}
-								
+
 								PropertyChanged(property, setting);
 
 								font = new Font(font.Name, 25f, font.Style);
@@ -481,6 +481,5 @@ namespace test.Controls
 			if (_modifiedDelegate != null)
 				_modifiedDelegate(refresh);
 		}
-
 	}
 }

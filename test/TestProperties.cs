@@ -57,7 +57,7 @@ namespace test
 			GenerateControls();
 
 			//TODO: this shit is confusing!
-			InitPreview(previewPanel.Width, previewPanel.Width, this.Handle);
+			InitPreview(previewPanel.Width, previewPanel.Height, this.Handle);
 
 			oldSettings = new ObsData(sourceSettings);
 

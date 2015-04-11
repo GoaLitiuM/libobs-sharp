@@ -15,42 +15,77 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	using obs_scene_t = IntPtr;
-	using obs_sceneitem_t = IntPtr;
-	using obs_source_t = IntPtr;
-
 	public static partial class libobs
 	{
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_scene_t obs_scene_create(string name);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec2_abs(out Vector2 dst, out Vector2 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_scene_addref(obs_scene_t source);
+		public static extern void vec2_floor(out Vector2 dst, out Vector2 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_scene_release(obs_scene_t source);
+		public static extern void vec2_ceil(out Vector2 dst, out Vector2 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_source_t obs_scene_get_source(obs_scene_t scene);
+		public static extern int vec2_close(out Vector2 v1, out Vector2 v2, float epsilon);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_scene_t obs_scene_from_source(obs_source_t source);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_sceneitem_t obs_scene_find_source(obs_scene_t scene, string name);
-
-		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
-		public delegate bool sceneitem_enum_callback(obs_scene_t scene, obs_sceneitem_t sceneItem, IntPtr data);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_scene_enum_items(obs_scene_t scene, sceneitem_enum_callback callback, IntPtr param);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_sceneitem_t obs_scene_add(obs_scene_t scene, obs_source_t source);
+		public static extern void vec2_norm(out Vector2 dst, out Vector2 v);
 	}
+
+	[StructLayout(LayoutKind.Explicit, Size = 8)]
+	public struct Vector2
+	{
+		public Vector2(float x, float y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+
+		[FieldOffset(0)]
+		public float x;
+
+		[FieldOffset(4)]
+		public float y;
+
+		[FieldOffset(0)]
+		public unsafe fixed float ptr[2];
+
+		public Vector2 Abs()
+		{
+			Vector2 v = this;
+			libobs.vec2_abs(out v, out this);
+			return v;
+		}
+
+		public Vector2 Floor()
+		{
+			Vector2 v = this;
+			libobs.vec2_floor(out v, out this);
+			return v;
+		}
+
+		public Vector2 Ceil()
+		{
+			Vector2 v = this;
+			libobs.vec2_ceil(out v, out this);
+			return v;
+		}
+
+		public bool Close(out Vector2 v2, float epsilon)
+		{
+			return (libobs.vec2_close(out this, out v2, epsilon) != 0);
+		}
+
+		public Vector2 Normalize()
+		{
+			Vector2 v = this;
+			libobs.vec2_norm(out v, out this);
+			return v;
+		}
+	};
 }

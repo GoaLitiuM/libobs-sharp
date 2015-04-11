@@ -21,13 +21,11 @@ using System.Runtime.InteropServices;
 namespace OBS
 {
 	using gs_effect_t = IntPtr;
-
 	using obs_data_array_t = IntPtr;
 	using obs_data_t = IntPtr;
 	using obs_source_t = IntPtr;
 
 	using size_t = IntPtr;	//UIntPtr?
-
 	using uint32_t = UInt32;
 
 	public static partial class libobs

@@ -21,7 +21,6 @@ using System.Runtime.InteropServices;
 namespace OBS
 {
 	using obs_data_t = IntPtr;
-
 	using obs_properties_t = IntPtr;
 	using obs_source_t = IntPtr;
 

@@ -16,7 +16,6 @@
 ***************************************************************************/
 
 using System;
-using System.Drawing;
 
 namespace OBS
 {
@@ -53,68 +52,31 @@ namespace OBS
 			return source;
 		}
 
-		#region Geometry
-
-		public int X
+		public float X
 		{
-			get { return Position.X; }
+			get { return Position.x; }
 		}
 
-		public int Y
+		public float Y
 		{
-			get { return Position.Y; }
-		}
-
-		/// <summary>
-		/// Absolute width of scene item
-		/// </summary>
-		public int Width
-		{
-			get { return Size.Width; }
+			get { return Position.y; }
 		}
 
 		/// <summary>
-		/// Absolute heigth of scene item
+		/// Boundary width of scene item
 		/// </summary>
-		public int Height
+		public float Width
 		{
-			get { return Size.Height; }
-		}
-
-		public Point Position
-		{
-			get
-			{
-				libobs.vec2 pos = GetPosition();
-				return new Point((int)pos.x, (int)pos.y);
-			}
+			get { return Bounds.x; }
 		}
 
 		/// <summary>
-		/// Absolute Size of scene item
+		/// Boundary heigth of scene item
 		/// </summary>
-		public Size Size
+		public float Height
 		{
-			get
-			{
-				var source = GetSource();
-				var scale = GetScale();
-				return new Size((int)(source.Width * scale.x), (int)(source.Height * scale.y));
-			}
+			get { return Bounds.y; }
 		}
-
-		/// <summary>
-		/// Scene item bounds
-		/// </summary>
-		public Rectangle Bounds
-		{
-			get
-			{
-				return new Rectangle(Position, Size);
-			}
-		}
-
-		#endregion Geometry
 
 		public string Name()
 		{
@@ -123,62 +85,98 @@ namespace OBS
 
 		public unsafe bool Selected
 		{
+			get { return libobs.obs_sceneitem_selected(instance); }
+			set { libobs.obs_sceneitem_select(instance, value); }
+		}
+
+		public Vector2 Position
+		{
 			get
 			{
-				return libobs.obs_sceneitem_selected(instance);
+				Vector2 pos;
+				libobs.obs_sceneitem_get_pos(instance, out pos);
+				return pos;
 			}
-			set
-			{
-				libobs.obs_sceneitem_select(instance, value);
-			}
-		}
-
-		public unsafe libobs.vec2 GetPosition()
-		{
-			libobs.vec2 position;
-			libobs.obs_sceneitem_get_pos(instance, out position);
-			return position;
-		}
-
-		public unsafe float GetRotation()
-		{
-			return libobs.obs_sceneitem_get_rot(instance);
-		}
-
-		public unsafe libobs.vec2 GetScale()
-		{
-			libobs.vec2 scale;
-			libobs.obs_sceneitem_get_scale(instance, out scale);
-			return scale;
-		}
-
-		public unsafe ObsAlignment GetAlignment()
-		{
-			return (ObsAlignment)libobs.obs_sceneitem_get_alignment(instance);
-		}
-
-		public unsafe void SetPosition(libobs.vec2 position)
-		{
-			libobs.obs_sceneitem_set_pos(instance, out position);
-		}
-
-		public unsafe void SetRotation(float rotation)
-		{
-			libobs.obs_sceneitem_set_rot(instance, rotation);
+			set { libobs.obs_sceneitem_set_pos(instance, out value); }
 		}
 
 		/// <summary>
 		/// Sets scale of layer
 		/// </summary>
-		/// <param name="scale">1f = original size</param>
-		public unsafe void SetScale(libobs.vec2 scale)
+		public Vector2 Scale
 		{
-			libobs.obs_sceneitem_set_scale(instance, out scale);
+			get
+			{
+				Vector2 scale;
+				libobs.obs_sceneitem_get_scale(instance, out scale);
+				return scale;
+			}
+			set { libobs.obs_sceneitem_set_scale(instance, out value); }
 		}
 
-		public unsafe void SetAlignment(ObsAlignment alignment)
+		public float Rotation
 		{
-			libobs.obs_sceneitem_set_alignment(instance, (uint)alignment);
+			get { return libobs.obs_sceneitem_get_rot(instance); }
+			set { libobs.obs_sceneitem_set_rot(instance, value); }
+		}
+
+		public unsafe Vector2 Bounds
+		{
+			get
+			{
+				Vector2 bounds;
+				libobs.obs_sceneitem_get_bounds(instance, out bounds);
+				return bounds;
+			}
+			set { libobs.obs_sceneitem_set_bounds(instance, out value); }
+		}
+
+		public unsafe ObsBoundsType BoundsType
+		{
+			get { return (ObsBoundsType)libobs.obs_sceneitem_get_bounds_type(instance); }
+			set { libobs.obs_sceneitem_set_bounds_type(instance, (libobs.obs_bounds_type)value); }
+		}
+
+		public unsafe ObsAlignment BoundsAlignment
+		{
+			get { return (ObsAlignment)libobs.obs_sceneitem_get_bounds_alignment(instance); }
+			set { libobs.obs_sceneitem_set_bounds_alignment(instance, (uint)value); }
+		}
+
+		public ObsAlignment Alignment
+		{
+			get { return (ObsAlignment)libobs.obs_sceneitem_get_alignment(instance); }
+			set { libobs.obs_sceneitem_set_alignment(instance, (uint)value); }
+		}
+
+		public unsafe void SetBounds(Vector2 bounds, ObsBoundsType type)
+		{
+			libobs.obs_sceneitem_set_bounds(instance, out bounds);
+			libobs.obs_sceneitem_set_bounds_type(instance, (libobs.obs_bounds_type)type);
+		}
+
+		public unsafe void SetBounds(Vector2 bounds, ObsAlignment alignment)
+		{
+			libobs.obs_sceneitem_set_bounds(instance, out bounds);
+			libobs.obs_sceneitem_set_bounds_alignment(instance, (uint)alignment);
+		}
+
+		public unsafe void SetBounds(Vector2 bounds, ObsBoundsType type, ObsAlignment alignment)
+		{
+			libobs.obs_sceneitem_set_bounds(instance, out bounds);
+			libobs.obs_sceneitem_set_bounds_type(instance, (libobs.obs_bounds_type)type);
+			libobs.obs_sceneitem_set_bounds_alignment(instance, (uint)alignment);
 		}
 	}
+
+	public enum ObsBoundsType : int
+	{
+		None,
+		Stretch,
+		ScaleInner,
+		ScaleOuter,
+		ScaleToWidth,
+		ScaleToHeight,
+		MaxOnly,
+	};
 }

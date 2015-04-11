@@ -61,22 +61,28 @@ namespace test
 
 			if (window == null) return;
 
-			//TODO: proper source size handling
-			int panelWidth = window.previewPanel.Width;
-			int panelHeight = window.previewPanel.Height;
+			int newW = (int)cx;
+			int newH = (int)cy;
+			int sourceWidth = (int)window.Source.Width;
+			int sourceHeight = (int)window.Source.Height;
+			float previewAspect = (float)cx / cy;
+			float sourceAspect = (float)sourceWidth / sourceHeight;
 
-			int previewCX = panelWidth;
-			int previewCY = panelHeight;
+			//calculate new width and height for source to make it fit inside the preview area
+			if (previewAspect > sourceAspect)
+				newW = (int)(cy * sourceAspect);
+			else
+				newH = (int)(cx / sourceAspect);
 
-			int previewX = 0;
-			int previewY = 0;
+			int centerX = ((int)cx - newW) / 2;
+			int centerY = ((int)cy - newH) / 2;
 
 			GS.ViewportPush();
 			GS.ProjectionPush();
 
 			//setup orthographic projection of the source
-			GS.Ortho(0.0f, previewCX, 0.0f, previewCY, -100.0f, 100.0f);
-			GS.SetViewport(previewX, previewY, previewCX, previewCY);
+			GS.Ortho(0.0f, sourceWidth, 0.0f, sourceHeight, -100.0f, 100.0f);
+			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//render source content
 			window.Source.Render();

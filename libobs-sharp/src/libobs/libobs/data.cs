@@ -20,11 +20,11 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	using int64_t = Int64;
 	using obs_data_array_t = IntPtr;
-
 	using obs_data_item_t = IntPtr;
 	using obs_data_t = IntPtr;
+
+	using int64_t = Int64;
 
 	public static partial class libobs
 	{

@@ -25,21 +25,19 @@ namespace test
 	{
 		private readonly ObsSceneItem _selectedItem;
 
-		private readonly libobs.vec2 _oldPos;
-		private readonly libobs.vec2 _oldScale;
+		private readonly Vector2 _oldPos;
+		private readonly Vector2 _oldScale;
 		private readonly float _oldRot;
 		private readonly ObsAlignment _oldAlignment;
 
-		private bool _ok;
-
-		private libobs.vec2 ItemPosition
+		private Vector2 ItemPosition
 		{
-			get { return new libobs.vec2((float)xNumeric.Value, (float)yNumeric.Value); }
+			get { return new Vector2((float)xNumeric.Value, (float)yNumeric.Value); }
 		}
 
-		private libobs.vec2 ItemScale
+		private Vector2 ItemScale
 		{
-			get { return new libobs.vec2((float)wNumeric.Value, (float)hNumeric.Value); }
+			get { return new Vector2((float)wNumeric.Value, (float)hNumeric.Value); }
 		}
 
 		public TestTransform(ObsSceneItem item)
@@ -69,55 +67,48 @@ namespace test
 			// Populate Controls
 
 			// Position
-			_oldPos = _selectedItem.GetPosition();
+			_oldPos = _selectedItem.Position;
 			xNumeric.Value = (decimal)_oldPos.x;
 			yNumeric.Value = (decimal)_oldPos.y;
 
 			// Scale
-			_oldScale = _selectedItem.GetScale();
+			_oldScale = _selectedItem.Scale;
 			wNumeric.Value = (decimal)_oldScale.x;
 			hNumeric.Value = (decimal)_oldScale.y;
 
 			// Rotation
-			_oldRot = _selectedItem.GetRotation();
+			_oldRot = _selectedItem.Rotation;
 			Rotation.Rotation = (int)Math.Round(_oldRot);
 
 			// Alignment
-			_oldAlignment = _selectedItem.GetAlignment();
+			_oldAlignment = _selectedItem.Alignment;
 			Alignment.Alignment = _oldAlignment;
 
 			// Delegates to change transform properties
-			xNumeric.ValueChanged += (sender, args) => _selectedItem.SetPosition(ItemPosition);
-			yNumeric.ValueChanged += (sender, args) => _selectedItem.SetPosition(ItemPosition);
+			xNumeric.ValueChanged += (sender, args) => _selectedItem.Position = ItemPosition;
+			yNumeric.ValueChanged += (sender, args) => _selectedItem.Position = ItemPosition;
 
-			wNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
-			hNumeric.ValueChanged += (sender, args) => _selectedItem.SetScale(ItemScale);
+			wNumeric.ValueChanged += (sender, args) => _selectedItem.Scale = ItemScale;
+			hNumeric.ValueChanged += (sender, args) => _selectedItem.Scale = ItemScale;
 
 			// These even handlers return the exact value we need
 			// Do this in the future for all custom even handlers
 			// Makes creating inline event handlers a breeze!
-			Rotation.RotationChanged += rotation => _selectedItem.SetRotation(rotation);
+			Rotation.RotationChanged += rotation => _selectedItem.Rotation = rotation;
 
-			Alignment.AlignmentChanged += alignment => _selectedItem.SetAlignment(alignment);
+			Alignment.AlignmentChanged += alignment => _selectedItem.Alignment = alignment;
 
 			// Close form methods
-			cancelButton.Click += (sender, args) => Close();
 
+			cancelButton.Click += (sender, args) => Close();
 			okButton.Click += (sender, args) =>
 			{
-				_ok = true;
+				_selectedItem.Position = _oldPos;
+				_selectedItem.Scale = _oldScale;
+				_selectedItem.Rotation = _oldRot;
+				_selectedItem.Alignment = _oldAlignment;
+
 				Close();
-			};
-
-			Closing += (sender, args) =>
-			{
-				// if ok wasnt clicked flush changes
-				if (_ok) return;
-
-				_selectedItem.SetPosition(_oldPos);
-				_selectedItem.SetScale(_oldScale);
-				_selectedItem.SetRotation(_oldRot);
-				_selectedItem.SetAlignment(_oldAlignment);
 			};
 		}
 	}

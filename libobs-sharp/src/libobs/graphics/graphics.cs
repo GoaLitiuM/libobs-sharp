@@ -22,7 +22,6 @@ namespace OBS
 {
 	using axisang = libobs.vec4;
 	using gs_effect_t = IntPtr;
-
 	using gs_eparam_t = IntPtr;
 	using gs_indexbuffer_t = IntPtr;
 	using gs_samplerstate_t = IntPtr;
@@ -31,8 +30,8 @@ namespace OBS
 	using gs_texture_t = IntPtr;
 	using gs_vertbuffer_t = IntPtr;
 	using quat = libobs.vec4;
-	using size_t = IntPtr;	//UIntPtr?
 
+	using size_t = IntPtr;	//UIntPtr?
 	using uint32_t = UInt32;
 	using uint8_t = Byte;
 
@@ -117,7 +116,7 @@ namespace OBS
 		public static extern void gs_effect_set_matrix4(gs_eparam_t param, out matrix4 val);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_effect_set_vec2(gs_eparam_t param, out vec2 val);
+		public static extern void gs_effect_set_vec2(gs_eparam_t param, out Vector2 val);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_effect_set_vec3(gs_eparam_t param, out vec3 val);
@@ -227,7 +226,7 @@ namespace OBS
 		public static extern void gs_texcoord(float x, float y, int unit);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_vertex2v(out vec2 v);
+		public static extern void gs_vertex2v(out Vector2 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_vertex3v(out vec3 v);
@@ -239,7 +238,7 @@ namespace OBS
 		public static extern void gs_color4v(out vec4 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_texcoord2v(out vec2 v, int unit);
+		public static extern void gs_texcoord2v(out Vector2 v, int unit);
 
 		//EXPORT input_t *gs_get_input(void);
 		//EXPORT gs_effect_t *gs_get_effect(void);

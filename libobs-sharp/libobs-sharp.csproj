@@ -69,7 +69,6 @@
     <Compile Include="src\libobs\graphics\graphics.cs" />
     <Compile Include="src\libobs\graphics\matrix3.cs" />
     <Compile Include="src\libobs\graphics\matrix4.cs" />
-    <Compile Include="src\libobs\graphics\vec2.cs" />
     <Compile Include="src\libobs\graphics\vec3.cs" />
     <Compile Include="src\libobs\graphics\vec4.cs" />
     <Compile Include="src\libobs\libobs.cs">
@@ -80,12 +79,15 @@
     <Compile Include="src\libobs\libobs\encoder.cs" />
     <Compile Include="src\libobs\libobs\obs.cs" />
     <Compile Include="src\libobs\libobs\output.cs" />
+    <Compile Include="src\libobs\libobs\properties.cs" />
     <Compile Include="src\libobs\libobs\property.cs" />
     <Compile Include="src\libobs\libobs\scene.cs" />
+    <Compile Include="src\libobs\libobs\sceneitem.cs" />
     <Compile Include="src\libobs\libobs\service.cs" />
     <Compile Include="src\libobs\libobs\source.cs" />
     <Compile Include="src\libobs\libobs\view.cs" />
     <Compile Include="src\libobs\medio-io\medio-io.cs" />
+    <Compile Include="src\libobs\graphics\Vector2.cs" />
     <Compile Include="src\Obs.cs" />
     <Compile Include="src\GS.cs" />
     <Compile Include="src\ObsData.cs" />

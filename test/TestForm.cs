@@ -137,7 +137,7 @@ namespace test
 				_transitionTypes = Obs.GetSourceTransitionTypes();
 
 				AddScene();
-				AddSource();
+				AddInputSource("random", "some random source");
 
 				Obs.AddDrawCallback(_RenderMain, this.Handle);
 
@@ -176,33 +176,15 @@ namespace test
 			sceneListBox.SelectedIndex = sceneListBox.Items.Count - 1;
 		}
 
-		private void AddSource()
-		{
-			if (_selectedScene < 0)
-				return;
-
-			ObsSource source = new ObsSource(ObsSourceType.Input, "random", "some randon source" + (_sceneSources[_selectedScene].Count + 1));
-
-			//ObsSource filter = new ObsSource(ObsSourceType.Filter, "test_filter", "a nice green filter" + (_sceneSources[_selectedScene].Count + 1));
-			//source.AddFilter(filter);
-
-			ObsSceneItem item = _scenes[_selectedScene].Add(source);
-			item.SetScale(new libobs.vec2(20.0f, 20.0f));
-			item.SetPosition(new libobs.vec2(10 * _sceneSources[_selectedScene].Count, 10 * _sceneSources[_selectedScene].Count));
-
-			_sceneSources[_selectedScene].Add(source);
-			_sceneItems[_selectedScene].Add(item);
-			sourceListBox.Items.Add(source.Name);
-		}
-
 		private ObsSource AddInputSource(string id, string name)
 		{
 			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
 
 			ObsSceneItem item = _scenes[_selectedScene].Add(source);
 
-			item.SetScale(new libobs.vec2(1f, 1f));
-			item.SetPosition(new libobs.vec2(0f, 0f));
+			item.Position = new Vector2(0f, 0f);
+			item.Scale = new Vector2(1.0f, 1.0f);
+			item.SetBounds(new Vector2(MainWidth, MainHeight), ObsBoundsType.ScaleInner, ObsAlignment.Center);
 
 			_sceneSources[_selectedScene].Add(source);
 			_sceneItems[_selectedScene].Add(item);
@@ -266,13 +248,6 @@ namespace test
 				menuitem.Click += (sender, args) =>
 				{
 					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
-
-					if (type == "monitor_capture")  //REMOVEME: testing
-					{
-						ObsData settings = source.GetSettings();
-						settings.SetInt("monitor", 1);
-						source.Update(settings);
-					}
 
 					var prop = new TestProperties(source);
 					prop.Show();
