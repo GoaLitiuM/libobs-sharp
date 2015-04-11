@@ -71,11 +71,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\PropertyPanel.cs">
+    <Compile Include="Controls\PropertyControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\PropertyPanel.Designer.cs">
-      <DependentUpon>PropertyPanel.cs</DependentUpon>
+    <Compile Include="Controls\PropertyControl.Designer.cs">
+      <DependentUpon>PropertyControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TestForm_Rendering.cs">
       <SubType>Form</SubType>
@@ -124,8 +124,8 @@
     <EmbeddedResource Include="Controls\AlignmentBox.resx">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\PropertyPanel.resx">
-      <DependentUpon>PropertyPanel.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\PropertyControl.resx">
+      <DependentUpon>PropertyControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\RotationBox.resx">
       <DependentUpon>RotationBox.cs</DependentUpon>

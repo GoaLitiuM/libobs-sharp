@@ -79,4 +79,13 @@ namespace OBS
 	{
 		DeferUpdate = (1 << 0),
 	};
+
+	[Flags]
+	public enum ObsFontFlags : uint
+	{
+		Bold = (1 << 0),
+		Italic = (1 << 1),
+		Underline = (1 << 2),
+		Strikeout = (1 << 3),
+	};
 }

@@ -147,39 +147,6 @@ namespace OBS
 			return idList.ToArray();
 		}
 
-		public static unsafe ObsProperty[] GetSourceProperties(ObsSourceType type, string id)
-		{
-			return GetPropertyList(libobs.obs_get_source_properties((libobs.obs_source_type)type, id));
-		}
-
-		public static unsafe ObsProperty[] GetSourceProperties(ObsSource source)
-		{
-			return GetPropertyList(libobs.obs_source_properties((IntPtr)source.GetPointer()));
-		}
-
-		private static unsafe ObsProperty[] GetPropertyList(IntPtr properties)
-		{
-			List<ObsProperty> propertyList = new List<ObsProperty>();
-
-			ObsProperties props = new ObsProperties(properties);
-			props.AddRef();
-
-			IntPtr property = libobs.obs_properties_first(properties);
-
-			while (property != IntPtr.Zero)
-			{
-				propertyList.Add(new ObsProperty(property, props));
-
-				IntPtr next = (IntPtr)property;
-				libobs.obs_property_next(out next);
-				property = next;
-			}
-
-			props.Dispose();
-
-			return propertyList.ToArray();
-		}
-
 		public static unsafe GSEffect GetDefaultEffect()
 		{
 			IntPtr ptr = libobs.obs_get_default_effect();

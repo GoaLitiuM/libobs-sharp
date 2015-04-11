@@ -21,7 +21,7 @@ using System.Windows.Forms;
 
 namespace test.Controls
 {
-	partial class PropertyPanel
+	partial class PropertyControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -71,7 +71,7 @@ namespace test.Controls
 			this.controlPanel.Size = new Size(450, 25);
 			this.controlPanel.TabIndex = 1;
 			// 
-			// PropertyPanel
+			// PropertyControl
 			// 
 			this.AutoScaleDimensions = new SizeF(6F, 13F);
 			this.AutoScaleMode = AutoScaleMode.Font;
@@ -79,7 +79,7 @@ namespace test.Controls
 			this.Controls.Add(this.controlPanel);
 			this.Controls.Add(this.nameLabel);
 			this.Margin = new Padding(0, 1, 0, 1);
-			this.Name = "PropertyPanel";
+			this.Name = "PropertyControl";
 			this.Size = new Size(600, 25);
 			this.ResumeLayout(false);
 			this.PerformLayout();

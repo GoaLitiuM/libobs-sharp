@@ -27,6 +27,10 @@ namespace test
 	{
 		public ObsSource Source;
 
+		private ObsData sourceSettings;
+		private ObsData oldSettings;
+		private bool deferUpdate;
+
 		private TestProperties()
 		{
 			InitializeComponent();
@@ -40,27 +44,36 @@ namespace test
 			: this()
 		{
 			Source = source;
-			_properties = Obs.GetSourceProperties(source);
+
+			sourceSettings = Source.GetSettings();
 		}
 
-		private ObsProperty[] _properties;
+		private ObsProperties properties;
 
 		private void TestProperties_Load(object sender, EventArgs e)
 		{
-			// Create Controls
+			ReloadProperties(Source);
+
 			GenerateControls();
 
 			//TODO: this shit is confusing!
 			InitPreview(previewPanel.Width, previewPanel.Width, this.Handle);
 
+			oldSettings = new ObsData(sourceSettings);
+
 			// Attach close events
-			// TODO: make it so cancel actually reverts stuff
+
 			okButton.Click += (o, args) =>
 			{
-				Source.Update();
+				//Source.Update();
 				Close();
 			};
-			cancelButton.Click += (o, args) => Close();
+			cancelButton.Click += (o, args) =>
+			{
+				sourceSettings.Clear();
+				UpdateSettings(Source, oldSettings);
+				Close();
+			};
 		}
 
 		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
@@ -70,18 +83,50 @@ namespace test
 
 		private void GenerateControls()
 		{
+			propertyPanel.Controls.Clear();
+
 			// Add property controls
-			ObsData settings = Source.GetSettings();
-			foreach (var proppanel in _properties.Select(property => new PropertyPanel(property, settings)
+
+			ObsProperty[] propertyList = properties.GetPropertyList();
+			foreach (var control in propertyList.Select(property => new PropertyControl(property, sourceSettings, PropertyModified)
 			{
 				Enabled = property.Enabled,
 				Visible = property.Visible,
 				Tag = property.Name
 			}))
 			{
-				propertyPanel.Controls.Add(proppanel);
+				propertyPanel.Controls.Add(control);
 			}
+
 			propertyPanel.Refresh();
+		}
+
+		private void PropertyModified(bool refreshProperties)
+		{
+			if (!deferUpdate)
+				UpdateSettings(Source, sourceSettings);
+
+			if (!refreshProperties)
+				return;
+
+			GenerateControls();
+		}
+
+		//TODO: interface for other types of properties panels (settings, filters, properties)
+
+		private void UpdateSettings(object obj, ObsData settings)
+		{
+			ObsSource source = (ObsSource)obj;
+
+			source.Update(settings);
+		}
+
+		private void ReloadProperties(object obj)
+		{
+			ObsSource source = (ObsSource)obj;
+
+			properties = source.GetProperties();
+			deferUpdate = properties.Flags.HasFlag(ObsPropertiesFlags.DeferUpdate);
 		}
 	}
 }
