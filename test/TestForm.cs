@@ -91,6 +91,8 @@ namespace test
 				_RenderMain = RenderMain;
 				_EnumSceneItem = EnumSceneItem;
 
+				System.Diagnostics.Debug.WriteLine("libobs version: " + Obs.GetVersion().ToString());
+
 				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{

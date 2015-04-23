@@ -18,6 +18,7 @@
 using OBS.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace OBS
 {
@@ -68,6 +69,16 @@ namespace OBS
 				throw new ApplicationException("obs_get_audio_info failed");
 
 			return ai;
+		}
+
+		public static bool IsInitialized()
+		{
+			return libobs.obs_initialized();
+		}
+
+		public static Obs.Version GetVersion()
+		{
+			return new Obs.Version { Full = libobs.obs_get_version() };
 		}
 
 		public static void AddDrawCallback(libobs.draw_callback callback, IntPtr param)
@@ -170,6 +181,27 @@ namespace OBS
 
 			GSEffect effect = new GSEffect(ptr);
 			return effect;
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		public struct Version
+		{
+			[FieldOffset(0)]
+			public UInt32 Full;
+
+			[FieldOffset(3)]
+			public byte Major;
+
+			[FieldOffset(2)]
+			public byte Minor;
+
+			[FieldOffset(0)]
+			public UInt16 Patch;
+
+			public override string ToString()
+			{
+				return Major.ToString() + "." + Minor.ToString() + "." + Patch.ToString();
+			}
 		}
 	}
 

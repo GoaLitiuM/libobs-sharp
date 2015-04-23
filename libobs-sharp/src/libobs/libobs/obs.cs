@@ -40,8 +40,13 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_shutdown();
 
-		//EXPORT bool obs_initialized(void);
-		//EXPORT uint32_t obs_get_version(void);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_initialized();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern uint32_t obs_get_version();
+
 		//EXPORT void obs_set_locale(const char *locale);
 		//EXPORT const char *obs_get_locale(void);
 
