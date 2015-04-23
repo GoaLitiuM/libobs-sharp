@@ -27,15 +27,15 @@ namespace test
 		private ObsDisplay _display;
 		private libobs.draw_callback _RenderPreview;
 
-		private void InitPreview(int width, int height, IntPtr handle)
+		private void InitPreview(uint width, uint height, IntPtr handle)
 		{
 			//assign callbacks
 			_RenderPreview = RenderPreview;
 
 			libobs.gs_init_data initData = new libobs.gs_init_data
 			{
-				cx = (uint)width,
-				cy = (uint)height,
+				cx = width,
+				cy = height,
 				format = libobs.gs_color_format.GS_RGBA,
 				window = new libobs.gs_window()
 				{
@@ -53,6 +53,11 @@ namespace test
 		{
 			Obs.RemoveDisplayDrawCallback(_display, _RenderPreview, this.Handle);
 			_display.Dispose();
+		}
+
+		private void ResizePreview(uint width, uint height)
+		{
+			Obs.DisplayResize(_display, width, height);
 		}
 
 		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)

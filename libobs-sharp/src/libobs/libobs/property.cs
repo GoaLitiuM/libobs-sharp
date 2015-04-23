@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 namespace OBS
 {
 	using obs_data_t = IntPtr;
+	using obs_properties_t = IntPtr;
 	using obs_property_t = IntPtr;
 
 	using size_t = IntPtr;	//UIntPtr?
@@ -28,7 +29,11 @@ namespace OBS
 
 	public static partial class libobs
 	{
-		//EXPORT void obs_property_set_modified_callback(obs_property_t *pobs_property_modified_t modified);
+		[UnmanagedFunctionPointer(importCall)]
+		public delegate bool obs_property_modified_t(obs_properties_t props, obs_property_t property, obs_data_t settings);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_property_set_modified_callback(obs_property_t p, [MarshalAs(UnmanagedType.FunctionPtr)] obs_property_modified_t modified);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		[return: MarshalAs(UnmanagedType.I1)]
@@ -172,6 +177,9 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern double obs_property_list_item_float(obs_property_t p, size_t idx);
+
+		[UnmanagedFunctionPointer(importCall)]
+		public delegate bool obs_property_clicked_t(obs_properties_t props, obs_property_t property, IntPtr data);
 
 		public enum obs_property_type : int
 		{

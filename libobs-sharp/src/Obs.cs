@@ -97,12 +97,17 @@ namespace OBS
 
 		public static unsafe void AddDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
 		{
-			libobs.obs_display_add_draw_callback((IntPtr)display.GetPointer(), callback, param);
+			libobs.obs_display_add_draw_callback(display.GetPointer(), callback, param);
 		}
 
 		public static unsafe void RemoveDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
 		{
-			libobs.obs_display_remove_draw_callback((IntPtr)display.GetPointer(), callback, param);
+			libobs.obs_display_remove_draw_callback(display.GetPointer(), callback, param);
+		}
+
+		public static unsafe void DisplayResize(ObsDisplay display, uint cx, uint cy)
+		{
+			libobs.obs_display_resize(display.GetPointer(), cx, cy);
 		}
 
 		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)

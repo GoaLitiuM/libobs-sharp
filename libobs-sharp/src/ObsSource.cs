@@ -19,7 +19,7 @@ using System;
 
 namespace OBS
 {
-	public class ObsSource : IDisposable
+	public class ObsSource : IObsContextData, IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 

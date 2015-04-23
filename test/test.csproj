@@ -71,8 +71,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\PropertyControl.cs">
+    <Compile Include="Controls\PropertiesView.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertiesView.Designer.cs">
+      <DependentUpon>PropertiesView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\PropertyControl.Designer.cs">
       <DependentUpon>PropertyControl.cs</DependentUpon>
@@ -121,11 +127,17 @@
     <Compile Include="TestTransform.Designer.cs">
       <DependentUpon>TestTransform.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utility\ColorHelper.cs" />
+    <Compile Include="Utility\WinFormsHelper.cs" />
     <EmbeddedResource Include="Controls\AlignmentBox.resx">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PropertiesView.resx">
+      <DependentUpon>PropertiesView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PropertyControl.resx">
       <DependentUpon>PropertyControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\RotationBox.resx">
       <DependentUpon>RotationBox.cs</DependentUpon>

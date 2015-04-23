@@ -29,7 +29,6 @@ namespace OBS
 		{
 			instance = pointer;
 			properties = props;
-			properties.AddRef();
 		}
 
 		public unsafe void Dispose()
@@ -41,6 +40,11 @@ namespace OBS
 
 			properties.Dispose();
 			properties = null;
+		}
+
+		public IntPtr GetPointer()
+		{
+			return instance;
 		}
 
 		public unsafe String Name
@@ -121,9 +125,9 @@ namespace OBS
 			get { return (ObsPathType)libobs.obs_property_path_type(instance); }
 		}
 
-		public unsafe string PathFilter
+		public unsafe FileFilter PathFilter
 		{
-			get { return libobs.obs_property_path_filter(instance); }
+			get { return FileFilter.QtFilter(libobs.obs_property_path_filter(instance)); }
 		}
 
 		public unsafe string PathDefault
@@ -153,7 +157,12 @@ namespace OBS
 
 		public unsafe bool ButtonClicked(IntPtr obj)
 		{
-			return libobs.obs_property_modified(instance, obj);
+			return libobs.obs_property_button_clicked(instance, obj);
+		}
+
+		public unsafe bool ButtonClicked(libobs.obs_property_clicked_t clicked, ObsProperties properties, IntPtr obj)
+		{
+			return clicked(properties.GetPointer(), instance, obj);
 		}
 
 		public unsafe string[] GetListItemNames()
@@ -167,18 +176,18 @@ namespace OBS
 			return names.ToArray();
 		}
 
-		public unsafe string[] GetListItemValues()
+		public unsafe object[] GetListItemValues()
 		{
 			int count = ListItemCount;
-			List<string> values = new List<string>();
+			List<object> values = new List<object>();
 			ObsComboFormat format = ListFormat;
 
 			for (int i = 0; i < count; i++)
 			{
 				if (format == ObsComboFormat.Int)
-					values.Add(libobs.obs_property_list_item_int(instance, (IntPtr)i).ToString());
+					values.Add(libobs.obs_property_list_item_int(instance, (IntPtr)i));
 				else if (format == ObsComboFormat.Float)
-					values.Add(libobs.obs_property_list_item_float(instance, (IntPtr)i).ToString());
+					values.Add(libobs.obs_property_list_item_float(instance, (IntPtr)i));
 				else if (format == ObsComboFormat.String)
 					values.Add(libobs.obs_property_list_item_string(instance, (IntPtr)i));
 			}

@@ -23,30 +23,24 @@ namespace OBS
 	public class ObsProperties : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
-		internal int refs = 0;
 
 		public unsafe ObsProperties(IntPtr pointer)
 		{
 			instance = pointer;
 		}
 
-		public unsafe void AddRef()
+		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
 				return;
 
-			refs++;
-		}
-
-		public unsafe void Dispose()
-		{
-			refs--;
-
-			if (refs > 0 || instance == IntPtr.Zero)
-				return;
-
 			libobs.obs_properties_destroy((IntPtr)instance);
 			instance = IntPtr.Zero;
+		}
+
+		public IntPtr GetPointer()
+		{
+			return instance;
 		}
 
 		public unsafe ObsPropertiesFlags Flags

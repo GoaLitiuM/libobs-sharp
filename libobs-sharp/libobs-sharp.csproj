@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\FileFilter.cs" />
     <Compile Include="src\GSEffect.cs" />
     <Compile Include="src\GSEffectTechnique.cs" />
     <Compile Include="src\GSVertexBuffer.cs" />
@@ -90,7 +91,9 @@
     <Compile Include="src\libobs\graphics\Vector2.cs" />
     <Compile Include="src\Obs.cs" />
     <Compile Include="src\GS.cs" />
+    <Compile Include="src\IObsContextData.cs" />
     <Compile Include="src\ObsData.cs" />
+    <Compile Include="src\ObsDataArray.cs" />
     <Compile Include="src\ObsDisplay.cs" />
     <Compile Include="src\ObsProperties.cs" />
     <Compile Include="src\ObsProperty.cs" />

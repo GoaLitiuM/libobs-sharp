@@ -16,8 +16,6 @@
 ***************************************************************************/
 
 using OBS;
-using System;
-using System.Linq;
 using System.Windows.Forms;
 using test.Controls;
 
@@ -25,11 +23,12 @@ namespace test
 {
 	public partial class TestProperties : Form
 	{
-		public ObsSource Source;
+		public ObsSource Source { get { return source; } }
 
+		private PropertiesView view;
+		private ObsSource source;
 		private ObsData sourceSettings;
 		private ObsData oldSettings;
-		private bool deferUpdate;
 
 		private TestProperties()
 		{
@@ -43,90 +42,40 @@ namespace test
 		public TestProperties(ObsSource source)
 			: this()
 		{
-			Source = source;
-
-			sourceSettings = Source.GetSettings();
-		}
-
-		private ObsProperties properties;
-
-		private void TestProperties_Load(object sender, EventArgs e)
-		{
-			ReloadProperties(Source);
-
-			GenerateControls();
-
-			//TODO: this shit is confusing!
-			InitPreview(previewPanel.Width, previewPanel.Height, this.Handle);
-
+			this.source = source;
+			sourceSettings = source.GetSettings();
 			oldSettings = new ObsData(sourceSettings);
 
-			// Attach close events
+			view = new PropertiesView(sourceSettings, source,
+				source.GetProperties, source.Update);
+
+			propertyPanel.Controls.Add(view);
+
+			previewPanel.SizeChanged += (sender, args) =>
+			{
+				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
+			};
 
 			okButton.Click += (o, args) =>
 			{
-				//Source.Update();
 				Close();
 			};
 			cancelButton.Click += (o, args) =>
 			{
 				sourceSettings.Clear();
-				UpdateSettings(Source, oldSettings);
+				source.Update(oldSettings);
 				Close();
 			};
-		}
 
-		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			ClosePreview();
-		}
-
-		private void GenerateControls()
-		{
-			propertyPanel.Controls.Clear();
-
-			// Add property controls
-
-			ObsProperty[] propertyList = properties.GetPropertyList();
-			foreach (var control in propertyList.Select(property => new PropertyControl(property, sourceSettings, PropertyModified)
+			Load += (sender, args) =>
 			{
-				Enabled = property.Enabled,
-				Visible = property.Visible,
-				Tag = property.Name
-			}))
+				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
+			};
+
+			FormClosed += (sender, args) =>
 			{
-				propertyPanel.Controls.Add(control);
-			}
-
-			propertyPanel.Refresh();
-		}
-
-		private void PropertyModified(bool refreshProperties)
-		{
-			if (!deferUpdate)
-				UpdateSettings(Source, sourceSettings);
-
-			if (!refreshProperties)
-				return;
-
-			GenerateControls();
-		}
-
-		//TODO: interface for other types of properties panels (settings, filters, properties)
-
-		private void UpdateSettings(object obj, ObsData settings)
-		{
-			ObsSource source = (ObsSource)obj;
-
-			source.Update(settings);
-		}
-
-		private void ReloadProperties(object obj)
-		{
-			ObsSource source = (ObsSource)obj;
-
-			properties = source.GetProperties();
-			deferUpdate = properties.Flags.HasFlag(ObsPropertiesFlags.DeferUpdate);
+				ClosePreview();
+			};
 		}
 	}
 }

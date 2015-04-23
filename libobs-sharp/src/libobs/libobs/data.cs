@@ -25,6 +25,7 @@ namespace OBS
 	using obs_data_t = IntPtr;
 
 	using int64_t = Int64;
+	using size_t = IntPtr;	//UIntPtr?
 
 	public static partial class libobs
 	{
@@ -204,14 +205,29 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_data_array_t obs_data_get_autoselect_array(obs_data_t data, string name);
 
-		//EXPORT obs_data_array_t *obs_data_array_create();
-		//EXPORT void obs_data_array_addref(obs_data_array_t *array);
-		//EXPORT void obs_data_array_release(obs_data_array_t *array);
-		//EXPORT size_t obs_data_array_count(obs_data_array_t *array);
-		//EXPORT obs_data_t *obs_data_array_item(obs_data_array_t *array, size_t idx);
-		//EXPORT size_t obs_data_array_push_back(obs_data_array_t *array, obs_data_t *obj);
-		//EXPORT void obs_data_array_insert(obs_data_array_t *array, size_t idxobs_data_t *obj);
-		//EXPORT void obs_data_array_erase(obs_data_array_t *array, size_t idx);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_data_array_t obs_data_array_create();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_data_array_addref(obs_data_array_t array);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_data_array_release(obs_data_array_t array);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern size_t obs_data_array_count(obs_data_array_t array);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_data_t obs_data_array_item(obs_data_array_t array, size_t idx);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern size_t obs_data_array_push_back(obs_data_array_t array, obs_data_t obj);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_data_array_insert(obs_data_array_t array, size_t idx, obs_data_t obj);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_data_array_erase(obs_data_array_t array, size_t idx);
 
 		/* ------------------------------------------------------------------------- */
 		/* Item status inspection */

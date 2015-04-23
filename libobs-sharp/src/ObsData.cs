@@ -98,9 +98,9 @@ namespace OBS
 			return libobs.obs_data_get_obj((IntPtr)instance, name);
 		}
 
-		public unsafe IntPtr GetArray(string name)
+		public unsafe ObsDataArray GetArray(string name)
 		{
-			return libobs.obs_data_get_array((IntPtr)instance, name);
+			return new ObsDataArray(libobs.obs_data_get_array((IntPtr)instance, name));
 		}
 
 		public unsafe string GetStringDefault(string name)
@@ -128,9 +128,9 @@ namespace OBS
 			return libobs.obs_data_get_default_obj((IntPtr)instance, name);
 		}
 
-		public unsafe IntPtr GetArrayDefault(string name)
+		public unsafe ObsDataArray GetArrayDefault(string name)
 		{
-			return libobs.obs_data_get_default_array((IntPtr)instance, name);
+			return new ObsDataArray(libobs.obs_data_get_default_array((IntPtr)instance, name));
 		}
 
 		public unsafe string GetStringAutoselect(string name)
@@ -158,9 +158,9 @@ namespace OBS
 			return libobs.obs_data_get_autoselect_obj((IntPtr)instance, name);
 		}
 
-		public unsafe IntPtr GetArrayAutoselect(string name)
+		public unsafe ObsDataArray GetArrayAutoselect(string name)
 		{
-			return libobs.obs_data_get_autoselect_array((IntPtr)instance, name);
+			return new ObsDataArray(libobs.obs_data_get_autoselect_array((IntPtr)instance, name));
 		}
 
 		//Setters
@@ -190,9 +190,9 @@ namespace OBS
 			libobs.obs_data_set_obj((IntPtr)instance, name, val);
 		}
 
-		public unsafe void SetArray(string name, IntPtr val)
+		public unsafe void SetArray(string name, ObsDataArray val)
 		{
-			libobs.obs_data_set_array((IntPtr)instance, name, val);
+			libobs.obs_data_set_array((IntPtr)instance, name, val.GetPointer());
 		}
 
 		public unsafe void SetStringDefault(string name, string val)
