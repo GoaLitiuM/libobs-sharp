@@ -36,6 +36,9 @@ namespace OBS
 		//must be a null-terminated string
 		private static string MarshalUTF8String(IntPtr strPtr)
 		{
+			if (strPtr == IntPtr.Zero)
+				return null;
+
 			var bytes = new List<byte>();
 			int offset = 0;
 			uint8_t chr = 0;
