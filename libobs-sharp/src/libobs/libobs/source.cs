@@ -84,7 +84,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_filter_add(obs_source_t source, obs_source_t filter);
 
-		//EXPORT void obs_source_filter_remove(obs_source_t *source, obs_source_t *filter);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_source_filter_remove(obs_source_t source, obs_source_t filter);
+
 		//EXPORT void obs_source_filter_set_order(obs_source_t *source, obs_source_t *filter, enum obs_order_movement movement);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]

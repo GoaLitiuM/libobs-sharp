@@ -110,6 +110,11 @@ namespace OBS
 			libobs.obs_source_filter_add(instance, filter.GetPointer());
 		}
 
+		public unsafe void RemoveFilter(ObsSource filter)
+		{
+			libobs.obs_source_filter_remove(instance, filter.GetPointer());
+		}
+
 		public unsafe void Update()
 		{
 			libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
