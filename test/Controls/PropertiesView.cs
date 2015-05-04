@@ -127,10 +127,16 @@ namespace test.Controls
 			refreshCount = -1;
 		}
 
+		public void UpdateSettings()
+		{
+			if (updateDelegate != null)
+				updateDelegate(settings);
+		}
+
 		public void PropertyChanged(ObsProperty property)
 		{
-			if (updateDelegate != null && !deferUpdate)
-				updateDelegate(settings);
+			if (!deferUpdate)
+				UpdateSettings();
 
 			if (property.Modified(settings))
 				RefreshProperties(property);

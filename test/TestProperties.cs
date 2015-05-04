@@ -58,6 +58,7 @@ namespace test
 
 			okButton.Click += (o, args) =>
 			{
+				view.UpdateSettings();
 				Close();
 			};
 			cancelButton.Click += (o, args) =>

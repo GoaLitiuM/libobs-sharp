@@ -71,6 +71,7 @@ namespace OBS
 	[Flags]
 	public enum ObsPropertiesFlags : uint
 	{
+		/// <summary>Source updates are deferred until the source video tick is called.</summary>
 		DeferUpdate = (1 << 0),
 	};
 
