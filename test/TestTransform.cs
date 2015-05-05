@@ -100,8 +100,8 @@ namespace test
 
 			// Close form methods
 
-			cancelButton.Click += (sender, args) => Close();
-			okButton.Click += (sender, args) =>
+			okButton.Click += (sender, args) => Close();
+			cancelButton.Click += (sender, args) =>
 			{
 				_selectedItem.Position = _oldPos;
 				_selectedItem.Scale = _oldScale;
