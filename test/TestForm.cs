@@ -335,6 +335,18 @@ namespace test
 		private void sourceListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			_selectedSource = sourceListBox.SelectedIndex;
+			if (_selectedSource != -1)
+			{
+				enableCheckBox.Enabled = true;
+				mutedCheckBox.Enabled = true;
+				enableCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Enabled;
+				mutedCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Muted;
+			}
+			else
+			{
+				enableCheckBox.Enabled = false;
+				mutedCheckBox.Enabled = false;
+			}
 		}
 
 		private void delSceneButton_Click(object sender, EventArgs e)
@@ -357,6 +369,24 @@ namespace test
 			if (e.Button == MouseButtons.Right && _selectedScene != -1 && _selectedSource != -1)
 			{
 				DisplayFilterSourceMenu();
+			}
+		}
+
+		private void enableCheckBox_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource != -1)
+			{
+				enableCheckBox.Checked = !enableCheckBox.Checked;
+				_sceneSources[_selectedScene][_selectedSource].Enabled = enableCheckBox.Checked;
+			}
+		}
+
+		private void mutedCheckBox_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource != -1)
+			{
+				mutedCheckBox.Checked = !mutedCheckBox.Checked;
+				_sceneSources[_selectedScene][_selectedSource].Muted = mutedCheckBox.Checked;
 			}
 		}
 	}

@@ -78,8 +78,11 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern uint32_t obs_source_get_height(obs_source_t source);
 
-		//EXPORT obs_source_t *obs_filter_get_parent(const obs_source_t *filter);
-		//EXPORT obs_source_t *obs_filter_get_target(const obs_source_t *filter);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_source_t obs_filter_get_parent(obs_source_t filter);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_source_t obs_filter_get_target(obs_source_t filter);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_filter_add(obs_source_t source, obs_source_t filter);
@@ -127,11 +130,19 @@ namespace OBS
 		//EXPORT void obs_source_enum_filters(obs_source_t *source, obs_source_enum_proc_t callback, void *param);
 		//EXPORT obs_source_t *obs_source_get_filter_by_name(obs_source_t *source, const char *name);
 
-		//EXPORT bool obs_source_enabled(const obs_source_t *source);
-		//EXPORT void obs_source_set_enabled(obs_source_t *source, bool enabled);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_source_enabled(obs_source_t source);
 
-		//EXPORT bool obs_source_muted(const obs_source_t *source);
-		//EXPORT void obs_source_set_muted(obs_source_t *source, bool muted);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_source_set_enabled(obs_source_t source, bool enabled);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_source_muted(obs_source_t source);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_source_set_muted(obs_source_t source, bool muted);
 
 		/* ------------------------------------------------------------------------- */
 		/* Functions used by sources */

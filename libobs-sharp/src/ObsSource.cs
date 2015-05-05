@@ -115,9 +115,31 @@ namespace OBS
 			libobs.obs_source_filter_remove(instance, filter.GetPointer());
 		}
 
+		public unsafe ObsSource GetFilterParent(ObsSource filter)
+		{
+			return new ObsSource(libobs.obs_filter_get_parent(filter.GetPointer()));
+		}
+
+		public unsafe ObsSource GetFilterTarget(ObsSource filter)
+		{
+			return new ObsSource(libobs.obs_filter_get_target(filter.GetPointer()));
+		}
+
 		public unsafe void Update()
 		{
 			libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
+		}
+
+		public bool Enabled
+		{
+			get { return libobs.obs_source_enabled(instance); }
+			set { libobs.obs_source_set_enabled(instance, value); }
+		}
+
+		public bool Muted
+		{
+			get { return libobs.obs_source_muted(instance); }
+			set { libobs.obs_source_set_muted(instance, value); }
 		}
 
 		public unsafe void Update(ObsData settings)

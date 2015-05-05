@@ -47,6 +47,8 @@ namespace test
         {
 			this.mainViewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel = new System.Windows.Forms.Panel();
+			this.mutedCheckBox = new System.Windows.Forms.CheckBox();
+			this.enableCheckBox = new System.Windows.Forms.CheckBox();
 			this.delSceneButton = new System.Windows.Forms.Button();
 			this.addSceneButton = new System.Windows.Forms.Button();
 			this.delSourceButton = new System.Windows.Forms.Button();
@@ -71,6 +73,8 @@ namespace test
 			// 
 			this.bottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.bottomPanel.Controls.Add(this.mutedCheckBox);
+			this.bottomPanel.Controls.Add(this.enableCheckBox);
 			this.bottomPanel.Controls.Add(this.delSceneButton);
 			this.bottomPanel.Controls.Add(this.addSceneButton);
 			this.bottomPanel.Controls.Add(this.delSourceButton);
@@ -81,6 +85,30 @@ namespace test
 			this.bottomPanel.Name = "bottomPanel";
 			this.bottomPanel.Size = new System.Drawing.Size(694, 121);
 			this.bottomPanel.TabIndex = 1;
+			// 
+			// mutedCheckBox
+			// 
+			this.mutedCheckBox.AutoCheck = false;
+			this.mutedCheckBox.AutoSize = true;
+			this.mutedCheckBox.Location = new System.Drawing.Point(327, 26);
+			this.mutedCheckBox.Name = "mutedCheckBox";
+			this.mutedCheckBox.Size = new System.Drawing.Size(56, 17);
+			this.mutedCheckBox.TabIndex = 7;
+			this.mutedCheckBox.Text = "Muted";
+			this.mutedCheckBox.UseVisualStyleBackColor = true;
+			this.mutedCheckBox.Click += new System.EventHandler(this.mutedCheckBox_Click);
+			// 
+			// enableCheckBox
+			// 
+			this.enableCheckBox.AutoCheck = false;
+			this.enableCheckBox.AutoSize = true;
+			this.enableCheckBox.Location = new System.Drawing.Point(327, 3);
+			this.enableCheckBox.Name = "enableCheckBox";
+			this.enableCheckBox.Size = new System.Drawing.Size(65, 17);
+			this.enableCheckBox.TabIndex = 6;
+			this.enableCheckBox.Text = "Enabled";
+			this.enableCheckBox.UseVisualStyleBackColor = true;
+			this.enableCheckBox.Click += new System.EventHandler(this.enableCheckBox_Click);
 			// 
 			// delSceneButton
 			// 
@@ -150,9 +178,10 @@ namespace test
 			this.Controls.Add(this.mainViewPanel);
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
-			this.Load += new System.EventHandler(this.TestForm_Load);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestForm_FormClosed);
+			this.Load += new System.EventHandler(this.TestForm_Load);
 			this.bottomPanel.ResumeLayout(false);
+			this.bottomPanel.PerformLayout();
 			this.ResumeLayout(false);
 
         }
@@ -167,6 +196,8 @@ namespace test
 		private System.Windows.Forms.Button addSourceButton;
 		private System.Windows.Forms.ListBox sourceListBox;
 		private System.Windows.Forms.ListBox sceneListBox;
+		private System.Windows.Forms.CheckBox mutedCheckBox;
+		private System.Windows.Forms.CheckBox enableCheckBox;
     }
 }
 
