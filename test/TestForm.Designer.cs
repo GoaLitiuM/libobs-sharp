@@ -55,6 +55,7 @@ namespace test
 			this.addSourceButton = new System.Windows.Forms.Button();
 			this.sourceListBox = new System.Windows.Forms.ListBox();
 			this.sceneListBox = new System.Windows.Forms.ListBox();
+			this.visibleCheckBox = new System.Windows.Forms.CheckBox();
 			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -73,6 +74,7 @@ namespace test
 			// 
 			this.bottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.bottomPanel.Controls.Add(this.visibleCheckBox);
 			this.bottomPanel.Controls.Add(this.mutedCheckBox);
 			this.bottomPanel.Controls.Add(this.enableCheckBox);
 			this.bottomPanel.Controls.Add(this.delSceneButton);
@@ -92,9 +94,9 @@ namespace test
 			this.mutedCheckBox.AutoSize = true;
 			this.mutedCheckBox.Location = new System.Drawing.Point(327, 26);
 			this.mutedCheckBox.Name = "mutedCheckBox";
-			this.mutedCheckBox.Size = new System.Drawing.Size(56, 17);
+			this.mutedCheckBox.Size = new System.Drawing.Size(93, 17);
 			this.mutedCheckBox.TabIndex = 7;
-			this.mutedCheckBox.Text = "Muted";
+			this.mutedCheckBox.Text = "Source Muted";
 			this.mutedCheckBox.UseVisualStyleBackColor = true;
 			this.mutedCheckBox.Click += new System.EventHandler(this.mutedCheckBox_Click);
 			// 
@@ -104,9 +106,9 @@ namespace test
 			this.enableCheckBox.AutoSize = true;
 			this.enableCheckBox.Location = new System.Drawing.Point(327, 3);
 			this.enableCheckBox.Name = "enableCheckBox";
-			this.enableCheckBox.Size = new System.Drawing.Size(65, 17);
+			this.enableCheckBox.Size = new System.Drawing.Size(102, 17);
 			this.enableCheckBox.TabIndex = 6;
-			this.enableCheckBox.Text = "Enabled";
+			this.enableCheckBox.Text = "Source Enabled";
 			this.enableCheckBox.UseVisualStyleBackColor = true;
 			this.enableCheckBox.Click += new System.EventHandler(this.enableCheckBox_Click);
 			// 
@@ -169,6 +171,18 @@ namespace test
 			this.sceneListBox.TabIndex = 0;
 			this.sceneListBox.SelectedIndexChanged += new System.EventHandler(this.sceneListBox_SelectedIndexChanged);
 			// 
+			// visibleCheckBox
+			// 
+			this.visibleCheckBox.AutoCheck = false;
+			this.visibleCheckBox.AutoSize = true;
+			this.visibleCheckBox.Location = new System.Drawing.Point(327, 49);
+			this.visibleCheckBox.Name = "visibleCheckBox";
+			this.visibleCheckBox.Size = new System.Drawing.Size(79, 17);
+			this.visibleCheckBox.TabIndex = 8;
+			this.visibleCheckBox.Text = "Item Visible";
+			this.visibleCheckBox.UseVisualStyleBackColor = true;
+			this.visibleCheckBox.Click += new System.EventHandler(this.visibleCheckBox_Click);
+			// 
 			// TestForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,6 +212,7 @@ namespace test
 		private System.Windows.Forms.ListBox sceneListBox;
 		private System.Windows.Forms.CheckBox mutedCheckBox;
 		private System.Windows.Forms.CheckBox enableCheckBox;
+		private System.Windows.Forms.CheckBox visibleCheckBox;
     }
 }
 

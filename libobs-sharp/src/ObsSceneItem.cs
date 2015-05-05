@@ -89,6 +89,12 @@ namespace OBS
 			set { libobs.obs_sceneitem_select(instance, value); }
 		}
 
+		public unsafe bool Visible
+		{
+			get { return libobs.obs_sceneitem_visible(instance); }
+			set { libobs.obs_sceneitem_set_visible(instance, value); }
+		}
+
 		public Vector2 Position
 		{
 			get

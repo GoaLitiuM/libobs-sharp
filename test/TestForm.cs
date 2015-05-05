@@ -339,13 +339,16 @@ namespace test
 			{
 				enableCheckBox.Enabled = true;
 				mutedCheckBox.Enabled = true;
+				visibleCheckBox.Enabled = true;
 				enableCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Enabled;
 				mutedCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Muted;
+				visibleCheckBox.Checked = _sceneItems[_selectedScene][_selectedSource].Visible;
 			}
 			else
 			{
 				enableCheckBox.Enabled = false;
 				mutedCheckBox.Enabled = false;
+				visibleCheckBox.Enabled = false;
 			}
 		}
 
@@ -387,6 +390,15 @@ namespace test
 			{
 				mutedCheckBox.Checked = !mutedCheckBox.Checked;
 				_sceneSources[_selectedScene][_selectedSource].Muted = mutedCheckBox.Checked;
+			}
+		}
+
+		private void visibleCheckBox_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource != -1)
+			{
+				visibleCheckBox.Checked = !visibleCheckBox.Checked;
+				_sceneItems[_selectedScene][_selectedSource].Visible = visibleCheckBox.Checked;
 			}
 		}
 	}
