@@ -23,6 +23,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\build\rundir\Release\bin\32bit\</OutputPath>
@@ -33,6 +34,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +45,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\build64\rundir\Release\bin\64bit\</OutputPath>
@@ -53,6 +56,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -89,6 +93,9 @@
     <Compile Include="src\libobs\libobs\view.cs" />
     <Compile Include="src\libobs\medio-io\medio-io.cs" />
     <Compile Include="src\libobs\graphics\Vector2.cs" />
+    <Compile Include="src\libobs\util\base.cs" />
+    <Compile Include="src\libobs\util\config-file.cs" />
+    <Compile Include="src\LogHandler.cs" />
     <Compile Include="src\Obs.cs" />
     <Compile Include="src\GS.cs" />
     <Compile Include="src\IObsContextData.cs" />
@@ -100,6 +107,8 @@
     <Compile Include="src\ObsScene.cs" />
     <Compile Include="src\ObsSceneItem.cs" />
     <Compile Include="src\ObsSource.cs" />
+    <Compile Include="src\Utility\Printf.cs" />
+    <Compile Include="src\Utility\va_list.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

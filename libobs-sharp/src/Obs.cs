@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	public static class Obs
+	public static partial class Obs
 	{
 		public static bool Startup(string locale)
 		{

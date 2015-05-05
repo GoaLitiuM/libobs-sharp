@@ -93,6 +93,11 @@ namespace test
 
 				System.Diagnostics.Debug.WriteLine("libobs version: " + Obs.GetVersion().ToString());
 
+				Obs.SetLogHandler((LogErrorLevel lvl, string msg, IntPtr p) =>
+				{
+					System.Diagnostics.Debug.WriteLine(msg);
+				});
+
 				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
 				libobs.obs_video_info ovi = new libobs.obs_video_info
 				{
@@ -158,11 +163,11 @@ namespace test
 					"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Environment.Exit(1);
 			}
-			catch (Exception exp)
+			/*catch (Exception exp)
 			{
 				MessageBox.Show(exp.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Environment.Exit(1);
-			}
+			}*/
 		}
 
 		private void AddScene()
