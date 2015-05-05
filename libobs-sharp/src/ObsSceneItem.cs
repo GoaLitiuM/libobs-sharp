@@ -52,6 +52,11 @@ namespace OBS
 			return source;
 		}
 
+		public unsafe ObsScene GetScene()
+		{
+			return new ObsScene(libobs.obs_sceneitem_get_scene(instance));
+		}
+		
 		public float X
 		{
 			get { return Position.x; }

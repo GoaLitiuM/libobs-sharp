@@ -22,6 +22,7 @@ namespace OBS
 {
 	using obs_sceneitem_t = IntPtr;
 	using obs_source_t = IntPtr;
+	using obs_scene_t = IntPtr;
 
 	using uint32_t = UInt32;
 
@@ -36,7 +37,8 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_remove(obs_sceneitem_t item);
 
-		//EXPORT obs_scene_t *obs_sceneitem_get_scene(const obs_sceneitem_t *item);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_scene_t obs_sceneitem_get_scene(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_source_t obs_sceneitem_get_source(obs_sceneitem_t scene);

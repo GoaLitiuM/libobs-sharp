@@ -34,6 +34,16 @@ namespace OBS
 			source = new ObsSource(libobs.obs_scene_get_source(instance));
 		}
 
+		public unsafe ObsScene(IntPtr pointer)
+		{
+			instance = pointer;
+
+			if (instance == null)
+				throw new ApplicationException("obs_scene_create failed");
+
+			source = new ObsSource(libobs.obs_scene_get_source(instance));
+		}
+		
 		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
