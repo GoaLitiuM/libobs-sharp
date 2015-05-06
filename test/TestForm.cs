@@ -23,20 +23,40 @@ using System.Windows.Forms;
 
 namespace test
 {
-	public partial class TestForm : Form
+	public partial class TestForm
 	{
 		public readonly int MainWidth = 1280;
 		public readonly int MainHeight = 720;
-		private libobs.draw_callback _RenderMain;
-		private libobs.sceneitem_enum_callback _EnumSceneItem;
+		private libobs.draw_callback _renderMain;
+		private libobs.sceneitem_enum_callback _enumSceneItem;
 
-		private List<ObsScene> _scenes = new List<ObsScene>();
-		private int _selectedScene = 0;
+		private readonly List<ObsScene> _scenes = new List<ObsScene>();
 
-		private List<List<ObsSource>> _sceneSources = new List<List<ObsSource>>();
-		private int _selectedSource = -1;
+		private readonly List<ObsSource> _sources = new List<ObsSource>();
 
-		private List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
+		private readonly List<List<ObsSceneItem>> _sceneItems = new List<List<ObsSceneItem>>();
+
+		private int _sceneIndex;
+		private int _itemIndex;
+		private int _sourceIndex;
+
+
+		private ObsScene _selectedScene()
+		{
+			return _sceneIndex != -1 ? _scenes[_sceneIndex] : null;
+		}
+
+		private ObsSceneItem _selectedSceneItem()
+		{
+			return _sceneIndex != -1 && _itemIndex != -1
+				? _sceneItems[_sceneIndex][_itemIndex]
+				: null;
+		}
+
+		private ObsSource _selectedSource()
+		{
+			return _sourceIndex != -1 ? _sources[_sourceIndex] : null;
+		}
 
 		private string[] _inputTypes;
 		private string[] _filterTypes;
@@ -45,85 +65,52 @@ namespace test
 		public TestForm()
 		{
 			InitializeComponent();
-
-			if (System.Environment.Is64BitProcess)
-				Text += " (64-bit)";
-		}
-
-		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			Obs.RemoveDrawCallback(_RenderMain, this.Handle);
-			RemoveScenesAndSources();
-
-			if (_boxPrimitive != null)
-				_boxPrimitive.Dispose();
-			if (_circlePrimitive != null)
-				_circlePrimitive.Dispose();
-
-			Obs.Shutdown();
-		}
-
-		private void RemoveScenesAndSources()
-		{
-			foreach (var scene in _sceneItems)
-				foreach (var item in scene)
-					item.Dispose();
-
-			foreach (var scene in _sceneSources)
-				foreach (var source in scene)
-					source.Dispose();
-
-			foreach (var scene in _scenes)
-				scene.Dispose();
-
-			_sceneSources.Clear();
-			_sceneItems.Clear();
-			_scenes.Clear();
-			sceneListBox.Items.Clear();
-			sourceListBox.Items.Clear();
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)
 		{
+			if (Environment.Is64BitProcess)
+				Text += " (64-bit)";
+
 			try
 			{
 				//callbacks
-				_RenderMain = RenderMain;
-				_EnumSceneItem = EnumSceneItem;
+				_renderMain = RenderMain;
+				_enumSceneItem = EnumSceneItem;
 
 				System.Diagnostics.Debug.WriteLine("libobs version: " + Obs.GetVersion().ToString());
 
-				Obs.SetLogHandler((LogErrorLevel lvl, string msg, IntPtr p) =>
+				Obs.SetLogHandler((lvl, msg, p) =>
 				{
 					System.Diagnostics.Debug.WriteLine(msg);
 				});
 
 				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
 				libobs.obs_video_info ovi = new libobs.obs_video_info
-				{
-					adapter = 0,
-					base_width = (uint)rc.Right,
-					base_height = (uint)rc.Bottom,
-					fps_num = 30000,
-					fps_den = 1001,
-					graphics_module = "libobs-d3d11",
-					window_width = (uint)rc.Right,
-					window_height = (uint)rc.Bottom,
-					output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
-					output_width = (uint)rc.Right,
-					output_height = (uint)rc.Bottom,
-					window = new libobs.gs_window
-					{
-						hwnd = mainViewPanel.Handle
-					},
-				};
+											{
+												adapter = 0,
+												base_width = (uint)rc.Right,
+												base_height = (uint)rc.Bottom,
+												fps_num = 30000,
+												fps_den = 1001,
+												graphics_module = "libobs-d3d11",
+												window_width = (uint)rc.Right,
+												window_height = (uint)rc.Bottom,
+												output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
+												output_width = (uint)rc.Right,
+												output_height = (uint)rc.Bottom,
+												window = new libobs.gs_window
+														 {
+															 hwnd = MainViewPanel.Handle
+														 },
+											};
 
 				libobs.obs_audio_info avi = new libobs.obs_audio_info
-				{
-					samples_per_sec = 44100,
-					speakers = libobs.speaker_layout.SPEAKERS_STEREO,
-					buffer_ms = 1000
-				};
+											{
+												samples_per_sec = 44100,
+												speakers = libobs.speaker_layout.SPEAKERS_STEREO,
+												buffer_ms = 1000
+											};
 
 				if (!Obs.Startup("en-US"))
 					throw new ApplicationException("Startup failed.");
@@ -143,23 +130,26 @@ namespace test
 				_filterTypes = Obs.GetSourceFilterTypes();
 				_transitionTypes = Obs.GetSourceTransitionTypes();
 
+				Console.Error.WriteLine(_transitionTypes);
+
 				AddScene();
-				AddInputSource("random", "some random source");
+				var source = AddSource("random", "some random source");
+				AddSceneItem(source);
 
-				Obs.AddDrawCallback(_RenderMain, this.Handle);
+				Obs.AddDrawCallback(_renderMain, Handle);
 
-				Obs.ResizeMainView(mainViewPanel.Width, mainViewPanel.Height);
+				Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
 
 				//select the first item
 				//_sceneItems[0][0].Selected = true;
 			}
-			catch (System.BadImageFormatException exp)
+			catch (BadImageFormatException exp)
 			{
 				MessageBox.Show("Platform target mismatch: "
-					+ (System.Environment.Is64BitProcess
-						? "Loading 32-bit OBS with 64-bit executable is not supported."
-						: "Loading 64-bit OBS with 32-bit executable is not supported.")
-					+ "\n\n" + exp.Message,
+								+ (Environment.Is64BitProcess
+									? "Loading 32-bit OBS with 64-bit executable is not supported."
+									: "Loading 64-bit OBS with 32-bit executable is not supported.")
+								+ "\n\n" + exp.Message,
 					"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Environment.Exit(1);
 			}
@@ -170,93 +160,216 @@ namespace test
 			}*/
 		}
 
-		private void AddScene()
+		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			ObsScene scene = new ObsScene("test scene (" + (_scenes.Count + 1) + ")");
-			Obs.SetOutputSource(0, scene.GetSource());
+			Obs.RemoveDrawCallback(_renderMain, Handle);
+			RemoveScenesAndSources();
 
-			_sceneSources.Add(new List<ObsSource>());
-			_sceneItems.Add(new List<ObsSceneItem>());
-			_scenes.Add(scene);
-			sceneListBox.Items.Add(scene.Name);
+			if (_boxPrimitive != null)
+				_boxPrimitive.Dispose();
+			if (_circlePrimitive != null)
+				_circlePrimitive.Dispose();
 
-			sceneListBox.SelectedIndex = sceneListBox.Items.Count - 1;
+			Obs.Shutdown();
 		}
 
-		private ObsSource AddInputSource(string id, string name)
+		private void RemoveScenesAndSources()
 		{
-			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
+			// dispose of all items from scenes
+			foreach (var scene in _sceneItems)
+				foreach (var item in scene)
+					item.Dispose();
 
-			ObsSceneItem item = _scenes[_selectedScene].Add(source);
+			// dispose all sources
+			foreach (var source in _sources)
+				source.Dispose();
 
+			// dispose all scenes
+			foreach (var scene in _scenes)
+				scene.Dispose();
+
+			// clear all lists
+			_sources.Clear();
+			_sceneItems.Clear();
+			_scenes.Clear();
+
+			// clear all listboxes
+			SceneListBox.Items.Clear();
+			SceneItemListBox.Items.Clear();
+			SourceListBox.Items.Clear();
+		}
+
+		private void MainViewPanel_SizeChanged(object sender, EventArgs e)
+		{
+			Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
+		}
+
+		#region Scene
+
+		private void AddScene()
+		{
+			// Create new scene
+			ObsScene scene = new ObsScene("test scene (" + (_scenes.Count + 1) + ")");
+
+			// Show the scene in the viewport
+			Obs.SetOutputSource(0, scene.GetSource());
+
+			// Add scene to scenelist
+			_scenes.Add(scene);
+
+			// create list for scene items
+			_sceneItems.Add(new List<ObsSceneItem>());
+
+			// add scene to scenelistbox
+			SceneListBox.Items.Add(scene.Name);
+
+			// set sceneindex to new scene
+			_sceneIndex = SceneListBox.Items.Count - 1;
+
+			// select scene in scenelistbox
+			SceneListBox.SelectedIndex = _sceneIndex;
+		}
+
+		private void DelScene()
+		{
+			// dont delete if only scene or no scene selected
+			if (_selectedScene() == null || SceneListBox.Items.Count == 1)
+				return;
+
+			// Dispose of all items
+			foreach (ObsSceneItem item in _sceneItems[_sceneIndex])
+				item.Dispose();
+
+			// Dispose of scene
+			_selectedScene().Dispose();
+
+			// remove scene from list
+			_scenes.RemoveAt(_sceneIndex);
+
+			// remove scene from listbox
+			SceneListBox.Items.RemoveAt(_sceneIndex);
+
+			// select the scene directly after it
+			_sceneIndex = _sceneIndex >= SceneListBox.Items.Count
+				? SceneListBox.Items.Count - 1
+				: _sceneIndex;
+		}
+
+		private void AddSceneButton_Click(object sender, EventArgs e)
+		{
+			AddScene();
+		}
+
+		private void DelSceneButton_Click(object sender, EventArgs e)
+		{
+			DelScene();
+		}
+
+		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// if the selected index isnt valid use the _sceneIndex to select the right one
+			if (SceneListBox.SelectedIndex == -1)
+			{
+				SceneListBox.SelectedIndex = _sceneIndex > SceneListBox.Items.Count ? _sceneIndex : SceneListBox.Items.Count - 1;
+				return;
+			}
+
+			_sceneIndex = SceneListBox.SelectedIndex;
+
+			// set the viewport to the currently selected scene
+			Obs.SetOutputSource(0, _selectedScene().GetSource());
+
+			// repopulate the itemlistbox with the apropriate items
+			SceneItemListBox.Items.Clear();
+			foreach (var item in _sceneItems[_sceneIndex])
+			{
+				SceneItemListBox.Items.Add(item.Name);
+			}
+		}
+
+		#endregion
+
+		#region SceneItem
+
+		private void AddSceneItem(ObsSource source)
+		{
+			// generate an item from soruce
+			ObsSceneItem item = _selectedScene().Add(source);
+
+			// set its proportions
 			item.Position = new Vector2(0f, 0f);
 			item.Scale = new Vector2(1.0f, 1.0f);
 			item.SetBounds(new Vector2(MainWidth, MainHeight), ObsBoundsType.ScaleInner, ObsAlignment.Center);
 
-			_sceneSources[_selectedScene].Add(source);
-			_sceneItems[_selectedScene].Add(item);
-			sourceListBox.Items.Add(source.Name);
+			// add item to the item list
+			_sceneItems[_sceneIndex].Add(item);
 
-			return source;
+			// add item to the item listbox
+			SceneItemListBox.Items.Add(source.Name);
 		}
 
-		private void DisplayFilterSourceMenu()
+		private void AddItemButton_Click(object sender, EventArgs e)
 		{
-			ContextMenu filtermenu = new ContextMenu();
-
-			foreach (var filterType in _filterTypes)
-			{
-				string type = filterType;
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
-				int index = _sceneSources[_selectedScene].Count + 1;
-
-				MenuItem menuitem = new MenuItem
-				{
-					Text = displayname + " (" + filterType + ")"
-				};
-				menuitem.Click += (sender, args) =>
-				{
-					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
-					_sceneSources[_selectedScene][_selectedSource].AddFilter(filter);
-				};
-
-				filtermenu.MenuItems.Add(menuitem);
-			}
-			filtermenu.MenuItems.Add("-");
-			MenuItem transform = new MenuItem
-			{
-				Text = "Edit Tranform Options..."
-			};
-			transform.Click += (sender, args) =>
-			{
-				var transformfrm = new TestTransform(_sceneItems[_selectedScene][_selectedSource]);
-				transformfrm.ShowDialog(this);
-			};
-			filtermenu.MenuItems.Add(transform);
-
-			filtermenu.Show(this, PointToClient(Cursor.Position));
+			DisplaySourceMenu();
 		}
 
-		private void DisplayInputSourceMenu()
+		private void DelItemButton_Click(object sender, EventArgs e)
 		{
+			DelSceneItem();
+		}
+
+		private void DisplaySourceMenu(bool deleteaftercomplete = false)
+		{
+			// TODO: there's a dirty hack in place here
+			/* 
+			 * adds an item then removes it once its complete because it wont render unless the source is visible on the scene
+			 * fix it so sources are displayed even if not being shown on canvas
+			 */
+
+			// create source context menu
 			ContextMenu inputmenu = new ContextMenu();
 
+			// create a context menu item for each source type
 			foreach (string inputType in _inputTypes)
 			{
 				// The variable dissapears when the loop ends so it needs to be copied
 				string type = inputType;
+
+				// create display name
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
 
+				// create menu item
 				MenuItem menuitem = new MenuItem
-				{
-					Text = displayname + " (" + type + ")"
-				};
-
+									{
+										Text = displayname + " (" + type + ")"
+									};
+				// attach menu item click event
 				menuitem.Click += (sender, args) =>
 				{
-					ObsSource source = AddInputSource(type, displayname + (_sceneSources[_selectedScene].Count + 1));
+					// create a source based off the menu item name
+					var source = AddSource(type, displayname + (_sources.Count + 1));
 
+					// add scene item made from source
+					AddSceneItem(source);
+
+					// create property dialog
 					var prop = new TestProperties(source);
+
+					// this check is here for the addsource in the sourcelistbox
+					if (deleteaftercomplete)
+					{
+						// remove the item after the source has been configured
+						prop.Disposed += (o, eventArgs) =>
+						{
+							var itemindex = SceneItemListBox.Items.Count - 1;
+							_sceneItems[_sceneIndex][itemindex].Dispose();
+
+							_sceneItems[_sceneIndex].RemoveAt(itemindex);
+
+							SceneItemListBox.Items.RemoveAt(itemindex);
+						};
+					}
+					// show property dialog
 					prop.Show();
 				};
 
@@ -266,145 +379,223 @@ namespace test
 			inputmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
-		private void DelScene(int index)
+		private void DelSceneItem()
 		{
-			if (_scenes.Count <= 1)
-				return;
+			// only delete item if one is selected
+			if (_selectedSceneItem() == null) return;
 
-			foreach (ObsSceneItem item in _sceneItems[index])
-				item.Dispose();
+			// dispose of item
+			_selectedSceneItem().Dispose();
 
-			foreach (ObsSource source in _sceneSources[index])
-				source.Dispose();
+			// store item index before deleting tiem because that will reset item index to -1
+			var olditemindex = _itemIndex;
 
-			ObsScene scene = _scenes[index];
-			scene.Dispose();
+			// remove item from item list
+			_sceneItems[_sceneIndex].RemoveAt(_itemIndex);
 
-			_sceneSources.RemoveAt(index);
-			_scenes.RemoveAt(index);
+			// remove item from item listbox
+			SceneItemListBox.Items.RemoveAt(_itemIndex);
 
-			_selectedScene = _scenes.Count - 1;
+			// select the scene directly after it
+			_itemIndex = olditemindex >= SceneItemListBox.Items.Count
+				? SceneItemListBox.Items.Count - 1
+				: olditemindex;
 
-			sceneListBox.Items.RemoveAt(index);
+			// select item in listbox
+			SceneItemListBox.SelectedIndex = _itemIndex;
 		}
 
-		private void DelSource(int index)
+		private void HideSceneItemCheckBox_Click(object sender, EventArgs e)
 		{
-			if (_selectedScene < 0)
-				return;
+			// only try to hide if a scene item is selected
+			if (_selectedSceneItem() == null) return;
 
-			if (index >= _sceneSources[_selectedScene].Count || index < 0)
-				return;
+			// Invert the checkbox value
+			HideSceneItemCheckBox.Checked = !HideSceneItemCheckBox.Checked;
 
-			ObsSource source = _sceneSources[_selectedScene][index];
-			source.Dispose();
-
-			ObsSceneItem item = _sceneItems[_selectedScene][index];
-			item.Dispose();
-
-			_sceneSources[_selectedScene].RemoveAt(index);
-			_sceneItems[_selectedScene].RemoveAt(index);
-			sourceListBox.Items.RemoveAt(index);
-
-			sourceListBox.SelectedIndex = sourceListBox.Items.Count - 1;
+			// set the value on the scene item
+			_selectedSceneItem().Visible = HideSceneItemCheckBox.Checked;
 		}
 
-		private void mainViewPanel_SizeChanged(object sender, EventArgs e)
+		private void SceneItemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Obs.ResizeMainView(mainViewPanel.Width, mainViewPanel.Height);
-		}
+			// set item index
+			_itemIndex = SceneItemListBox.SelectedIndex;
 
-		private void addSourceButton_Click(object sender, EventArgs e)
-		{
-			DisplayInputSourceMenu();
-		}
-
-		private void sceneListBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (sceneListBox.SelectedIndex < 0)
+			// enable/disable the hide checkbox and set its value
+			if (_selectedSceneItem() != null)
 			{
-				sceneListBox.SelectedIndex = _selectedScene;
-				return;
-			}
+				HideSceneItemCheckBox.Enabled = true;
 
-			_selectedScene = sceneListBox.SelectedIndex;
-			Obs.SetOutputSource(0, _scenes[_selectedScene].GetSource());
-
-			sourceListBox.Items.Clear();
-			foreach (ObsSource source in _sceneSources[_selectedScene])
-			{
-				sourceListBox.Items.Add(source.Name);
-			}
-		}
-
-		private void sourceListBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			_selectedSource = sourceListBox.SelectedIndex;
-			if (_selectedSource != -1)
-			{
-				enableCheckBox.Enabled = true;
-				mutedCheckBox.Enabled = true;
-				visibleCheckBox.Enabled = true;
-				enableCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Enabled;
-				mutedCheckBox.Checked = _sceneSources[_selectedScene][_selectedSource].Muted;
-				visibleCheckBox.Checked = _sceneItems[_selectedScene][_selectedSource].Visible;
+				HideSceneItemCheckBox.Checked = _selectedSceneItem().Visible;
 			}
 			else
 			{
-				enableCheckBox.Enabled = false;
-				mutedCheckBox.Enabled = false;
-				visibleCheckBox.Enabled = false;
+				HideSceneItemCheckBox.Enabled = false;
 			}
 		}
 
-		private void delSceneButton_Click(object sender, EventArgs e)
+		#endregion
+
+		#region Source
+
+		private ObsSource AddSource(string id, string name)
 		{
-			DelScene(_selectedScene);
+			// Create a new source
+			ObsSource source = new ObsSource(ObsSourceType.Input, id, name);
+
+			// Add the source to the source list
+			_sources.Add(source);
+
+			// Add the source to the source listbox
+			SourceListBox.Items.Add(source.Name);
+			return source;
 		}
 
-		private void delSourceButton_Click(object sender, EventArgs e)
+		private void SourceListBox_MouseDown(object sender, MouseEventArgs e)
 		{
-			DelSource(_selectedSource);
-		}
-
-		private void addSceneButton_Click(object sender, EventArgs e)
-		{
-			AddScene();
-		}
-
-		private void sourceListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right && _selectedScene != -1 && _selectedSource != -1)
+			// display the filter menu when rightclicking on a source in the sourcelistbox
+			if (e.Button == MouseButtons.Right && _selectedSource() != null)
 			{
 				DisplayFilterSourceMenu();
 			}
 		}
 
-		private void enableCheckBox_Click(object sender, EventArgs e)
+		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_selectedSource != -1)
+			// set source index
+			_sourceIndex = SourceListBox.SelectedIndex;
+
+			// enable/disable the enable/mute checkboxes and set their value
+			if (_selectedSource() != null)
 			{
-				enableCheckBox.Checked = !enableCheckBox.Checked;
-				_sceneSources[_selectedScene][_selectedSource].Enabled = enableCheckBox.Checked;
+				EnableSourceCheckBox.Enabled = true;
+				MuteSourceCheckBox.Enabled = true;
+
+				EnableSourceCheckBox.Checked = _selectedSource().Enabled;
+				MuteSourceCheckBox.Checked = _selectedSource().Muted;
+			}
+			else
+			{
+				EnableSourceCheckBox.Enabled = false;
+				MuteSourceCheckBox.Enabled = false;
 			}
 		}
 
-		private void mutedCheckBox_Click(object sender, EventArgs e)
+		private void AddSourceButton_Click(object sender, EventArgs e)
 		{
-			if (_selectedSource != -1)
+			DisplaySourceMenu(true);
+		}
+
+		private void DelSourceButton_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource() != null)
 			{
-				mutedCheckBox.Checked = !mutedCheckBox.Checked;
-				_sceneSources[_selectedScene][_selectedSource].Muted = mutedCheckBox.Checked;
+				//TODO: figure out a better way to clear all items with this specific source
+
+				// remove all scene items that use the same pointer as the selected source
+				foreach (var scene in _sceneItems)
+				{
+					scene.RemoveAll(x => x.GetSource().GetPointer() == _selectedSource().GetPointer());
+				}
+
+				// repopulate the scene item listbox
+				SceneItemListBox.Items.Clear();
+				foreach (var item in _sceneItems[_sceneIndex])
+				{
+					SceneItemListBox.Items.Add(item.Name);
+				}
+
+				// dispose of the source
+				_selectedSource().Dispose();
+
+				// store index because a remove resets index to -1
+				var oldindex = _sourceIndex;
+
+				// remove the source from the source list
+				_sources.RemoveAt(_sourceIndex);
+
+				// remove the source from the source listbox
+				SourceListBox.Items.RemoveAt(_sourceIndex);
+
+				// select the source directly after it
+				_sourceIndex = oldindex >= SourceListBox.Items.Count ? SourceListBox.Items.Count - 1 : oldindex;
+
+				SourceListBox.SelectedIndex = _sourceIndex;
 			}
 		}
 
-		private void visibleCheckBox_Click(object sender, EventArgs e)
+		private void AddSourceToSceneButton_Click(object sender, EventArgs e)
 		{
-			if (_selectedSource != -1)
+			// add currently selected source to the currently selected scene
+			if (_selectedSource() != null)
 			{
-				visibleCheckBox.Checked = !visibleCheckBox.Checked;
-				_sceneItems[_selectedScene][_selectedSource].Visible = visibleCheckBox.Checked;
+				AddSceneItem(_selectedSource());
 			}
 		}
+
+		private void EnableSourceCheckBox_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource() != null)
+			{
+				// invert the checkbox
+				EnableSourceCheckBox.Checked = !EnableSourceCheckBox.Checked;
+
+				// set enabled to the checkbox value
+				_selectedSource().Enabled = EnableSourceCheckBox.Checked;
+			}
+		}
+
+		private void MuteSourceCheckBox_Click(object sender, EventArgs e)
+		{
+			if (_selectedSource() != null)
+			{
+				// invert the checkbox
+				MuteSourceCheckBox.Checked = !MuteSourceCheckBox.Checked;
+
+				// set muted to checkbox value
+				_selectedSource().Muted = MuteSourceCheckBox.Checked;
+			}
+		}
+
+		private void DisplayFilterSourceMenu()
+		{
+			//TODO: actually use this somewhere :p
+			ContextMenu filtermenu = new ContextMenu();
+
+			foreach (var filterType in _filterTypes)
+			{
+				string type = filterType;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
+				int index = _sources.Count + 1;
+
+				MenuItem menuitem = new MenuItem
+									{
+										Text = displayname + " (" + filterType + ")"
+									};
+				menuitem.Click += (sender, args) =>
+				{
+					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
+					_sources[_sourceIndex].AddFilter(filter);
+				};
+
+				filtermenu.MenuItems.Add(menuitem);
+			}
+			filtermenu.MenuItems.Add("-");
+			MenuItem transform = new MenuItem
+								 {
+									 Text = "Edit Tranform Options..."
+								 };
+			transform.Click += (sender, args) =>
+			{
+				var transformfrm = new TestTransform(_sceneItems[_sceneIndex][_itemIndex]);
+				transformfrm.ShowDialog(this);
+			};
+			filtermenu.MenuItems.Add(transform);
+
+			filtermenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		#endregion
 	}
 }

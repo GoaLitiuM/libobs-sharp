@@ -36,9 +36,7 @@ namespace OBS
 			if (instance == IntPtr.Zero)
 				return;
 
-			source.Dispose();
-
-			libobs.obs_sceneitem_remove(instance);	//remove also removes it from sources
+			libobs.obs_sceneitem_remove(instance);
 			instance = IntPtr.Zero;
 		}
 
@@ -56,7 +54,7 @@ namespace OBS
 		{
 			return new ObsScene(libobs.obs_sceneitem_get_scene(instance));
 		}
-		
+
 		public float X
 		{
 			get { return Position.x; }
@@ -83,9 +81,9 @@ namespace OBS
 			get { return Bounds.y; }
 		}
 
-		public string Name()
+		public string Name
 		{
-			return source.Name;
+			get { return source.Name; }
 		}
 
 		public unsafe bool Selected

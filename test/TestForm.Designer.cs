@@ -45,143 +45,190 @@ namespace test
         /// </summary>
         private void InitializeComponent()
         {
-			this.mainViewPanel = new System.Windows.Forms.Panel();
+			this.MainViewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel = new System.Windows.Forms.Panel();
-			this.mutedCheckBox = new System.Windows.Forms.CheckBox();
-			this.enableCheckBox = new System.Windows.Forms.CheckBox();
-			this.delSceneButton = new System.Windows.Forms.Button();
-			this.addSceneButton = new System.Windows.Forms.Button();
-			this.delSourceButton = new System.Windows.Forms.Button();
-			this.addSourceButton = new System.Windows.Forms.Button();
-			this.sourceListBox = new System.Windows.Forms.ListBox();
-			this.sceneListBox = new System.Windows.Forms.ListBox();
-			this.visibleCheckBox = new System.Windows.Forms.CheckBox();
+			this.AddSourceToSceneButton = new System.Windows.Forms.Button();
+			this.DelSourceButton = new System.Windows.Forms.Button();
+			this.AddSourceButton = new System.Windows.Forms.Button();
+			this.SourceListBox = new System.Windows.Forms.ListBox();
+			this.HideSceneItemCheckBox = new System.Windows.Forms.CheckBox();
+			this.MuteSourceCheckBox = new System.Windows.Forms.CheckBox();
+			this.EnableSourceCheckBox = new System.Windows.Forms.CheckBox();
+			this.DelSceneButton = new System.Windows.Forms.Button();
+			this.AddSceneButton = new System.Windows.Forms.Button();
+			this.DelItemButton = new System.Windows.Forms.Button();
+			this.AddItemButton = new System.Windows.Forms.Button();
+			this.SceneItemListBox = new System.Windows.Forms.ListBox();
+			this.SceneListBox = new System.Windows.Forms.ListBox();
 			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// mainViewPanel
+			// MainViewPanel
 			// 
-			this.mainViewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.MainViewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.mainViewPanel.Location = new System.Drawing.Point(12, 9);
-			this.mainViewPanel.Name = "mainViewPanel";
-			this.mainViewPanel.Size = new System.Drawing.Size(694, 331);
-			this.mainViewPanel.TabIndex = 0;
-			this.mainViewPanel.SizeChanged += new System.EventHandler(this.mainViewPanel_SizeChanged);
+			this.MainViewPanel.Location = new System.Drawing.Point(12, 9);
+			this.MainViewPanel.Name = "MainViewPanel";
+			this.MainViewPanel.Size = new System.Drawing.Size(694, 331);
+			this.MainViewPanel.TabIndex = 0;
+			this.MainViewPanel.SizeChanged += new System.EventHandler(this.MainViewPanel_SizeChanged);
 			// 
 			// bottomPanel
 			// 
 			this.bottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.bottomPanel.Controls.Add(this.visibleCheckBox);
-			this.bottomPanel.Controls.Add(this.mutedCheckBox);
-			this.bottomPanel.Controls.Add(this.enableCheckBox);
-			this.bottomPanel.Controls.Add(this.delSceneButton);
-			this.bottomPanel.Controls.Add(this.addSceneButton);
-			this.bottomPanel.Controls.Add(this.delSourceButton);
-			this.bottomPanel.Controls.Add(this.addSourceButton);
-			this.bottomPanel.Controls.Add(this.sourceListBox);
-			this.bottomPanel.Controls.Add(this.sceneListBox);
+			this.bottomPanel.Controls.Add(this.AddSourceToSceneButton);
+			this.bottomPanel.Controls.Add(this.DelSourceButton);
+			this.bottomPanel.Controls.Add(this.AddSourceButton);
+			this.bottomPanel.Controls.Add(this.SourceListBox);
+			this.bottomPanel.Controls.Add(this.HideSceneItemCheckBox);
+			this.bottomPanel.Controls.Add(this.MuteSourceCheckBox);
+			this.bottomPanel.Controls.Add(this.EnableSourceCheckBox);
+			this.bottomPanel.Controls.Add(this.DelSceneButton);
+			this.bottomPanel.Controls.Add(this.AddSceneButton);
+			this.bottomPanel.Controls.Add(this.DelItemButton);
+			this.bottomPanel.Controls.Add(this.AddItemButton);
+			this.bottomPanel.Controls.Add(this.SceneItemListBox);
+			this.bottomPanel.Controls.Add(this.SceneListBox);
 			this.bottomPanel.Location = new System.Drawing.Point(12, 346);
 			this.bottomPanel.Name = "bottomPanel";
 			this.bottomPanel.Size = new System.Drawing.Size(694, 121);
 			this.bottomPanel.TabIndex = 1;
 			// 
-			// mutedCheckBox
+			// AddSourceToSceneButton
 			// 
-			this.mutedCheckBox.AutoCheck = false;
-			this.mutedCheckBox.AutoSize = true;
-			this.mutedCheckBox.Location = new System.Drawing.Point(327, 26);
-			this.mutedCheckBox.Name = "mutedCheckBox";
-			this.mutedCheckBox.Size = new System.Drawing.Size(93, 17);
-			this.mutedCheckBox.TabIndex = 7;
-			this.mutedCheckBox.Text = "Source Muted";
-			this.mutedCheckBox.UseVisualStyleBackColor = true;
-			this.mutedCheckBox.Click += new System.EventHandler(this.mutedCheckBox_Click);
+			this.AddSourceToSceneButton.Location = new System.Drawing.Point(327, 39);
+			this.AddSourceToSceneButton.Name = "AddSourceToSceneButton";
+			this.AddSourceToSceneButton.Size = new System.Drawing.Size(75, 23);
+			this.AddSourceToSceneButton.TabIndex = 12;
+			this.AddSourceToSceneButton.Text = "< <";
+			this.AddSourceToSceneButton.UseVisualStyleBackColor = true;
+			this.AddSourceToSceneButton.Click += new System.EventHandler(this.AddSourceToSceneButton_Click);
 			// 
-			// enableCheckBox
+			// DelSourceButton
 			// 
-			this.enableCheckBox.AutoCheck = false;
-			this.enableCheckBox.AutoSize = true;
-			this.enableCheckBox.Location = new System.Drawing.Point(327, 3);
-			this.enableCheckBox.Name = "enableCheckBox";
-			this.enableCheckBox.Size = new System.Drawing.Size(102, 17);
-			this.enableCheckBox.TabIndex = 6;
-			this.enableCheckBox.Text = "Source Enabled";
-			this.enableCheckBox.UseVisualStyleBackColor = true;
-			this.enableCheckBox.Click += new System.EventHandler(this.enableCheckBox_Click);
+			this.DelSourceButton.Location = new System.Drawing.Point(489, 98);
+			this.DelSourceButton.Name = "DelSourceButton";
+			this.DelSourceButton.Size = new System.Drawing.Size(75, 23);
+			this.DelSourceButton.TabIndex = 11;
+			this.DelSourceButton.Text = "Del Source";
+			this.DelSourceButton.UseVisualStyleBackColor = true;
+			this.DelSourceButton.Click += new System.EventHandler(this.DelSourceButton_Click);
 			// 
-			// delSceneButton
+			// AddSourceButton
 			// 
-			this.delSceneButton.Location = new System.Drawing.Point(84, 98);
-			this.delSceneButton.Name = "delSceneButton";
-			this.delSceneButton.Size = new System.Drawing.Size(75, 23);
-			this.delSceneButton.TabIndex = 5;
-			this.delSceneButton.Text = "DelScene";
-			this.delSceneButton.UseVisualStyleBackColor = true;
-			this.delSceneButton.Click += new System.EventHandler(this.delSceneButton_Click);
+			this.AddSourceButton.Location = new System.Drawing.Point(408, 98);
+			this.AddSourceButton.Name = "AddSourceButton";
+			this.AddSourceButton.Size = new System.Drawing.Size(75, 23);
+			this.AddSourceButton.TabIndex = 10;
+			this.AddSourceButton.Text = "Add Source";
+			this.AddSourceButton.UseVisualStyleBackColor = true;
+			this.AddSourceButton.Click += new System.EventHandler(this.AddSourceButton_Click);
 			// 
-			// addSceneButton
+			// SourceListBox
 			// 
-			this.addSceneButton.Location = new System.Drawing.Point(3, 98);
-			this.addSceneButton.Name = "addSceneButton";
-			this.addSceneButton.Size = new System.Drawing.Size(75, 23);
-			this.addSceneButton.TabIndex = 4;
-			this.addSceneButton.Text = "AddScene";
-			this.addSceneButton.UseVisualStyleBackColor = true;
-			this.addSceneButton.Click += new System.EventHandler(this.addSceneButton_Click);
+			this.SourceListBox.FormattingEnabled = true;
+			this.SourceListBox.Location = new System.Drawing.Point(408, 0);
+			this.SourceListBox.Name = "SourceListBox";
+			this.SourceListBox.Size = new System.Drawing.Size(156, 95);
+			this.SourceListBox.TabIndex = 9;
+			this.SourceListBox.SelectedIndexChanged += new System.EventHandler(this.SourceListBox_SelectedIndexChanged);
+			this.SourceListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SourceListBox_MouseDown);
 			// 
-			// delSourceButton
+			// HideSceneItemCheckBox
 			// 
-			this.delSourceButton.Location = new System.Drawing.Point(246, 98);
-			this.delSourceButton.Name = "delSourceButton";
-			this.delSourceButton.Size = new System.Drawing.Size(75, 23);
-			this.delSourceButton.TabIndex = 3;
-			this.delSourceButton.Text = "DelSource";
-			this.delSourceButton.UseVisualStyleBackColor = true;
-			this.delSourceButton.Click += new System.EventHandler(this.delSourceButton_Click);
+			this.HideSceneItemCheckBox.AutoCheck = false;
+			this.HideSceneItemCheckBox.AutoSize = true;
+			this.HideSceneItemCheckBox.Location = new System.Drawing.Point(327, 3);
+			this.HideSceneItemCheckBox.Name = "HideSceneItemCheckBox";
+			this.HideSceneItemCheckBox.Size = new System.Drawing.Size(56, 17);
+			this.HideSceneItemCheckBox.TabIndex = 8;
+			this.HideSceneItemCheckBox.Text = "Visible";
+			this.HideSceneItemCheckBox.UseVisualStyleBackColor = true;
+			this.HideSceneItemCheckBox.Click += new System.EventHandler(this.HideSceneItemCheckBox_Click);
 			// 
-			// addSourceButton
+			// MuteSourceCheckBox
 			// 
-			this.addSourceButton.Location = new System.Drawing.Point(165, 98);
-			this.addSourceButton.Name = "addSourceButton";
-			this.addSourceButton.Size = new System.Drawing.Size(75, 23);
-			this.addSourceButton.TabIndex = 2;
-			this.addSourceButton.Text = "AddSource";
-			this.addSourceButton.UseVisualStyleBackColor = true;
-			this.addSourceButton.Click += new System.EventHandler(this.addSourceButton_Click);
+			this.MuteSourceCheckBox.AutoCheck = false;
+			this.MuteSourceCheckBox.AutoSize = true;
+			this.MuteSourceCheckBox.Location = new System.Drawing.Point(570, 26);
+			this.MuteSourceCheckBox.Name = "MuteSourceCheckBox";
+			this.MuteSourceCheckBox.Size = new System.Drawing.Size(56, 17);
+			this.MuteSourceCheckBox.TabIndex = 7;
+			this.MuteSourceCheckBox.Text = "Muted";
+			this.MuteSourceCheckBox.UseVisualStyleBackColor = true;
+			this.MuteSourceCheckBox.Click += new System.EventHandler(this.MuteSourceCheckBox_Click);
 			// 
-			// sourceListBox
+			// EnableSourceCheckBox
 			// 
-			this.sourceListBox.FormattingEnabled = true;
-			this.sourceListBox.Location = new System.Drawing.Point(165, 0);
-			this.sourceListBox.Name = "sourceListBox";
-			this.sourceListBox.Size = new System.Drawing.Size(156, 95);
-			this.sourceListBox.TabIndex = 1;
-			this.sourceListBox.SelectedIndexChanged += new System.EventHandler(this.sourceListBox_SelectedIndexChanged);
-			this.sourceListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sourceListBox_MouseDown);
+			this.EnableSourceCheckBox.AutoCheck = false;
+			this.EnableSourceCheckBox.AutoSize = true;
+			this.EnableSourceCheckBox.Location = new System.Drawing.Point(570, 3);
+			this.EnableSourceCheckBox.Name = "EnableSourceCheckBox";
+			this.EnableSourceCheckBox.Size = new System.Drawing.Size(65, 17);
+			this.EnableSourceCheckBox.TabIndex = 6;
+			this.EnableSourceCheckBox.Text = "Enabled";
+			this.EnableSourceCheckBox.UseVisualStyleBackColor = true;
+			this.EnableSourceCheckBox.Click += new System.EventHandler(this.EnableSourceCheckBox_Click);
 			// 
-			// sceneListBox
+			// DelSceneButton
 			// 
-			this.sceneListBox.FormattingEnabled = true;
-			this.sceneListBox.Location = new System.Drawing.Point(3, 0);
-			this.sceneListBox.Name = "sceneListBox";
-			this.sceneListBox.Size = new System.Drawing.Size(156, 95);
-			this.sceneListBox.TabIndex = 0;
-			this.sceneListBox.SelectedIndexChanged += new System.EventHandler(this.sceneListBox_SelectedIndexChanged);
+			this.DelSceneButton.Location = new System.Drawing.Point(84, 98);
+			this.DelSceneButton.Name = "DelSceneButton";
+			this.DelSceneButton.Size = new System.Drawing.Size(75, 23);
+			this.DelSceneButton.TabIndex = 5;
+			this.DelSceneButton.Text = "Del Scene";
+			this.DelSceneButton.UseVisualStyleBackColor = true;
+			this.DelSceneButton.Click += new System.EventHandler(this.DelSceneButton_Click);
 			// 
-			// visibleCheckBox
+			// AddSceneButton
 			// 
-			this.visibleCheckBox.AutoCheck = false;
-			this.visibleCheckBox.AutoSize = true;
-			this.visibleCheckBox.Location = new System.Drawing.Point(327, 49);
-			this.visibleCheckBox.Name = "visibleCheckBox";
-			this.visibleCheckBox.Size = new System.Drawing.Size(79, 17);
-			this.visibleCheckBox.TabIndex = 8;
-			this.visibleCheckBox.Text = "Item Visible";
-			this.visibleCheckBox.UseVisualStyleBackColor = true;
-			this.visibleCheckBox.Click += new System.EventHandler(this.visibleCheckBox_Click);
+			this.AddSceneButton.Location = new System.Drawing.Point(3, 98);
+			this.AddSceneButton.Name = "AddSceneButton";
+			this.AddSceneButton.Size = new System.Drawing.Size(75, 23);
+			this.AddSceneButton.TabIndex = 4;
+			this.AddSceneButton.Text = "Add Scene";
+			this.AddSceneButton.UseVisualStyleBackColor = true;
+			this.AddSceneButton.Click += new System.EventHandler(this.AddSceneButton_Click);
+			// 
+			// DelItemButton
+			// 
+			this.DelItemButton.Location = new System.Drawing.Point(246, 98);
+			this.DelItemButton.Name = "DelItemButton";
+			this.DelItemButton.Size = new System.Drawing.Size(75, 23);
+			this.DelItemButton.TabIndex = 3;
+			this.DelItemButton.Text = "Del Item";
+			this.DelItemButton.UseVisualStyleBackColor = true;
+			this.DelItemButton.Click += new System.EventHandler(this.DelItemButton_Click);
+			// 
+			// AddItemButton
+			// 
+			this.AddItemButton.Location = new System.Drawing.Point(165, 98);
+			this.AddItemButton.Name = "AddItemButton";
+			this.AddItemButton.Size = new System.Drawing.Size(75, 23);
+			this.AddItemButton.TabIndex = 2;
+			this.AddItemButton.Text = "Add Item";
+			this.AddItemButton.UseVisualStyleBackColor = true;
+			this.AddItemButton.Click += new System.EventHandler(this.AddItemButton_Click);
+			// 
+			// SceneItemListBox
+			// 
+			this.SceneItemListBox.FormattingEnabled = true;
+			this.SceneItemListBox.Location = new System.Drawing.Point(165, 0);
+			this.SceneItemListBox.Name = "SceneItemListBox";
+			this.SceneItemListBox.Size = new System.Drawing.Size(156, 95);
+			this.SceneItemListBox.TabIndex = 1;
+			this.SceneItemListBox.SelectedIndexChanged += new System.EventHandler(this.SceneItemListBox_SelectedIndexChanged);
+			// 
+			// SceneListBox
+			// 
+			this.SceneListBox.FormattingEnabled = true;
+			this.SceneListBox.Location = new System.Drawing.Point(3, 0);
+			this.SceneListBox.Name = "SceneListBox";
+			this.SceneListBox.Size = new System.Drawing.Size(156, 95);
+			this.SceneListBox.TabIndex = 0;
+			this.SceneListBox.SelectedIndexChanged += new System.EventHandler(this.SceneListBox_SelectedIndexChanged);
 			// 
 			// TestForm
 			// 
@@ -189,7 +236,7 @@ namespace test
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(718, 479);
 			this.Controls.Add(this.bottomPanel);
-			this.Controls.Add(this.mainViewPanel);
+			this.Controls.Add(this.MainViewPanel);
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestForm_FormClosed);
@@ -202,17 +249,21 @@ namespace test
 
         #endregion
 
-		public System.Windows.Forms.Panel mainViewPanel;
+		public System.Windows.Forms.Panel MainViewPanel;
 		private System.Windows.Forms.Panel bottomPanel;
-		private System.Windows.Forms.Button delSceneButton;
-		private System.Windows.Forms.Button addSceneButton;
-		private System.Windows.Forms.Button delSourceButton;
-		private System.Windows.Forms.Button addSourceButton;
-		private System.Windows.Forms.ListBox sourceListBox;
-		private System.Windows.Forms.ListBox sceneListBox;
-		private System.Windows.Forms.CheckBox mutedCheckBox;
-		private System.Windows.Forms.CheckBox enableCheckBox;
-		private System.Windows.Forms.CheckBox visibleCheckBox;
+		private System.Windows.Forms.Button DelSceneButton;
+		private System.Windows.Forms.Button AddSceneButton;
+		private System.Windows.Forms.Button DelItemButton;
+		private System.Windows.Forms.Button AddItemButton;
+		private System.Windows.Forms.ListBox SceneItemListBox;
+		private System.Windows.Forms.ListBox SceneListBox;
+		private System.Windows.Forms.CheckBox MuteSourceCheckBox;
+		private System.Windows.Forms.CheckBox EnableSourceCheckBox;
+		private System.Windows.Forms.CheckBox HideSceneItemCheckBox;
+		private System.Windows.Forms.Button DelSourceButton;
+		private System.Windows.Forms.Button AddSourceButton;
+		private System.Windows.Forms.ListBox SourceListBox;
+		private System.Windows.Forms.Button AddSourceToSceneButton;
     }
 }
 
