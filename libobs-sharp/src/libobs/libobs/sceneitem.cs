@@ -62,8 +62,11 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_alignment(obs_sceneitem_t item, uint32_t alignment);
 
-		//EXPORT void obs_sceneitem_set_order(obs_sceneitem_t *item, enum obs_order_movement movement);
-		//EXPORT void obs_sceneitem_set_order_position(obs_sceneitem_t *item, int position);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_sceneitem_set_order(obs_sceneitem_t item, obs_order_movement movement);
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_sceneitem_set_order_position(obs_sceneitem_t item, int position);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_sceneitem_set_bounds_type(obs_sceneitem_t item, obs_bounds_type type);
@@ -121,5 +124,13 @@ namespace OBS
 			OBS_BOUNDS_SCALE_TO_HEIGHT, /**< scales to the height */
 			OBS_BOUNDS_MAX_ONLY,        /**< no scaling, maximum size only */
 		};
+	}
+
+	public enum obs_order_movement : int
+	{
+		OBS_ORDER_MOVE_UP,
+		OBS_ORDER_MOVE_DOWN,
+		OBS_ORDER_MOVE_TOP,
+		OBS_ORDER_MOVE_BOTTOM
 	}
 }

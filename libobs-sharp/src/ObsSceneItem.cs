@@ -21,7 +21,7 @@ namespace OBS
 {
 	public class ObsSceneItem : IDisposable
 	{
-		internal IntPtr instance;    //pointer to unmanaged object
+		internal IntPtr instance; //pointer to unmanaged object
 
 		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
@@ -32,8 +32,7 @@ namespace OBS
 
 		public unsafe void Dispose()
 		{
-			if (instance == IntPtr.Zero)
-				return;
+			if (instance == IntPtr.Zero) return;
 
 			libobs.obs_sceneitem_release(instance);
 
@@ -56,8 +55,7 @@ namespace OBS
 		public unsafe ObsSource GetSource()
 		{
 			IntPtr ptr = libobs.obs_sceneitem_get_source(instance);
-			if (ptr == IntPtr.Zero)
-				return null;
+			if (ptr == IntPtr.Zero) return null;
 
 			return new ObsSource(ptr);
 		}
@@ -65,10 +63,14 @@ namespace OBS
 		public unsafe ObsScene GetScene()
 		{
 			IntPtr ptr = libobs.obs_sceneitem_get_scene(instance);
-			if (ptr == IntPtr.Zero)
-				return null;
+			if (ptr == IntPtr.Zero) return null;
 
 			return new ObsScene(ptr);
+		}
+
+		public string Name
+		{
+			get { return GetSource().Name; }
 		}
 
 		public float X
@@ -187,6 +189,17 @@ namespace OBS
 			libobs.obs_sceneitem_set_bounds_type(instance, (libobs.obs_bounds_type)type);
 			libobs.obs_sceneitem_set_bounds_alignment(instance, (uint)alignment);
 		}
+
+		public unsafe void SetOrder(obs_order_movement direction)
+		{
+			libobs.obs_sceneitem_set_order(instance, direction);
+		}
+
+		public unsafe void SetOrderPosition(int position)
+		{
+			libobs.obs_sceneitem_set_order_position(instance, position);
+		}
+
 	}
 
 	public enum ObsBoundsType : int

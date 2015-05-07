@@ -150,9 +150,9 @@ namespace test
 			GS.TechniqueBegin(tech);
 			GS.TechniqueBeginPass(tech, 0);
 
-			//enum every sceneitem in scene
-			if (_selectedScene() != null)
-				_selectedScene().EnumItems(_enumSceneItem, data);
+			// enum every sceneitem in scene
+			if (_scenes[_renderSceneIndex] != null)
+				_scenes[_renderSceneIndex].EnumItems(_enumSceneItem, data);
 
 			GS.TechniqueEndPass(tech);
 			GS.TechniqueEnd(tech);

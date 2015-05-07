@@ -62,6 +62,11 @@ namespace OBS
 				return source.Name;
 		}
 
+		public string ListName
+		{
+			get { return GetName(); }
+		}
+
 		/// <summary> Sets name of the underlying source. </summary>
 		public unsafe void SetName(string name)
 		{

@@ -51,14 +51,14 @@ namespace test
 			this.DelSourceButton = new System.Windows.Forms.Button();
 			this.AddSourceButton = new System.Windows.Forms.Button();
 			this.SourceListBox = new System.Windows.Forms.ListBox();
-			this.HideSceneItemCheckBox = new System.Windows.Forms.CheckBox();
+			this.HideItemCheckBox = new System.Windows.Forms.CheckBox();
 			this.MuteSourceCheckBox = new System.Windows.Forms.CheckBox();
 			this.EnableSourceCheckBox = new System.Windows.Forms.CheckBox();
 			this.DelSceneButton = new System.Windows.Forms.Button();
 			this.AddSceneButton = new System.Windows.Forms.Button();
 			this.DelItemButton = new System.Windows.Forms.Button();
 			this.AddItemButton = new System.Windows.Forms.Button();
-			this.SceneItemListBox = new System.Windows.Forms.ListBox();
+			this.ItemListBox = new System.Windows.Forms.ListBox();
 			this.SceneListBox = new System.Windows.Forms.ListBox();
 			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
@@ -82,14 +82,14 @@ namespace test
 			this.bottomPanel.Controls.Add(this.DelSourceButton);
 			this.bottomPanel.Controls.Add(this.AddSourceButton);
 			this.bottomPanel.Controls.Add(this.SourceListBox);
-			this.bottomPanel.Controls.Add(this.HideSceneItemCheckBox);
+			this.bottomPanel.Controls.Add(this.HideItemCheckBox);
 			this.bottomPanel.Controls.Add(this.MuteSourceCheckBox);
 			this.bottomPanel.Controls.Add(this.EnableSourceCheckBox);
 			this.bottomPanel.Controls.Add(this.DelSceneButton);
 			this.bottomPanel.Controls.Add(this.AddSceneButton);
 			this.bottomPanel.Controls.Add(this.DelItemButton);
 			this.bottomPanel.Controls.Add(this.AddItemButton);
-			this.bottomPanel.Controls.Add(this.SceneItemListBox);
+			this.bottomPanel.Controls.Add(this.ItemListBox);
 			this.bottomPanel.Controls.Add(this.SceneListBox);
 			this.bottomPanel.Location = new System.Drawing.Point(12, 346);
 			this.bottomPanel.Name = "bottomPanel";
@@ -136,17 +136,17 @@ namespace test
 			this.SourceListBox.SelectedIndexChanged += new System.EventHandler(this.SourceListBox_SelectedIndexChanged);
 			this.SourceListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SourceListBox_MouseDown);
 			// 
-			// HideSceneItemCheckBox
+			// HideItemCheckBox
 			// 
-			this.HideSceneItemCheckBox.AutoCheck = false;
-			this.HideSceneItemCheckBox.AutoSize = true;
-			this.HideSceneItemCheckBox.Location = new System.Drawing.Point(327, 3);
-			this.HideSceneItemCheckBox.Name = "HideSceneItemCheckBox";
-			this.HideSceneItemCheckBox.Size = new System.Drawing.Size(56, 17);
-			this.HideSceneItemCheckBox.TabIndex = 8;
-			this.HideSceneItemCheckBox.Text = "Visible";
-			this.HideSceneItemCheckBox.UseVisualStyleBackColor = true;
-			this.HideSceneItemCheckBox.Click += new System.EventHandler(this.HideSceneItemCheckBox_Click);
+			this.HideItemCheckBox.AutoCheck = false;
+			this.HideItemCheckBox.AutoSize = true;
+			this.HideItemCheckBox.Location = new System.Drawing.Point(327, 3);
+			this.HideItemCheckBox.Name = "HideItemCheckBox";
+			this.HideItemCheckBox.Size = new System.Drawing.Size(56, 17);
+			this.HideItemCheckBox.TabIndex = 8;
+			this.HideItemCheckBox.Text = "Visible";
+			this.HideItemCheckBox.UseVisualStyleBackColor = true;
+			this.HideItemCheckBox.Click += new System.EventHandler(this.ItemCheckBox_Click);
 			// 
 			// MuteSourceCheckBox
 			// 
@@ -212,14 +212,14 @@ namespace test
 			this.AddItemButton.UseVisualStyleBackColor = true;
 			this.AddItemButton.Click += new System.EventHandler(this.AddItemButton_Click);
 			// 
-			// SceneItemListBox
+			// ItemListBox
 			// 
-			this.SceneItemListBox.FormattingEnabled = true;
-			this.SceneItemListBox.Location = new System.Drawing.Point(165, 0);
-			this.SceneItemListBox.Name = "SceneItemListBox";
-			this.SceneItemListBox.Size = new System.Drawing.Size(156, 95);
-			this.SceneItemListBox.TabIndex = 1;
-			this.SceneItemListBox.SelectedIndexChanged += new System.EventHandler(this.SceneItemListBox_SelectedIndexChanged);
+			this.ItemListBox.FormattingEnabled = true;
+			this.ItemListBox.Location = new System.Drawing.Point(165, 0);
+			this.ItemListBox.Name = "ItemListBox";
+			this.ItemListBox.Size = new System.Drawing.Size(156, 95);
+			this.ItemListBox.TabIndex = 1;
+			this.ItemListBox.SelectedIndexChanged += new System.EventHandler(this.ItemListBox_SelectedIndexChanged);
 			// 
 			// SceneListBox
 			// 
@@ -255,11 +255,11 @@ namespace test
 		private System.Windows.Forms.Button AddSceneButton;
 		private System.Windows.Forms.Button DelItemButton;
 		private System.Windows.Forms.Button AddItemButton;
-		private System.Windows.Forms.ListBox SceneItemListBox;
+		private System.Windows.Forms.ListBox ItemListBox;
 		private System.Windows.Forms.ListBox SceneListBox;
 		private System.Windows.Forms.CheckBox MuteSourceCheckBox;
 		private System.Windows.Forms.CheckBox EnableSourceCheckBox;
-		private System.Windows.Forms.CheckBox HideSceneItemCheckBox;
+		private System.Windows.Forms.CheckBox HideItemCheckBox;
 		private System.Windows.Forms.Button DelSourceButton;
 		private System.Windows.Forms.Button AddSourceButton;
 		private System.Windows.Forms.ListBox SourceListBox;

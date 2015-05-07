@@ -128,6 +128,7 @@
       <DependentUpon>TestTransform.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\ColorHelper.cs" />
+    <Compile Include="Utility\BindingListHelper.cs" />
     <Compile Include="Utility\WinFormsHelper.cs" />
     <EmbeddedResource Include="Controls\AlignmentBox.resx">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
