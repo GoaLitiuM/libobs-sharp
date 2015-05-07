@@ -34,6 +34,7 @@ namespace OBS
 				return;
 
 			libobs.obs_sceneitem_remove(instance);
+
 			instance = IntPtr.Zero;
 		}
 

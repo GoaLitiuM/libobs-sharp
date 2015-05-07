@@ -84,7 +84,11 @@ namespace OBS
 				if (index < 0 || index > Count)
 					throw new IndexOutOfRangeException();
 
-				return new ObsData(libobs.obs_data_array_item(instance, (IntPtr)index));
+				IntPtr ptr = libobs.obs_data_array_item(instance, (IntPtr)index);
+				if (ptr == IntPtr.Zero)
+					return null;
+
+                return new ObsData(ptr);
 			}
 		}
 
@@ -108,7 +112,11 @@ namespace OBS
 			if (index < 0 || index > Count)
 				throw new IndexOutOfRangeException();
 
-			return new ObsData(libobs.obs_data_array_item(instance, (IntPtr)index));
+			IntPtr ptr = libobs.obs_data_array_item(instance, (IntPtr)index);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+            return new ObsData(ptr);
 		}
 	}
 }

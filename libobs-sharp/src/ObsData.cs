@@ -100,7 +100,11 @@ namespace OBS
 
 		public unsafe ObsDataArray GetArray(string name)
 		{
-			return new ObsDataArray(libobs.obs_data_get_array((IntPtr)instance, name));
+			IntPtr ptr = libobs.obs_data_get_array((IntPtr)instance, name);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+            return new ObsDataArray(ptr);
 		}
 
 		public unsafe string GetStringDefault(string name)
@@ -130,7 +134,11 @@ namespace OBS
 
 		public unsafe ObsDataArray GetArrayDefault(string name)
 		{
-			return new ObsDataArray(libobs.obs_data_get_default_array((IntPtr)instance, name));
+			IntPtr ptr = libobs.obs_data_get_default_array((IntPtr)instance, name);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsDataArray(ptr);
 		}
 
 		public unsafe string GetStringAutoselect(string name)
@@ -160,7 +168,11 @@ namespace OBS
 
 		public unsafe ObsDataArray GetArrayAutoselect(string name)
 		{
-			return new ObsDataArray(libobs.obs_data_get_autoselect_array((IntPtr)instance, name));
+			IntPtr ptr = libobs.obs_data_get_autoselect_array((IntPtr)instance, name);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsDataArray(ptr);
 		}
 
 		//Setters

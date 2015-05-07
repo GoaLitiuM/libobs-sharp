@@ -79,7 +79,6 @@ namespace OBS
 		public unsafe ObsData GetSettings()
 		{
 			IntPtr ptr = libobs.obs_source_get_settings(instance);
-
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -89,7 +88,6 @@ namespace OBS
 		public unsafe static ObsProperties GetProperties(ObsSourceType type, string id)
 		{
 			IntPtr ptr = libobs.obs_get_source_properties((libobs.obs_source_type)type, id);
-
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -99,7 +97,6 @@ namespace OBS
 		public unsafe ObsProperties GetProperties()
 		{
 			IntPtr ptr = libobs.obs_source_properties(instance);
-
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -118,12 +115,20 @@ namespace OBS
 
 		public unsafe ObsSource GetFilterParent(ObsSource filter)
 		{
-			return new ObsSource(libobs.obs_filter_get_parent(filter.GetPointer()));
+			IntPtr ptr = libobs.obs_filter_get_parent(filter.GetPointer());
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsSource(ptr);
 		}
 
 		public unsafe ObsSource GetFilterTarget(ObsSource filter)
 		{
-			return new ObsSource(libobs.obs_filter_get_target(filter.GetPointer()));
+			IntPtr ptr = libobs.obs_filter_get_target(filter.GetPointer());
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsSource(ptr);
 		}
 
 		public unsafe void Update()

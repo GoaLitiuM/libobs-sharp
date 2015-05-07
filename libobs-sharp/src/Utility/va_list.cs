@@ -111,6 +111,7 @@ namespace OBS.Utility
 				Marshal.FreeHGlobal(rel);
 
 			allocPtrs.Clear();
+
 			instance = IntPtr.Zero;
 		}
 

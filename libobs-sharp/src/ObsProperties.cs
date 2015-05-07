@@ -35,6 +35,7 @@ namespace OBS
 				return;
 
 			libobs.obs_properties_destroy((IntPtr)instance);
+
 			instance = IntPtr.Zero;
 		}
 
