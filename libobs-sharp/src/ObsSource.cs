@@ -36,8 +36,8 @@ namespace OBS
 			if (instance == IntPtr.Zero)
 				return;
 
-			libobs.obs_source_release(instance);
 			libobs.obs_source_remove(instance);
+			libobs.obs_source_release(instance);
 			instance = IntPtr.Zero;
 		}
 

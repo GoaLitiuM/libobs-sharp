@@ -15,11 +15,14 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using OBS;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+
+using OBS;
 
 namespace test
 {
@@ -78,11 +81,11 @@ namespace test
 				_renderMain = RenderMain;
 				_enumSceneItem = EnumSceneItem;
 
-				System.Diagnostics.Debug.WriteLine("libobs version: " + Obs.GetVersion().ToString());
+				Debug.WriteLine("libobs version: " + Obs.GetVersion().ToString());
 
 				Obs.SetLogHandler((lvl, msg, p) =>
 				{
-					System.Diagnostics.Debug.WriteLine(msg);
+					Debug.WriteLine(msg);
 				});
 
 				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
@@ -396,11 +399,15 @@ namespace test
 			// remove item from item listbox
 			SceneItemListBox.Items.RemoveAt(_itemIndex);
 
-			// select the scene directly after it
-			_itemIndex = olditemindex >= SceneItemListBox.Items.Count
-				? SceneItemListBox.Items.Count - 1
-				: olditemindex;
-
+			// select the scene item directly after it
+			if (SceneItemListBox.Items.Count > 0)
+			{
+				_itemIndex = olditemindex >= SceneItemListBox.Items.Count ? SceneItemListBox.Items.Count - 1 : olditemindex;
+			}
+			else
+			{
+				_itemIndex = -1;
+			}
 			// select item in listbox
 			SceneItemListBox.SelectedIndex = _itemIndex;
 		}
@@ -496,6 +503,11 @@ namespace test
 				// remove all scene items that use the same pointer as the selected source
 				foreach (var scene in _sceneItems)
 				{
+					var deleteitems = scene.Where(x => x.GetSource().GetPointer() == _selectedSource().GetPointer());
+					foreach (var item in deleteitems)
+					{
+						item.Dispose();
+					}
 					scene.RemoveAll(x => x.GetSource().GetPointer() == _selectedSource().GetPointer());
 				}
 
@@ -522,6 +534,10 @@ namespace test
 				_sourceIndex = oldindex >= SourceListBox.Items.Count ? SourceListBox.Items.Count - 1 : oldindex;
 
 				SourceListBox.SelectedIndex = _sourceIndex;
+				
+				// unselect items
+				SceneItemListBox.SelectedIndex = -1;
+				_itemIndex = -1;
 			}
 		}
 
