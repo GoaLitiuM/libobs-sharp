@@ -22,7 +22,6 @@ namespace OBS
 	public class ObsScene : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
-		internal ObsSource source;
 
 		public unsafe ObsScene(string name)
 		{
@@ -30,8 +29,6 @@ namespace OBS
 
 			if (instance == null)
 				throw new ApplicationException("obs_scene_create failed");
-
-			source = new ObsSource(libobs.obs_scene_get_source(instance));
 		}
 
 		public unsafe ObsScene(IntPtr pointer)
@@ -40,8 +37,6 @@ namespace OBS
 
 			if (instance == null)
 				throw new ApplicationException("obs_scene_create failed");
-
-			source = new ObsSource(libobs.obs_scene_get_source(instance));
 		}
 		
 		public unsafe void Dispose()
@@ -49,9 +44,8 @@ namespace OBS
 			if (instance == IntPtr.Zero)
 				return;
 
-			source.Dispose();
-
 			libobs.obs_scene_release(instance);
+
 			instance = IntPtr.Zero;
 		}
 
@@ -70,13 +64,20 @@ namespace OBS
 
 		public unsafe ObsSource GetSource()
 		{
-			return source;
+			IntPtr ptr = libobs.obs_scene_get_source(instance);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+            return new ObsSource(ptr);
 		}
 
 		public unsafe ObsSceneItem Add(ObsSource source)
 		{
-			IntPtr sceneItem = libobs.obs_scene_add(instance, source.GetPointer());
-			return new ObsSceneItem(sceneItem);
+			IntPtr ptr = libobs.obs_scene_add(instance, source.GetPointer());
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsSceneItem(ptr);
 		}
 
 		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)

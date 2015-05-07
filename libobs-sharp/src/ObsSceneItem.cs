@@ -22,13 +22,10 @@ namespace OBS
 	public class ObsSceneItem : IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
-		internal ObsSource source;
 
 		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
 			instance = sceneItem;
-
-			source = new ObsSource(libobs.obs_sceneitem_get_source(instance));
 		}
 
 		public unsafe void Dispose()
@@ -47,12 +44,20 @@ namespace OBS
 
 		public unsafe ObsSource GetSource()
 		{
-			return source;
+			IntPtr ptr = libobs.obs_sceneitem_get_source(instance);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsSource(ptr);
 		}
 
 		public unsafe ObsScene GetScene()
 		{
-			return new ObsScene(libobs.obs_sceneitem_get_scene(instance));
+			IntPtr ptr = libobs.obs_sceneitem_get_scene(instance);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsScene(ptr);
 		}
 
 		public float X
@@ -79,11 +84,6 @@ namespace OBS
 		public float Height
 		{
 			get { return Bounds.y; }
-		}
-
-		public string Name
-		{
-			get { return source.Name; }
 		}
 
 		public unsafe bool Selected

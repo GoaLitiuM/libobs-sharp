@@ -215,7 +215,7 @@ namespace test
 			ObsScene scene = new ObsScene("test scene (" + (_scenes.Count + 1) + ")");
 
 			// Show the scene in the viewport
-			Obs.SetOutputSource(0, scene.GetSource());
+			Obs.SetOutputSource(0, scene);
 
 			// Add scene to scenelist
 			_scenes.Add(scene);
@@ -280,13 +280,14 @@ namespace test
 			_sceneIndex = SceneListBox.SelectedIndex;
 
 			// set the viewport to the currently selected scene
-			Obs.SetOutputSource(0, _selectedScene().GetSource());
+			Obs.SetOutputSource(0, _selectedScene());
 
 			// repopulate the itemlistbox with the apropriate items
 			SceneItemListBox.Items.Clear();
 			foreach (var item in _sceneItems[_sceneIndex])
 			{
-				SceneItemListBox.Items.Add(item.Name);
+				using (ObsSource source = item.GetSource())
+					SceneItemListBox.Items.Add(source.Name);
 			}
 		}
 
@@ -503,19 +504,23 @@ namespace test
 				// remove all scene items that use the same pointer as the selected source
 				foreach (var scene in _sceneItems)
 				{
-					var deleteitems = scene.Where(x => x.GetSource().GetPointer() == _selectedSource().GetPointer());
-					foreach (var item in deleteitems)
+					scene.RemoveAll(x =>
 					{
-						item.Dispose();
-					}
-					scene.RemoveAll(x => x.GetSource().GetPointer() == _selectedSource().GetPointer());
+						using (var source = x.GetSource())
+							if (source.GetPointer() != _selectedSource().GetPointer())
+								return false;
+
+						x.Dispose();
+						return true;
+					});
 				}
 
 				// repopulate the scene item listbox
 				SceneItemListBox.Items.Clear();
 				foreach (var item in _sceneItems[_sceneIndex])
 				{
-					SceneItemListBox.Items.Add(item.Name);
+					using (ObsSource source = item.GetSource())
+						SceneItemListBox.Items.Add(source.Name);
 				}
 
 				// dispose of the source

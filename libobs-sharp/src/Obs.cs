@@ -96,6 +96,12 @@ namespace OBS
 			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
 		}
 
+		public static unsafe void SetOutputSource(UInt32 channel, ObsScene scene)
+		{
+			using (ObsSource source = scene.GetSource())
+				SetOutputSource(channel, source);	
+		}
+
 		public static void RenderMainView()
 		{
 			libobs.obs_render_main_view();
