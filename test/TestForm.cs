@@ -224,7 +224,7 @@ namespace test
 			_sceneItems.Add(new List<ObsSceneItem>());
 
 			// add scene to scenelistbox
-			SceneListBox.Items.Add(scene.Name);
+			SceneListBox.Items.Add(scene.GetName());
 
 			// set sceneindex to new scene
 			_sceneIndex = SceneListBox.Items.Count - 1;
@@ -366,6 +366,7 @@ namespace test
 						prop.Disposed += (o, eventArgs) =>
 						{
 							var itemindex = SceneItemListBox.Items.Count - 1;
+							_sceneItems[_sceneIndex][itemindex].Remove();
 							_sceneItems[_sceneIndex][itemindex].Dispose();
 
 							_sceneItems[_sceneIndex].RemoveAt(itemindex);
@@ -388,7 +389,8 @@ namespace test
 			// only delete item if one is selected
 			if (_selectedSceneItem() == null) return;
 
-			// dispose of item
+			// remove sceneitem from scene, and dispose it
+			_selectedSceneItem().Remove();
 			_selectedSceneItem().Dispose();
 
 			// store item index before deleting tiem because that will reset item index to -1
@@ -510,6 +512,7 @@ namespace test
 							if (source.GetPointer() != _selectedSource().GetPointer())
 								return false;
 
+						x.Remove();
 						x.Dispose();
 						return true;
 					});

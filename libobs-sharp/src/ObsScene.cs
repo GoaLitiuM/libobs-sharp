@@ -16,10 +16,11 @@
 ***************************************************************************/
 
 using System;
+using System.Collections.Generic;
 
 namespace OBS
 {
-	public class ObsScene : IDisposable
+	public class ObsScene : IDisposable, IEnumerable<ObsSceneItem>
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 
@@ -38,7 +39,7 @@ namespace OBS
 			if (instance == null)
 				throw new ApplicationException("obs_scene_create failed");
 		}
-		
+
 		public unsafe void Dispose()
 		{
 			if (instance == IntPtr.Zero)
@@ -54,12 +55,18 @@ namespace OBS
 			return instance;
 		}
 
-		public unsafe String Name
+		/// <summary> Gets name of the underlying source. </summary>
+		public unsafe string GetName()
 		{
-			get
-			{
-				return libobs.obs_source_get_name(libobs.obs_scene_get_source(instance));
-			}
+			using (ObsSource source = GetSource())
+				return source.Name;
+		}
+
+		/// <summary> Sets name of the underlying source. </summary>
+		public unsafe void SetName(string name)
+		{
+			using (ObsSource source = GetSource())
+				source.Name = name;
 		}
 
 		public unsafe ObsSource GetSource()
@@ -68,7 +75,7 @@ namespace OBS
 			if (ptr == IntPtr.Zero)
 				return null;
 
-            return new ObsSource(ptr);
+			return new ObsSource(ptr);
 		}
 
 		public unsafe ObsSceneItem Add(ObsSource source)
@@ -83,6 +90,33 @@ namespace OBS
 		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)
 		{
 			libobs.obs_scene_enum_items(instance, callback, param);
+		}
+
+		public unsafe ObsSceneItem[] GetItems()
+		{
+			List<ObsSceneItem> items = new List<ObsSceneItem>();
+			EnumItems((IntPtr scene, IntPtr item, IntPtr data) =>
+			{
+				items.Add(new ObsSceneItem(item));
+				return true;
+			}, IntPtr.Zero);
+
+			return items.ToArray();
+		}
+
+		public IEnumerator<ObsSceneItem> GetEnumerator()
+		{
+			ObsSceneItem[] items = GetItems();
+			foreach (ObsSceneItem item in items)
+				yield return item;
+
+			foreach (ObsSceneItem item in items)
+				item.Dispose();
+        }
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }

@@ -43,6 +43,14 @@ namespace OBS
 			return instance;
 		}
 
+		/// <summary>
+		/// Removes all references to this sceneitem.
+		/// </summary>
+		public unsafe void Remove()
+		{
+			libobs.obs_sceneitem_remove(instance);
+		}
+
 		public unsafe ObsSource GetSource()
 		{
 			IntPtr ptr = libobs.obs_sceneitem_get_source(instance);

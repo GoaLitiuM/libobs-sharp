@@ -106,7 +106,9 @@ namespace OBS
 			return Marshal.PtrToStringAnsi(strPtr);
 		}
 
-		//EXPORT void obs_source_set_name(obs_source_t *source, const char *name);
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern void obs_source_set_name(obs_source_t source, string name);
+
 		//EXPORT enum obs_source_type obs_source_get_type(const obs_source_t *source);
 		//EXPORT const char *obs_source_get_id(const obs_source_t *source);
 		//EXPORT signal_handler_t *obs_source_get_signal_handler(const obs_source_t *source);

@@ -55,23 +55,23 @@ namespace OBS
 			instance = IntPtr.Zero;
 		}
 
-		public unsafe ObsSource(IntPtr instance)
-		{
-			this.instance = instance;
-			libobs.obs_source_addref(instance);
-		}
-
 		public unsafe IntPtr GetPointer()
 		{
 			return instance;
 		}
 
-		public unsafe String Name
+		/// <summary>
+		/// Removes all references to this source.
+		/// </summary>
+		public unsafe void Remove()
 		{
-			get
-			{
-				return libobs.obs_source_get_name(instance);
-			}
+			libobs.obs_source_remove(instance);
+		}
+
+		public unsafe string Name
+		{
+			get	{ return libobs.obs_source_get_name(instance); }
+			set { libobs.obs_source_set_name(instance, value); }
 		}
 
 		public unsafe uint Width
