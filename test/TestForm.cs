@@ -306,9 +306,12 @@ namespace test
 			SelectedSceneItems.Remove(SelectedItem);
 
 			// select next item
-			ItemListBox.SelectedIndex = oldindex >= SelectedSceneItems.Count
-				? SelectedSceneItems.IndexOf(SelectedSceneItems.Last())
-				: oldindex;
+			if (SelectedSceneItems.Any())
+			{
+				ItemListBox.SelectedIndex = oldindex >= SelectedSceneItems.Count
+					? SelectedSceneItems.IndexOf(SelectedSceneItems.Last())
+					: oldindex;
+			}
 		}
 
 		#endregion
@@ -368,10 +371,13 @@ namespace test
 			var oldindex = SourceIndex;
 
 			// remove the source from the source list
-			_sources.RemoveAt(SourceIndex);
+			_sources.Remove(SelectedSource);
 
 			// select the next source
-			SourceListBox.SelectedIndex = oldindex >= _sources.Count ? _sources.IndexOf(_sources.Last()) : oldindex;
+			if (_sources.Any())
+			{
+				SourceListBox.SelectedIndex = oldindex >= _sources.Count ? _sources.IndexOf(_sources.Last()) : oldindex;
+			}
 		}
 
 		#endregion
