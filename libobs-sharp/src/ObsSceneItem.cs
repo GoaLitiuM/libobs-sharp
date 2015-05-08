@@ -23,6 +23,11 @@ namespace OBS
 	{
 		internal IntPtr instance; //pointer to unmanaged object
 
+		public ObsSceneItem GetBase()
+		{
+			return this;
+		}
+
 		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
 			instance = sceneItem;
@@ -66,11 +71,6 @@ namespace OBS
 			if (ptr == IntPtr.Zero) return null;
 
 			return new ObsScene(ptr);
-		}
-
-		public string Name
-		{
-			get { return GetSource().Name; }
 		}
 
 		public float X
@@ -199,7 +199,6 @@ namespace OBS
 		{
 			libobs.obs_sceneitem_set_order_position(instance, position);
 		}
-
 	}
 
 	public enum ObsBoundsType : int

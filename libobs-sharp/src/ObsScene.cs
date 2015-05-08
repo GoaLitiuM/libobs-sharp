@@ -22,7 +22,12 @@ namespace OBS
 {
 	public class ObsScene : IDisposable, IEnumerable<ObsSceneItem>
 	{
-		internal IntPtr instance;    //pointer to unmanaged object
+		private IntPtr instance;    //pointer to unmanaged object
+
+		public ObsScene GetBase()
+		{
+			return this;
+		}
 
 		public unsafe ObsScene(string name)
 		{
@@ -62,11 +67,6 @@ namespace OBS
 				return source.Name;
 		}
 
-		public string ListName
-		{
-			get { return GetName(); }
-		}
-
 		/// <summary> Sets name of the underlying source. </summary>
 		public unsafe void SetName(string name)
 		{
@@ -100,7 +100,7 @@ namespace OBS
 		public unsafe ObsSceneItem[] GetItems()
 		{
 			List<ObsSceneItem> items = new List<ObsSceneItem>();
-			EnumItems((IntPtr scene, IntPtr item, IntPtr data) =>
+			EnumItems((scene, item, data) =>
 			{
 				items.Add(new ObsSceneItem(item));
 				return true;

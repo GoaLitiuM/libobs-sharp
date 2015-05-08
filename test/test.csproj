@@ -83,6 +83,9 @@
     <Compile Include="Controls\PropertyControl.Designer.cs">
       <DependentUpon>PropertyControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Objects\Item.cs" />
+    <Compile Include="Objects\Scene.cs" />
+    <Compile Include="Objects\Source.cs" />
     <Compile Include="TestForm_Rendering.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +132,7 @@
     </Compile>
     <Compile Include="Utility\ColorHelper.cs" />
     <Compile Include="Utility\BindingListHelper.cs" />
+    <Compile Include="Utility\ListBoxHelper.cs" />
     <Compile Include="Utility\WinFormsHelper.cs" />
     <EmbeddedResource Include="Controls\AlignmentBox.resx">
       <DependentUpon>AlignmentBox.cs</DependentUpon>
