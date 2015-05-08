@@ -26,6 +26,8 @@ namespace OBS
 		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
 			instance = sceneItem;
+
+			libobs.obs_sceneitem_addref(instance);
 		}
 
 		public unsafe void Dispose()
@@ -33,7 +35,7 @@ namespace OBS
 			if (instance == IntPtr.Zero)
 				return;
 
-			libobs.obs_sceneitem_remove(instance);
+			libobs.obs_sceneitem_release(instance);
 
 			instance = IntPtr.Zero;
 		}
