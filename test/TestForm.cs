@@ -415,6 +415,13 @@ namespace test
 				HideItemCheckBox.Enabled = true;
 
 				HideItemCheckBox.Checked = SelectedItem.Visible;
+
+				foreach (ObsSceneItem item in SelectedSceneItems)
+				{
+					item.Selected = false;
+				}
+
+				SelectedItem.Selected = true;
 			}
 			else
 			{
