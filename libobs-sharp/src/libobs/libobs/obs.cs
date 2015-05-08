@@ -154,7 +154,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_set_output_source(uint32_t channel, obs_source_t source);
 
-		//EXPORT obs_source_t *obs_get_output_source(uint32_t channel);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_source_t obs_get_output_source(uint32_t channel);
+
 		//EXPORT void obs_enum_sources(bool (*enum_proc)(void*, obs_source_t*), void *param);
 		//EXPORT void obs_enum_outputs(bool (*enum_proc)(void*, obs_output_t*), void *param);
 		//EXPORT void obs_enum_encoders(bool (*enum_proc)(void*, obs_encoder_t*), void *param);

@@ -23,12 +23,26 @@ namespace OBS
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 
-		public unsafe ObsSource(ObsSourceType type, string id, string name/*, obs_data settings*/)
+		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{
 			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
+		}
+
+		public unsafe ObsSource(ObsSourceType type, string id, string name, ObsData settings)
+		{
+			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, settings.GetPointer());
+
+			if (instance == null)
+				throw new ApplicationException("obs_source_create failed");
+		}
+
+		public unsafe ObsSource(IntPtr instance)
+		{
+			this.instance = instance;
+			libobs.obs_source_addref(instance);
 		}
 
 		public unsafe void Dispose()
@@ -74,6 +88,17 @@ namespace OBS
 			{
 				return libobs.obs_source_get_height(instance);
 			}
+		}
+
+		/// <summary> Returns the underlying scene of this source if it's a scene. </summary>
+		/// <returns> null if source is not a scene. </returns>
+		public unsafe ObsScene GetScene()
+		{
+			IntPtr ptr = libobs.obs_scene_from_source(instance);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsScene(ptr);
 		}
 
 		public unsafe ObsData GetSettings()

@@ -91,15 +91,38 @@ namespace OBS
 			libobs.obs_remove_draw_callback(callback, param);
 		}
 
+		/// <summary> Sets primary output to source for a channel. </summary>
 		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
 		{
 			libobs.obs_set_output_source(channel, (IntPtr)source.GetPointer());
 		}
 
-		public static unsafe void SetOutputSource(UInt32 channel, ObsScene scene)
+		/// <summary> Sets primary output to scene for a channel. </summary>
+		public static unsafe void SetOutputScene(UInt32 channel, ObsScene scene)
 		{
 			using (ObsSource source = scene.GetSource())
-				SetOutputSource(channel, source);	
+				SetOutputSource(channel, source);
+		}
+
+		/// <summary> Gets output source for a channel. </summary>
+		/// <returns> null if current output is not set. </returns>
+		public static unsafe ObsSource GetOutputSource(UInt32 channel)
+		{
+			IntPtr ptr = libobs.obs_get_output_source(channel);
+
+			// obs_view_get_source increments the reference counter already
+			// so let's undo that and takeover the handling of the ref counting
+			libobs.obs_source_release(ptr);
+
+			return new ObsSource(ptr);
+		}
+
+		/// <summary> Gets output scene for a channel. </summary>
+		/// <returns> null if current output is not set or is not a scene. </returns>
+		public static unsafe ObsScene GetOutputScene(UInt32 channel)
+		{
+			using (ObsSource source = GetOutputSource(channel))
+				return source.GetScene();
 		}
 
 		public static void RenderMainView()

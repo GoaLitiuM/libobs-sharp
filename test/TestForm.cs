@@ -215,7 +215,7 @@ namespace test
 			ObsScene scene = new ObsScene("test scene (" + (_scenes.Count + 1) + ")");
 
 			// Show the scene in the viewport
-			Obs.SetOutputSource(0, scene);
+			Obs.SetOutputScene(0, scene);
 
 			// Add scene to scenelist
 			_scenes.Add(scene);
@@ -280,7 +280,7 @@ namespace test
 			_sceneIndex = SceneListBox.SelectedIndex;
 
 			// set the viewport to the currently selected scene
-			Obs.SetOutputSource(0, _selectedScene());
+			Obs.SetOutputScene(0, _selectedScene());
 
 			// repopulate the itemlistbox with the apropriate items
 			SceneItemListBox.Items.Clear();
