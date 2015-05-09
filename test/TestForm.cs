@@ -543,16 +543,13 @@ namespace test
 				filtermenu.MenuItems.Add(menuitem);
 			}
 			filtermenu.MenuItems.Add("-");
-			MenuItem transform = new MenuItem
+			var properties = new MenuItem(Text = "Edit Source Properties...");
+			properties.Click += (sender, args) =>
 			                     {
-				                     Text = "Edit Tranform Options..."
+				var propfrm = new TestProperties(SelectedSource);
+				propfrm.ShowDialog(this);
 			                     };
-			transform.Click += (sender, args) =>
-			{
-				var transformfrm = new TestTransform(SelectedScene.Items[ItemIndex]);
-				transformfrm.ShowDialog(this);
-			};
-			filtermenu.MenuItems.Add(transform);
+			filtermenu.MenuItems.Add(properties);
 
 			filtermenu.Show(this, PointToClient(Cursor.Position));
 		}
