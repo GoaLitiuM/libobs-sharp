@@ -151,8 +151,11 @@ namespace test
 			GS.TechniqueBeginPass(tech, 0);
 
 			// enum every sceneitem in scene
-			if (_scenes[_renderSceneIndex] != null)
-				_scenes[_renderSceneIndex].EnumItems(_enumSceneItem, data);
+			//if (_presentation.Scenes[_renderSceneIndex] != null)
+			//	_presentation.Scenes[_renderSceneIndex].EnumItems(_enumSceneItem, data);
+
+			if (_presentation.SelectedScene != null)
+				_presentation.SelectedScene.EnumItems(_enumSceneItem, data);
 
 			GS.TechniqueEndPass(tech);
 			GS.TechniqueEnd(tech);
