@@ -138,7 +138,6 @@ namespace test
 			// 
 			// HideItemCheckBox
 			// 
-			this.HideItemCheckBox.AutoCheck = false;
 			this.HideItemCheckBox.AutoSize = true;
 			this.HideItemCheckBox.Location = new System.Drawing.Point(327, 3);
 			this.HideItemCheckBox.Name = "HideItemCheckBox";
@@ -146,11 +145,9 @@ namespace test
 			this.HideItemCheckBox.TabIndex = 8;
 			this.HideItemCheckBox.Text = "Visible";
 			this.HideItemCheckBox.UseVisualStyleBackColor = true;
-			this.HideItemCheckBox.Click += new System.EventHandler(this.ItemCheckBox_Click);
 			// 
 			// MuteSourceCheckBox
 			// 
-			this.MuteSourceCheckBox.AutoCheck = false;
 			this.MuteSourceCheckBox.AutoSize = true;
 			this.MuteSourceCheckBox.Location = new System.Drawing.Point(570, 26);
 			this.MuteSourceCheckBox.Name = "MuteSourceCheckBox";
@@ -158,11 +155,9 @@ namespace test
 			this.MuteSourceCheckBox.TabIndex = 7;
 			this.MuteSourceCheckBox.Text = "Muted";
 			this.MuteSourceCheckBox.UseVisualStyleBackColor = true;
-			this.MuteSourceCheckBox.Click += new System.EventHandler(this.MuteSourceCheckBox_Click);
 			// 
 			// EnableSourceCheckBox
 			// 
-			this.EnableSourceCheckBox.AutoCheck = false;
 			this.EnableSourceCheckBox.AutoSize = true;
 			this.EnableSourceCheckBox.Location = new System.Drawing.Point(570, 3);
 			this.EnableSourceCheckBox.Name = "EnableSourceCheckBox";
@@ -170,7 +165,6 @@ namespace test
 			this.EnableSourceCheckBox.TabIndex = 6;
 			this.EnableSourceCheckBox.Text = "Enabled";
 			this.EnableSourceCheckBox.UseVisualStyleBackColor = true;
-			this.EnableSourceCheckBox.Click += new System.EventHandler(this.EnableSourceCheckBox_Click);
 			// 
 			// DelSceneButton
 			// 

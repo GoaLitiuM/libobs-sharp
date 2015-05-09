@@ -64,11 +64,6 @@ namespace test
 			get { return (Scene)SceneListBox.SelectedItem; }
 		}
 
-		//private BindingList<Item> SelectedScene.Items
-		//{
-		//	get { return SelectedScene.Items; }
-		//}
-
 		private Item SelectedItem
 		{
 			get { return (Item)ItemListBox.SelectedItem; }
@@ -159,7 +154,7 @@ namespace test
 				SceneListBox.DataSource = _scenes;
 
 				AddScene();
-				
+
 				SetItemBind();
 
 				SourceListBox.DataSource = _sources;
@@ -167,6 +162,15 @@ namespace test
 
 				var source = AddSource("random", "some random source");
 				AddItem(source);
+
+				HideItemCheckBox.DataBindings.Add(
+					new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+
+				EnableSourceCheckBox.DataBindings.Add(
+					new Binding("Checked", SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+
+				MuteSourceCheckBox.DataBindings.Add(
+					new Binding("Checked", SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 
 				Obs.AddDrawCallback(_renderMain, Handle);
 
@@ -206,9 +210,9 @@ namespace test
 		private void RemoveScenesAndSources()
 		{
 			// dispose of all items from scenes
-			foreach (var scene in _scenes)			
+			foreach (var scene in _scenes)
 				scene.ClearItems();
-			
+
 			// dispose all sources
 			foreach (var source in _sources)
 			{
@@ -360,7 +364,7 @@ namespace test
 			// dispose of the source
 			SelectedSource.Remove();
 			SelectedSource.Dispose();
-			
+
 			// store index because a remove resets index to -1
 			var oldindex = SourceIndex;
 
@@ -395,6 +399,19 @@ namespace test
 			DelScene();
 		}
 
+		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_renderSceneIndex = SceneIndex;
+
+			if (SelectedScene == null)
+				return;
+
+			SetItemBind();
+
+			// set the viewport to the currently selected scene
+			Obs.SetOutputScene(0, SelectedScene);
+		}
+
 		#endregion
 
 		#region ItemControls
@@ -404,17 +421,61 @@ namespace test
 			DisplaySourceMenu();
 		}
 
-		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
 		{
-			_renderSceneIndex = SceneIndex;
-
-			if (SelectedScene == null)
+			if (SelectedScene == null || SelectedItem == null || e.Button != MouseButtons.Right)
 				return;
-			
-			SetItemBind();
-			
-			// set the viewport to the currently selected scene
-			Obs.SetOutputScene(0, SelectedScene);
+
+
+			var top = new ToolStripMenuItem("Move to &Top");
+			top.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
+
+			};
+
+			var up = new ToolStripMenuItem("Move &Up");
+			up.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
+			};
+
+			var down = new ToolStripMenuItem("Move &Down");
+			down.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
+			};
+
+			var bottom = new ToolStripMenuItem("Move to &Bottom");
+			bottom.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+			};
+
+			var transform = new ToolStripMenuItem("&Edit Transform Options...");
+			transform.Click += (o, args) =>
+			{
+				var transformfrm = new TestTransform(SelectedItem);
+				transformfrm.ShowDialog(this);
+			};
+
+			var ordermenu = new ContextMenuStrip();
+
+			ordermenu.Items.AddRange(new ToolStripItem[]
+			                         {
+				                         top, 
+				                         up, 
+				                         down, 
+				                         bottom, 
+				                         new ToolStripSeparator(), 
+				                         transform
+			                         });
+
+			ordermenu.Show(this, PointToClient(Cursor.Position));
 		}
 
 		private void DelItemButton_Click(object sender, EventArgs e)
@@ -427,9 +488,7 @@ namespace test
 			// enable/disable the hide checkbox and set its value
 			if (SelectedItem != null)
 			{
-				HideItemCheckBox.Enabled = true;
-
-				HideItemCheckBox.Checked = SelectedItem.Visible;
+				//HideItemCheckBox.Enabled = true;
 
 				foreach (Item item in SelectedScene.Items)
 				{
@@ -440,20 +499,8 @@ namespace test
 			}
 			else
 			{
-				HideItemCheckBox.Enabled = false;
+				//HideItemCheckBox.Enabled = false;
 			}
-		}
-
-		private void ItemCheckBox_Click(object sender, EventArgs e)
-		{
-			// only try to hide if a scene item is selected
-			if (SelectedItem == null) return;
-
-			// Invert the checkbox value
-			HideItemCheckBox.Checked = !HideItemCheckBox.Checked;
-
-			// set the value on the scene item
-			SelectedItem.Visible = HideItemCheckBox.Checked;
 		}
 
 		#endregion
@@ -554,6 +601,22 @@ namespace test
 			filtermenu.Show(this, PointToClient(Cursor.Position));
 		}
 
+		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// enable/disable the enable/mute checkboxes and set their value
+			if (SelectedSource == null)
+			{
+				EnableSourceCheckBox.Enabled = false;
+				MuteSourceCheckBox.Enabled = false;
+				AddSourceToSceneButton.Enabled = false;
+				return;
+			}
+
+			EnableSourceCheckBox.Enabled = true;
+			MuteSourceCheckBox.Enabled = true;
+			AddSourceToSceneButton.Enabled = true;
+		}
+
 		private void AddSourceButton_Click(object sender, EventArgs e)
 		{
 			DisplaySourceMenu(true);
@@ -572,28 +635,6 @@ namespace test
 			AddItem(SelectedSource);
 		}
 
-		private void EnableSourceCheckBox_Click(object sender, EventArgs e)
-		{
-			if (SelectedSource == null) return;
-
-			// invert the checkbox
-			EnableSourceCheckBox.Checked = !EnableSourceCheckBox.Checked;
-
-			// set enabled to the checkbox value
-			SelectedSource.Enabled = EnableSourceCheckBox.Checked;
-		}
-
-		private void MuteSourceCheckBox_Click(object sender, EventArgs e)
-		{
-			if (SelectedSource == null) return;
-
-			// invert the checkbox
-			MuteSourceCheckBox.Checked = !MuteSourceCheckBox.Checked;
-
-			// set muted to checkbox value
-			SelectedSource.Muted = MuteSourceCheckBox.Checked;
-		}
-
 		private void SourceListBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			// display the filter menu when rightclicking on a source in the sourcelistbox
@@ -602,82 +643,6 @@ namespace test
 			DisplayFilterSourceMenu();
 		}
 
-		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			// enable/disable the enable/mute checkboxes and set their value
-			if (SelectedSource == null)
-			{
-				EnableSourceCheckBox.Enabled = false;
-				MuteSourceCheckBox.Enabled = false;
-				AddSourceToSceneButton.Enabled = false;
-				return;
-			}
-
-			EnableSourceCheckBox.Enabled = true;
-			MuteSourceCheckBox.Enabled = true;
-			AddSourceToSceneButton.Enabled = true;
-
-			EnableSourceCheckBox.Checked = SelectedSource.Enabled;
-			MuteSourceCheckBox.Checked = SelectedSource.Muted;
-		}
-
 		#endregion
-
-		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
-		{
-			if (SelectedScene == null || SelectedItem == null || e.Button != MouseButtons.Right)
-				return;
-
-
-			var top = new ToolStripMenuItem("Move to &Top");
-			top.Click += (o, args) =>
-			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
-				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
-
-			};
-
-			var up = new ToolStripMenuItem("Move &Up");
-			up.Click += (o, args) =>
-			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
-				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
-			};
-
-			var down = new ToolStripMenuItem("Move &Down");
-			down.Click += (o, args) =>
-			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
-				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
-			};
-
-			var bottom = new ToolStripMenuItem("Move to &Bottom");
-			bottom.Click += (o, args) =>
-			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
-				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
-			};
-
-			var transform = new ToolStripMenuItem("&Edit Transform Options...");
-			transform.Click += (o, args) =>
-			{
-				var transformfrm = new TestTransform(SelectedItem);
-				transformfrm.ShowDialog(this);
-			};
-
-			var ordermenu = new ContextMenuStrip();
-
-			ordermenu.Items.AddRange(new ToolStripItem[]
-			                         {
-				                         top, 
-										 up, 
-										 down, 
-										 bottom, 
-										 new ToolStripSeparator(), 
-										 transform
-			                         });
-
-			ordermenu.Show(this, PointToClient(Cursor.Position));
-		}
 	}
 }
