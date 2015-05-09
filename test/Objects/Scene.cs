@@ -56,7 +56,7 @@ namespace test
 		{
 			var sceneitem = base.Add(source);
 			var item = new Item(sceneitem.GetPointer()) { Name = name };
-			Items.Add(item);
+			Items.Insert(0, item);
 			return item;
 		}
 
