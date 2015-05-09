@@ -467,7 +467,7 @@ namespace test
 			 * adds an item then removes it once its complete because it wont render unless the source is visible on the scene
 			 * fix it so sources are displayed even if not being shown on canvas
 			 */
-			
+
 			// create source context menu
 			ContextMenu inputmenu = new ContextMenu();
 
@@ -482,9 +482,9 @@ namespace test
 
 				// create menu item
 				MenuItem menuitem = new MenuItem
-				                    {
-					                    Text = displayname + " (" + type + ")"
-				                    };
+									{
+										Text = displayname + " (" + type + ")"
+									};
 				// attach menu item click event
 				menuitem.Click += (sender, args) =>
 				{
@@ -531,9 +531,9 @@ namespace test
 				int index = _sources.Count + 1;
 
 				MenuItem menuitem = new MenuItem
-				                    {
-					                    Text = displayname + " (" + filterType + ")"
-				                    };
+									{
+										Text = displayname + " (" + filterType + ")"
+									};
 				menuitem.Click += (sender, args) =>
 				{
 					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
@@ -545,10 +545,10 @@ namespace test
 			filtermenu.MenuItems.Add("-");
 			var properties = new MenuItem(Text = "Edit Source Properties...");
 			properties.Click += (sender, args) =>
-			                     {
+			{
 				var propfrm = new TestProperties(SelectedSource);
 				propfrm.ShowDialog(this);
-			                     };
+			};
 			filtermenu.MenuItems.Add(properties);
 
 			filtermenu.Show(this, PointToClient(Cursor.Position));
@@ -628,7 +628,8 @@ namespace test
 			if (SelectedScene == null || SelectedItem == null || e.Button != MouseButtons.Right)
 				return;
 
-			var top = new MenuItem("Move to &Top");
+
+			var top = new ToolStripMenuItem("Move to &Top");
 			top.Click += (o, args) =>
 			{
 				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
@@ -636,44 +637,45 @@ namespace test
 
 			};
 
-			var up = new MenuItem("Move &Up");
+			var up = new ToolStripMenuItem("Move &Up");
 			up.Click += (o, args) =>
 			{
 				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
 				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
 			};
 
-			var down = new MenuItem("Move &Down");
+			var down = new ToolStripMenuItem("Move &Down");
 			down.Click += (o, args) =>
 			{
 				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
 				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
 			};
 
-			var bottom = new MenuItem("Move to &Bottom");
+			var bottom = new ToolStripMenuItem("Move to &Bottom");
 			bottom.Click += (o, args) =>
 			{
 				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
 				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
 			};
 
-			var transform = new MenuItem("&Edit Transform Options...");
+			var transform = new ToolStripMenuItem("&Edit Transform Options...");
 			transform.Click += (o, args) =>
 			{
 				var transformfrm = new TestTransform(SelectedItem);
 				transformfrm.ShowDialog(this);
 			};
 
-			var properties = new MenuItem("Edit Source Options...");
-			properties.Click += (o, args) =>
-			{
-				var propfrm = new TestProperties(SelectedItem.GetSource());
-				propfrm.ShowDialog();
-			};
+			var ordermenu = new ContextMenuStrip();
 
-			var ordermenu = new ContextMenu();
-
-			ordermenu.MenuItems.AddRange(new[] { top, up, down, bottom, new MenuItem("-"), transform, properties });
+			ordermenu.Items.AddRange(new ToolStripItem[]
+			                         {
+				                         top, 
+										 up, 
+										 down, 
+										 bottom, 
+										 new ToolStripSeparator(), 
+										 transform
+			                         });
 
 			ordermenu.Show(this, PointToClient(Cursor.Position));
 		}
