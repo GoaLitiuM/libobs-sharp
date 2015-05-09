@@ -220,6 +220,7 @@ namespace test
 			this.ItemListBox.Size = new System.Drawing.Size(156, 95);
 			this.ItemListBox.TabIndex = 1;
 			this.ItemListBox.SelectedIndexChanged += new System.EventHandler(this.ItemListBox_SelectedIndexChanged);
+			this.ItemListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ItemListBox_MouseUp);
 			// 
 			// SceneListBox
 			// 

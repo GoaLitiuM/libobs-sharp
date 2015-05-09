@@ -625,5 +625,60 @@ namespace test
 		}
 
 		#endregion
+
+		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (SelectedScene == null || SelectedItem == null || e.Button != MouseButtons.Right)
+				return;
+
+			var top = new MenuItem("Move to &Top");
+			top.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
+
+			};
+
+			var up = new MenuItem("Move &Up");
+			up.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
+			};
+
+			var down = new MenuItem("Move &Down");
+			down.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
+			};
+
+			var bottom = new MenuItem("Move to &Bottom");
+			bottom.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+				ItemListBox.SelectedIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+			};
+
+			var transform = new MenuItem("&Edit Transform Options...");
+			transform.Click += (o, args) =>
+			{
+				var transformfrm = new TestTransform(SelectedItem);
+				transformfrm.ShowDialog(this);
+			};
+
+			var properties = new MenuItem("Edit Source Options...");
+			properties.Click += (o, args) =>
+			{
+				var propfrm = new TestProperties(SelectedItem.GetSource());
+				propfrm.ShowDialog();
+			};
+
+			var ordermenu = new ContextMenu();
+
+			ordermenu.MenuItems.AddRange(new[] { top, up, down, bottom, new MenuItem("-"), transform, properties });
+
+			ordermenu.Show(this, PointToClient(Cursor.Position));
+		}
 	}
 }

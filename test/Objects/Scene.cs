@@ -17,8 +17,11 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 using OBS;
+
+using test.Utility;
 
 namespace test
 {
@@ -69,6 +72,30 @@ namespace test
 			}
 
 			Items.Clear();
+		}
+
+		public int MoveItem(Item item, obs_order_movement direction)
+		{
+			var oldindex = Items.IndexOf(item);
+			int newindex = -1;
+			switch (direction)
+			{
+				case obs_order_movement.OBS_ORDER_MOVE_UP:
+					newindex = oldindex - 1;
+					break;
+				case obs_order_movement.OBS_ORDER_MOVE_DOWN:
+					newindex = oldindex + 1;
+					break;
+				case obs_order_movement.OBS_ORDER_MOVE_TOP:
+					newindex = 0;
+					break;
+				case obs_order_movement.OBS_ORDER_MOVE_BOTTOM:
+					newindex = Items.Count - 1;
+					break;
+			}
+			Items.Move(oldindex, newindex);
+			Debug.WriteLine("{0} new index is {1}", item.Name, newindex);
+			return newindex;
 		}
 	}
 }
