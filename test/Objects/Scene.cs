@@ -27,31 +27,18 @@ namespace test
 {
 	public class Scene : ObsScene
 	{
-		private readonly ObsScene _instance;
-
 		public BindingList<Item> Items { get; set; }
 
 		public Scene(string name)
 			: base(name)
 		{
-			_instance = GetBase();
 			Items = new BindingList<Item>();
 		}
 
 		public Scene(IntPtr pointer)
 			: base(pointer)
 		{
-			_instance = GetBase();
 			Items = new BindingList<Item>();
-		}
-
-		/// <summary>
-		/// The base class which this is inherited from
-		/// </summary>
-		/// <returns>The base ObsScene of this Scene</returns>
-		public ObsScene GetInstance()
-		{
-			return _instance;
 		}
 
 		/// <summary>

@@ -24,11 +24,6 @@ namespace OBS
 	{
 		private IntPtr instance;    //pointer to unmanaged object
 
-		public ObsScene GetBase()
-		{
-			return this;
-		}
-
 		public unsafe ObsScene(string name)
 		{
 			instance = libobs.obs_scene_create(name);

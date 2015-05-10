@@ -22,11 +22,6 @@ namespace OBS
 	public class ObsSource : IObsContextData, IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
-
-		public ObsSource GetBase()
-		{
-			return this;
-		}
 		
 		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{

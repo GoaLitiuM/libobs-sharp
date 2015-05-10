@@ -15,41 +15,20 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using System;
-
 using OBS;
 
 namespace test
 {
 	public class Source : ObsSource
 	{
-		private readonly ObsSource _instance;
-
 		public Source(ObsSourceType type, string id, string name)
 			: base(type, id, name)
 		{
-			_instance = GetBase();
 		}
 
 		public Source(ObsSourceType type, string id, string name, ObsData settings)
 			: base(type, id, name, settings)
 		{
-			_instance = GetBase();
-		}
-
-		public Source(IntPtr instance)
-			: base(instance)
-		{
-			_instance = GetBase();
-		}
-
-		/// <summary>
-		/// The base class which this is inherited from
-		/// </summary>
-		/// <returns>The base ObsSource of this Source</returns>
-		public ObsSource GetInstance()
-		{
-			return _instance;
 		}
 	}
 }

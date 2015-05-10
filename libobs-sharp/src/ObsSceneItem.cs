@@ -23,11 +23,6 @@ namespace OBS
 	{
 		internal IntPtr instance; //pointer to unmanaged object
 
-		public ObsSceneItem GetBase()
-		{
-			return this;
-		}
-
 		public unsafe ObsSceneItem(IntPtr sceneItem)
 		{
 			instance = sceneItem;
