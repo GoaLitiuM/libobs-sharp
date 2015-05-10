@@ -15,6 +15,7 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -25,7 +26,7 @@ using test.Utility;
 
 namespace test.Objects
 {
-	public sealed class Presentation
+	public sealed class Presentation : IDisposable
 	{
 		public Scene SelectedScene { get; private set; }
 
@@ -315,6 +316,22 @@ namespace test.Objects
 			}
 
 			inputmenu.Show(sender, sender.PointToClient(Cursor.Position));
+		}
+
+		public void Dispose()
+		{
+			foreach (var scene in Scenes)
+				scene.ClearItems();
+
+			
+			foreach (var source in Sources)
+			{
+				source.Remove();
+				source.Dispose();
+			}
+
+			foreach (var scene in Scenes)
+				scene.Dispose();
 		}
 	}
 }

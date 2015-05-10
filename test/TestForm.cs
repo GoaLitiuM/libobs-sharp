@@ -154,7 +154,7 @@ namespace test
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Obs.RemoveDrawCallback(_renderMain, Handle);
-			RemoveScenesAndSources();
+			_presentation.Dispose();
 
 			if (_boxPrimitive != null)
 				_boxPrimitive.Dispose();
@@ -167,24 +167,6 @@ namespace test
 		private void MainViewPanel_SizeChanged(object sender, EventArgs e)
 		{
 			Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
-		}
-
-		private void RemoveScenesAndSources()
-		{
-			// dispose of all items from scenes
-			foreach (var scene in _presentation.Scenes)
-				scene.ClearItems();
-
-			// dispose all sources
-			foreach (var source in _presentation.Sources)
-			{
-				source.Remove();
-				source.Dispose();
-			}
-
-			// dispose all scenes
-			foreach (var scene in _presentation.Scenes)
-				scene.Dispose();
 		}
 
 		#region SceneControls
