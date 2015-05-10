@@ -18,13 +18,11 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 using OBS;
 
 using test.Objects;
-using test.Utility;
 
 namespace test
 {
@@ -118,16 +116,13 @@ namespace test
 				// Scene
 				SceneListBox.DisplayMember = "Name";
 				SceneListBox.ValueMember = "Items";
-				SceneListBox.DataBindings.Add(new Binding("SelectedItem", _presentation, "SelectedScene", false, DataSourceUpdateMode.OnPropertyChanged));
 				SceneListBox.DataSource = _presentation.Scenes;
 
 				// Item
 				ItemListBox.DisplayMember = "Name";
-				ItemListBox.DataBindings.Add(new Binding("SelectedItem", _presentation, "SelectedItem", false, DataSourceUpdateMode.OnPropertyChanged));
 
 				// Source
 				SourceListBox.DisplayMember = "Name";
-				SourceListBox.DataBindings.Add(new Binding("SelectedItem", _presentation, "SelectedSource", false, DataSourceUpdateMode.OnPropertyChanged));
 				SourceListBox.DataSource = _presentation.Sources;
 
 
@@ -137,6 +132,10 @@ namespace test
 
 				var source = _presentation.AddSource("random", "some random source");
 				_presentation.AddItem(source);
+
+				_presentation.SceneIndex = SceneListBox.SelectedIndex;
+				_presentation.ItemIndex = ItemListBox.SelectedIndex;
+				_presentation.SourceIndex = SourceListBox.SelectedIndex;
 
 				HideItemCheckBox.DataBindings.Add(
 					new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
@@ -210,6 +209,7 @@ namespace test
 		{
 			//AddScene();
 			_presentation.AddScene();
+			SceneListBox.SelectedIndex = _presentation.SceneIndex;
 		}
 
 		private void DelSceneButton_Click(object sender, EventArgs e)
@@ -219,6 +219,8 @@ namespace test
 
 		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			_presentation.SceneIndex = SceneListBox.SelectedIndex;
+
 			if (_presentation.SelectedScene == null)
 				return;
 
@@ -229,80 +231,11 @@ namespace test
 
 		#region ItemControls
 
+
+
 		private void AddItemButton_Click(object sender, EventArgs e)
 		{
-			DisplaySourceMenu();
-		}
-
-		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
-		{
-			if (_presentation.SelectedScene == null || _presentation.SelectedItem == null || e.Button != MouseButtons.Right)
-				return;
-
-			ShowItemContextMenu();
-		}
-
-		private void ShowItemContextMenu()
-		{
-			var top = new ToolStripMenuItem("Move to &Top");
-			top.Click += (o, args) =>
-			{
-				_presentation.SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
-				ItemListBox.SelectedIndex = _presentation.SelectedScene.MoveItem(_presentation.SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
-
-			};
-
-			var up = new ToolStripMenuItem("Move &Up");
-			up.Click += (o, args) =>
-			{
-				_presentation.SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
-				ItemListBox.SelectedIndex = _presentation.SelectedScene.MoveItem(_presentation.SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
-			};
-
-			var down = new ToolStripMenuItem("Move &Down");
-			down.Click += (o, args) =>
-			{
-				_presentation.SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
-				ItemListBox.SelectedIndex = _presentation.SelectedScene.MoveItem(_presentation.SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
-			};
-
-			var bottom = new ToolStripMenuItem("Move to &Bottom");
-			bottom.Click += (o, args) =>
-			{
-				_presentation.SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
-				ItemListBox.SelectedIndex = _presentation.SelectedScene.MoveItem(_presentation.SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
-			};
-
-			var transform = new ToolStripMenuItem("&Edit Transform Options...");
-			transform.Click += (o, args) =>
-			{
-				var transformfrm = new TestTransform(_presentation.SelectedItem);
-				transformfrm.ShowDialog(this);
-			};
-
-			var visible = new ToolStripBindableMenuItem
-						  {
-							  Text = "&Visible",
-							  CheckOnClick = true
-						  };
-			visible.DataBindings.Add(new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-
-
-			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
-
-			ordermenu.Items.AddRange(new ToolStripItem[]
-			                         {
-				                         top, 
-				                         up, 
-				                         down, 
-				                         bottom, 
-				                         new ToolStripSeparator(),
-										 visible,
-										 new ToolStripSeparator(), 
-				                         transform
-			                         });
-
-			ordermenu.Show(this, PointToClient(Cursor.Position));
+			_presentation.ShowAddSourceContextMenu(this);
 		}
 
 		private void DelItemButton_Click(object sender, EventArgs e)
@@ -312,6 +245,8 @@ namespace test
 
 		private void ItemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			_presentation.ItemIndex = ItemListBox.SelectedIndex;
+
 			HideItemCheckBox.Enabled = _presentation.SelectedItem != null;
 
 			if (_presentation.SelectedItem != null)
@@ -325,119 +260,21 @@ namespace test
 			}
 		}
 
+		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (_presentation.SelectedScene == null || _presentation.SelectedItem == null || e.Button != MouseButtons.Right)
+				return;
+
+			_presentation.ShowItemContextMenu(this);
+		}
+
 		#endregion
 
 		#region SourceControls
 
-		private void DisplaySourceMenu(bool deleteaftercomplete = false)
-		{
-			// TODO: there's a dirty hack in place here
-			/* 
-			 * adds an item then removes it once its complete because it wont render unless the source is visible on the scene
-			 * fix it so sources are displayed even if not being shown on canvas
-			 */
-
-			// create source context menu
-			var inputmenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
-
-			// create a context menu item for each source type
-			foreach (string inputType in _inputTypes)
-			{
-				// The variable dissapears when the loop ends so it needs to be copied
-				string type = inputType;
-
-				// create display name
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
-
-				// create menu item
-				var menuitem = new ToolStripMenuItem(Text = displayname + " (" + type + ")");
-
-				// attach menu item click event
-				menuitem.Click += (sender, args) =>
-				{
-					// create a source based off the menu item name
-					var source = _presentation.AddSource(type, displayname + (_presentation.Sources.Count + 1));
-
-					// add scene item made from source
-					_presentation.AddItem(source);
-
-					// create property dialog
-					var prop = new TestProperties(source);
-
-					// this check is here for the addsource in the sourcelistbox
-					if (deleteaftercomplete)
-					{
-						// remove the item after the source has been configured
-						prop.Disposed += (o, eventArgs) =>
-						{
-							Item item = _presentation.SelectedScene.Items.Last();
-							item.Remove();
-							item.Dispose();
-							_presentation.SelectedScene.Items.Remove(item);
-						};
-					}
-					// show property dialog
-					prop.Show();
-				};
-
-				inputmenu.Items.Add(menuitem);
-			}
-
-			inputmenu.Show(this, PointToClient(Cursor.Position));
-		}
-
-		private void DisplayFilterSourceMenu()
-		{
-			//TODO: actually use this somewhere :p
-			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
-
-			foreach (var filterType in _filterTypes)
-			{
-				string type = filterType;
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
-				int index = _presentation.Sources.Count + 1;
-
-				var menuitem = new ToolStripMenuItem(Text = displayname + " (" + filterType + ")");
-
-				menuitem.Click += (sender, args) =>
-				{
-					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
-					_presentation.SelectedSource.AddFilter(filter);
-				};
-
-				filtermenu.Items.Add(menuitem);
-			}
-			filtermenu.Items.Add("-");
-			var properties = new ToolStripMenuItem(Text = "Edit Source Properties...");
-			properties.Click += (sender, args) =>
-			{
-				var propfrm = new TestProperties(_presentation.SelectedSource);
-				propfrm.ShowDialog(this);
-			};
-			filtermenu.Items.Add(properties);
-
-			filtermenu.Show(this, PointToClient(Cursor.Position));
-		}
-
-		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			// enable/disable the enable/mute checkboxes and set their value
-			if (_presentation.SelectedSource == null)
-			{
-				EnableSourceCheckBox.Enabled = false;
-				MuteSourceCheckBox.Enabled = false;
-				AddSourceToSceneButton.Enabled = false;
-				return;
-			}
-
-			EnableSourceCheckBox.Enabled = true;
-			MuteSourceCheckBox.Enabled = true;
-			AddSourceToSceneButton.Enabled = true;
-		}
-
 		private void AddSourceButton_Click(object sender, EventArgs e)
 		{
-			DisplaySourceMenu(true);
+			_presentation.ShowAddSourceContextMenu(this, true);
 		}
 
 		private void DelSourceButton_Click(object sender, EventArgs e)
@@ -453,12 +290,30 @@ namespace test
 			_presentation.AddItem(_presentation.SelectedSource);
 		}
 
+		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_presentation.SourceIndex = SourceListBox.SelectedIndex;
+
+			// enable/disable the enable/mute checkboxes and set their value
+			if (_presentation.SelectedSource == null)
+			{
+				EnableSourceCheckBox.Enabled = false;
+				MuteSourceCheckBox.Enabled = false;
+				AddSourceToSceneButton.Enabled = false;
+				return;
+			}
+
+			EnableSourceCheckBox.Enabled = true;
+			MuteSourceCheckBox.Enabled = true;
+			AddSourceToSceneButton.Enabled = true;
+		}
+
 		private void SourceListBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			// display the filter menu when rightclicking on a source in the sourcelistbox
 			if (e.Button != MouseButtons.Right || _presentation.SelectedSource == null) return;
 
-			DisplayFilterSourceMenu();
+			_presentation.ShowSourceContextMenu(this);
 		}
 
 		#endregion

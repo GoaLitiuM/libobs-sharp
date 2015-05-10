@@ -17,7 +17,7 @@
 
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 using OBS;
 
@@ -25,48 +25,58 @@ using test.Utility;
 
 namespace test.Objects
 {
-	public sealed class Presentation : INotifyPropertyChanged
+	public sealed class Presentation
 	{
-		public Scene SelectedScene
+		public Scene SelectedScene { get; private set; }
+
+		public Item SelectedItem { get; private set; }
+
+		public Source SelectedSource { get; private set; }
+
+		public int SceneIndex
 		{
-			get { return _selectedScene; }
+			get
+			{
+				return SelectedScene != null ? Scenes.IndexOf(SelectedScene) : -1;
+			}
 			set
 			{
-				_selectedScene = value;
-				Obs.SetOutputScene(0, value);
-				OnPropertyChanged(); 
+				SelectedScene = value != -1 ? Scenes[value] : null;
+				if (SelectedScene != null)
+				{
+					Obs.SetOutputScene(0, SelectedScene);
+				}
 			}
 		}
 
-		public Item SelectedItem
+		public int ItemIndex
 		{
-			get { return _selectedItem; }
+			get
+			{
+				return SelectedItem != null ? SelectedScene.Items.IndexOf(SelectedItem) : -1;
+			}
 			set
 			{
-				_selectedItem = value;
-				OnPropertyChanged(); 
+				SelectedItem = value != -1 ? SelectedScene.Items[value] : null;
 			}
 		}
 
-		public Source SelectedSource
+		public int SourceIndex
 		{
-			get { return _selectedSource; }
+			get
+			{
+				return SelectedSource != null ? Sources.IndexOf(SelectedSource) : -1;
+			}
 			set
 			{
-				_selectedSource = value;
-				OnPropertyChanged(); 
+
+				SelectedSource = value != -1 ? Sources[value] : null;
 			}
 		}
 
 		public readonly BindingList<Scene> Scenes = new BindingList<Scene>();
 
 		public readonly BindingList<Source> Sources = new BindingList<Source>();
-		private int _sceneIndex;
-		private int _itemIndex;
-		private int _sourceIndex;
-		private Scene _selectedScene;
-		private Item _selectedItem;
-		private Source _selectedSource;
 
 		public Scene AddScene()
 		{
@@ -217,15 +227,161 @@ namespace test.Objects
 			}
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		public void ShowItemContextMenu(Form sender)
 		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null)
+			var top = new ToolStripMenuItem("Move to &Top");
+			top.Click += (o, args) =>
 			{
-				handler(this, new PropertyChangedEventArgs(propertyName));
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
+
+			};
+
+			var up = new ToolStripMenuItem("Move &Up");
+			up.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
+			};
+
+			var down = new ToolStripMenuItem("Move &Down");
+			down.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
+			};
+
+			var bottom = new ToolStripMenuItem("Move to &Bottom");
+			bottom.Click += (o, args) =>
+			{
+				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+			};
+
+			var transform = new ToolStripMenuItem("&Edit Transform Options...");
+			transform.Click += (o, args) =>
+			{
+				var transformfrm = new TestTransform(SelectedItem);
+				transformfrm.ShowDialog(sender);
+			};
+
+			var visible = new ToolStripBindableMenuItem
+			{
+				Text = "&Visible",
+				CheckOnClick = true
+			};
+			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+
+
+			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+
+			ordermenu.Items.AddRange(new ToolStripItem[]
+			                         {
+				                         top, 
+				                         up, 
+				                         down, 
+				                         bottom, 
+				                         new ToolStripSeparator(),
+				                         visible,
+				                         new ToolStripSeparator(), 
+				                         transform
+			                         });
+
+			ordermenu.Show(sender, Cursor.Position);
+
+			int index = ItemIndex;
+			top.Enabled = up.Enabled = index != 0;
+			down.Enabled = bottom.Enabled = index != SelectedScene.Items.Count - 1;
+		}
+
+		public void ShowSourceContextMenu(Form sender)
+		{
+			//TODO: actually use this somewhere :p
+			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+
+			foreach (var filterType in Obs.GetSourceFilterTypes())
+			{
+				string type = filterType;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
+				int index = Sources.Count + 1;
+
+				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")");
+
+				menuitem.Click += (s, args) =>
+				{
+					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
+					SelectedSource.AddFilter(filter);
+				};
+
+				filtermenu.Items.Add(menuitem);
 			}
+			filtermenu.Items.Add("-");
+			var properties = new ToolStripMenuItem("Edit Source Properties...");
+			properties.Click += (s, args) =>
+			{
+				var propfrm = new TestProperties(SelectedSource);
+				propfrm.ShowDialog(sender);
+			};
+			filtermenu.Items.Add(properties);
+
+			filtermenu.Show(sender, Cursor.Position);
+		}
+
+		public void ShowAddSourceContextMenu(Form sender, bool deleteaftercomplete = false)
+		{
+			// TODO: there's a dirty hack in place here
+			/* 
+			 * adds an item then removes it once its complete because it wont render unless the source is visible on the scene
+			 * fix it so sources are displayed even if not being shown on canvas
+			 */
+
+			// create source context menu
+			var inputmenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+
+			// create a context menu item for each source type
+			foreach (string inputType in Obs.GetSourceInputTypes())
+			{
+				// The variable dissapears when the loop ends so it needs to be copied
+				string type = inputType;
+
+				// create display name
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
+
+				// create menu item
+				var menuitem = new ToolStripMenuItem(displayname + " (" + type + ")");
+
+				// attach menu item click event
+				menuitem.Click += (s, args) =>
+				{
+					// create a source based off the menu item name
+					var source = AddSource(type, displayname + (Sources.Count + 1));
+
+					// add scene item made from source
+					AddItem(source);
+
+					// create property dialog
+					var prop = new TestProperties(source);
+
+					// this check is here for the addsource in the sourcelistbox
+					if (deleteaftercomplete)
+					{
+						// remove the item after the source has been configured
+						prop.Disposed += (o, eventArgs) =>
+						{
+							Item item = SelectedScene.Items.Last();
+							item.Remove();
+							item.Dispose();
+							SelectedScene.Items.Remove(item);
+						};
+					}
+					// show property dialog
+					prop.Show();
+				};
+
+				inputmenu.Items.Add(menuitem);
+			}
+
+			inputmenu.Show(sender, Cursor.Position);
 		}
 	}
 }
