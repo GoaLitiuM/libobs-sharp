@@ -287,7 +287,7 @@ namespace test.Objects
 				                         transform
 			                         });
 
-			ordermenu.Show(sender, Cursor.Position);
+			ordermenu.Show(sender, sender.PointToClient(Cursor.Position));
 
 			int index = ItemIndex;
 			top.Enabled = up.Enabled = index != 0;
@@ -324,7 +324,7 @@ namespace test.Objects
 			};
 			filtermenu.Items.Add(properties);
 
-			filtermenu.Show(sender, Cursor.Position);
+			filtermenu.Show(sender, sender.PointToClient(Cursor.Position));
 		}
 
 		public void ShowAddSourceContextMenu(Form sender, bool deleteaftercomplete = false)
@@ -381,7 +381,7 @@ namespace test.Objects
 				inputmenu.Items.Add(menuitem);
 			}
 
-			inputmenu.Show(sender, Cursor.Position);
+			inputmenu.Show(sender, sender.PointToClient(Cursor.Position));
 		}
 	}
 }
