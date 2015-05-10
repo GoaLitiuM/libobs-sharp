@@ -36,10 +36,6 @@ namespace test
 
 		private Presentation _presentation;
 
-		private string[] _inputTypes;
-		private string[] _filterTypes;
-		private string[] _transitionTypes;
-
 		public TestForm()
 		{
 			InitializeComponent();
@@ -103,13 +99,6 @@ namespace test
 
 				InitPrimitives();
 
-				// Populate Source Types
-				_inputTypes = Obs.GetSourceInputTypes();
-				_filterTypes = Obs.GetSourceFilterTypes();
-				_transitionTypes = Obs.GetSourceTransitionTypes();
-
-				Console.Error.WriteLine(_transitionTypes);
-
 				_presentation = new Presentation();
 
 				// Bindings
@@ -128,7 +117,7 @@ namespace test
 
 				_presentation.AddScene();
 
-				SetItemBind();
+				ItemListBox.DataSource = SceneListBox.SelectedValue;
 
 				var source = _presentation.AddSource("random", "some random source");
 				_presentation.AddItem(source);
@@ -162,11 +151,6 @@ namespace test
 			}
 		}
 
-		private void SetItemBind()
-		{
-			ItemListBox.DataSource = SceneListBox.SelectedValue;
-		}
-
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Obs.RemoveDrawCallback(_renderMain, Handle);
@@ -178,6 +162,11 @@ namespace test
 				_circlePrimitive.Dispose();
 
 			Obs.Shutdown();
+		}
+
+		private void MainViewPanel_SizeChanged(object sender, EventArgs e)
+		{
+			Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
 		}
 
 		private void RemoveScenesAndSources()
@@ -198,16 +187,10 @@ namespace test
 				scene.Dispose();
 		}
 
-		private void MainViewPanel_SizeChanged(object sender, EventArgs e)
-		{
-			Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
-		}
-
 		#region SceneControls
 
 		private void AddSceneButton_Click(object sender, EventArgs e)
 		{
-			//AddScene();
 			_presentation.AddScene();
 			SceneListBox.SelectedIndex = _presentation.SceneIndex;
 		}
@@ -224,7 +207,7 @@ namespace test
 			if (_presentation.SelectedScene == null)
 				return;
 
-			SetItemBind();
+			ItemListBox.DataSource = SceneListBox.SelectedValue;
 		}
 
 		#endregion

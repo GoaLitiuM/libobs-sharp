@@ -80,59 +80,37 @@ namespace test.Objects
 
 		public Scene AddScene()
 		{
-			// Create new scene
 			Scene scene = new Scene("test scene (" + (Scenes.Count + 1) + ")");
 
-			// Show the scene in the viewport
-			//Obs.SetOutputScene(0, scene);
-
-			// Add scene to scenelist
 			Scenes.Add(scene);
 
-			// select the new scene
 			SelectedScene = scene;
 			return scene;
 		}
 
 		public void DelScene()
 		{
-			// dont delete if only scene or no scene selected
 			if (SelectedScene == null || Scenes.Count == 1) return;
 
-			// Dispose of all items
 			SelectedScene.ClearItems();
 
-			// Dispose of scene
 			SelectedScene.Dispose();
 
-			// store old index
 			int oldindex = Scenes.IndexOf(SelectedScene);
 
-			// remove scene from list
 			Scenes.RemoveAt(oldindex);
 
-			// Select the next scene
-			if (oldindex < Scenes.Count)
-			{
-				SelectedScene = Scenes[oldindex];
-			}
-			else
-			{
-				SelectedScene = Scenes.Last();
-			}
+			SelectedScene = oldindex < Scenes.Count ? Scenes[oldindex] : Scenes.Last();
 		}
 
 		public ObsSceneItem AddItem(Source source)
 		{
-			// generate an item from soruce
 			var item = SelectedScene.Add(source, source.Name);
 
-			// set its proportions
 			item.Position = new Vector2(0f, 0f);
 			item.Scale = new Vector2(1.0f, 1.0f);
 			item.SetBounds(new Vector2(1280, 720), ObsBoundsType.ScaleInner, ObsAlignment.Center);
 
-			// select new item
 			SelectedItem = item;
 
 			return item;
@@ -140,42 +118,27 @@ namespace test.Objects
 
 		public void DelItem()
 		{
-			// dont delete if no scene is deleted
 			if (SelectedItem == null) return;
 
-			// dispose of scen
 			SelectedItem.Remove();
 			SelectedItem.Dispose();
 
-			// store old index
 			int oldindex = SelectedScene.Items.IndexOf(SelectedItem);
 
-			// remove disposed item from list
 			SelectedScene.Items.Remove(SelectedItem);
 
-			// select next item
 			if (SelectedScene.Items.Any())
 			{
-				if (oldindex < SelectedScene.Items.Count)
-				{
-					SelectedItem = SelectedScene.Items[oldindex];
-				}
-				else
-				{
-					SelectedItem = SelectedScene.Items.Last();
-				}
+				SelectedItem = oldindex < SelectedScene.Items.Count ? SelectedScene.Items[oldindex] : SelectedScene.Items.Last();
 			}
 		}
 
 		public Source AddSource(string id, string name)
 		{
-			// Create a new source
 			Source source = new Source(ObsSourceType.Input, id, name);
 
-			// Add the source to the source list
 			Sources.Add(source);
 
-			// Select new item
 			SelectedSource = source;
 
 			return source;
@@ -185,10 +148,8 @@ namespace test.Objects
 		{
 			if (SelectedSource == null) return;
 
-			// duplicate pointer for REASONS
 			var pointer = SelectedSource.GetPointer();
 
-			// remove all scene items that use the same pointer as the selected source
 			foreach (var scene in Scenes)
 			{
 				scene.Items.RemoveAll(x =>
@@ -203,27 +164,16 @@ namespace test.Objects
 				});
 			}
 
-			// dispose of the source
 			SelectedSource.Remove();
 			SelectedSource.Dispose();
 
-			// store index because a remove resets index to -1
 			var oldindex = Sources.IndexOf(SelectedSource);
 
-			// remove the source from the source list
 			Sources.Remove(SelectedSource);
 
-			// select the next source
 			if (Sources.Any())
 			{
-				if (oldindex < Sources.Count)
-				{
-					SelectedSource = Sources[oldindex];
-				}
-				else
-				{
-					SelectedSource = Sources.Last();
-				}
+				SelectedSource = oldindex < Sources.Count ? Sources[oldindex] : Sources.Last();
 			}
 		}
 
@@ -330,37 +280,26 @@ namespace test.Objects
 			 * fix it so sources are displayed even if not being shown on canvas
 			 */
 
-			// create source context menu
 			var inputmenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
-			// create a context menu item for each source type
 			foreach (string inputType in Obs.GetSourceInputTypes())
 			{
-				// The variable dissapears when the loop ends so it needs to be copied
 				string type = inputType;
 
-				// create display name
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
 
-				// create menu item
 				var menuitem = new ToolStripMenuItem(displayname + " (" + type + ")");
 
-				// attach menu item click event
 				menuitem.Click += (s, args) =>
 				{
-					// create a source based off the menu item name
 					var source = AddSource(type, displayname + (Sources.Count + 1));
 
-					// add scene item made from source
 					AddItem(source);
 
-					// create property dialog
 					var prop = new TestProperties(source);
 
-					// this check is here for the addsource in the sourcelistbox
 					if (deleteaftercomplete)
 					{
-						// remove the item after the source has been configured
 						prop.Disposed += (o, eventArgs) =>
 						{
 							Item item = SelectedScene.Items.Last();
@@ -369,7 +308,6 @@ namespace test.Objects
 							SelectedScene.Items.Remove(item);
 						};
 					}
-					// show property dialog
 					prop.Show();
 				};
 
