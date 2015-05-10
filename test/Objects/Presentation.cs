@@ -232,29 +232,24 @@ namespace test.Objects
 			var top = new ToolStripMenuItem("Move to &Top");
 			top.Click += (o, args) =>
 			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
 				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
-
 			};
 
 			var up = new ToolStripMenuItem("Move &Up");
 			up.Click += (o, args) =>
 			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_UP);
 				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
 			};
 
 			var down = new ToolStripMenuItem("Move &Down");
 			down.Click += (o, args) =>
 			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_DOWN);
 				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
 			};
 
 			var bottom = new ToolStripMenuItem("Move to &Bottom");
 			bottom.Click += (o, args) =>
 			{
-				SelectedItem.SetOrder(obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
 				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
 			};
 

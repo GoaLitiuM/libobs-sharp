@@ -93,6 +93,7 @@ namespace test
 					newindex = Items.Count - 1;
 					break;
 			}
+			item.SetOrder(obs_order_movement.OBS_ORDER_MOVE_TOP);
 			Items.Move(oldindex, newindex);
 			Debug.WriteLine("{0} new index is {1}", item.Name, newindex);
 			return newindex;
