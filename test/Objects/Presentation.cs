@@ -28,12 +28,40 @@ namespace test.Objects
 {
 	public sealed class Presentation : IDisposable
 	{
+		public void Dispose()
+		{
+			foreach (var scene in Scenes)
+				scene.ClearItems();
+
+			
+			foreach (var source in Sources)
+			{
+				source.Remove();
+				source.Dispose();
+			}
+
+			foreach (var scene in Scenes)
+				scene.Dispose();
+		}
+
+		/// <summary>
+		/// The currently selected Scene
+		/// </summary>
 		public Scene SelectedScene { get; private set; }
 
+		/// <summary>
+		/// The currently selected Item
+		/// </summary>
 		public Item SelectedItem { get; private set; }
 
+		/// <summary>
+		/// The currently selected Source
+		/// </summary>
 		public Source SelectedSource { get; private set; }
 
+		/// <summary>
+		/// Gets the index of the currently selected Scene. Sets the selected Scene by index.
+		/// </summary>
 		public int SceneIndex
 		{
 			get
@@ -49,7 +77,10 @@ namespace test.Objects
 				}
 			}
 		}
-
+		
+		/// <summary>
+		/// Gets the index of the currently selected Item. Sets the selected Item by index.
+		/// </summary>
 		public int ItemIndex
 		{
 			get
@@ -62,6 +93,9 @@ namespace test.Objects
 			}
 		}
 
+		/// <summary>
+		/// Gets the index of the currently selected Source. Sets the selected Source by index.
+		/// </summary>
 		public int SourceIndex
 		{
 			get
@@ -75,10 +109,20 @@ namespace test.Objects
 			}
 		}
 
+		/// <summary>
+		/// Scenes contained in this presentation
+		/// </summary>
 		public readonly BindingList<Scene> Scenes = new BindingList<Scene>();
 
+		/// <summary>
+		///  Sources contained in this presentation
+		/// </summary>
 		public readonly BindingList<Source> Sources = new BindingList<Source>();
 
+		/// <summary>
+		///  Creates and adds a new Scene to the presentation
+		/// </summary>
+		/// <returns>The newly created Scene</returns>
 		public Scene AddScene()
 		{
 			Scene scene = new Scene("test scene (" + (Scenes.Count + 1) + ")");
@@ -88,7 +132,10 @@ namespace test.Objects
 			SelectedScene = scene;
 			return scene;
 		}
-
+		
+		/// <summary>
+		/// Deletes the currently selected Scene
+		/// </summary>
 		public void DelScene()
 		{
 			if (SelectedScene == null || Scenes.Count == 1) return;
@@ -104,6 +151,11 @@ namespace test.Objects
 			SelectedScene = oldindex < Scenes.Count ? Scenes[oldindex] : Scenes.Last();
 		}
 
+		/// <summary>
+		/// Creates and adds a new Item to the currently selected Scene
+		/// </summary>
+		/// <param name="source">Source to use to create a new item</param>
+		/// <returns>The newly created Item</returns>
 		public ObsSceneItem AddItem(Source source)
 		{
 			var item = SelectedScene.Add(source, source.Name);
@@ -117,6 +169,9 @@ namespace test.Objects
 			return item;
 		}
 
+		/// <summary>
+		/// Deletes the currently selected Item
+		/// </summary>
 		public void DelItem()
 		{
 			if (SelectedItem == null) return;
@@ -134,6 +189,12 @@ namespace test.Objects
 			}
 		}
 
+		/// <summary>
+		/// Creates a new Source and adds it to the source list
+		/// </summary>
+		/// <param name="id">ID of type of source to use</param>
+		/// <param name="name">Name of the source</param>
+		/// <returns>The newly created source</returns>
 		public Source AddSource(string id, string name)
 		{
 			Source source = new Source(ObsSourceType.Input, id, name);
@@ -145,6 +206,9 @@ namespace test.Objects
 			return source;
 		}
 
+		/// <summary>
+		/// Deletes the currently selected Source
+		/// </summary>
 		public void DelSource()
 		{
 			if (SelectedSource == null) return;
@@ -178,68 +242,10 @@ namespace test.Objects
 			}
 		}
 
-		public void ShowItemContextMenu(Form sender)
-		{
-			var top = new ToolStripMenuItem("Move to &Top");
-			top.Click += (o, args) =>
-			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
-			};
-
-			var up = new ToolStripMenuItem("Move &Up");
-			up.Click += (o, args) =>
-			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
-			};
-
-			var down = new ToolStripMenuItem("Move &Down");
-			down.Click += (o, args) =>
-			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
-			};
-
-			var bottom = new ToolStripMenuItem("Move to &Bottom");
-			bottom.Click += (o, args) =>
-			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
-			};
-
-			var transform = new ToolStripMenuItem("&Edit Transform Options...");
-			transform.Click += (o, args) =>
-			{
-				var transformfrm = new TestTransform(SelectedItem);
-				transformfrm.ShowDialog(sender);
-			};
-
-			var visible = new ToolStripBindableMenuItem
-			{
-				Text = "&Visible",
-				CheckOnClick = true
-			};
-			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-
-
-			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
-
-			ordermenu.Items.AddRange(new ToolStripItem[]
-			                         {
-				                         top, 
-				                         up, 
-				                         down, 
-				                         bottom, 
-				                         new ToolStripSeparator(),
-				                         visible,
-				                         new ToolStripSeparator(), 
-				                         transform
-			                         });
-
-			ordermenu.Show(sender, sender.PointToClient(Cursor.Position));
-
-			int index = ItemIndex;
-			top.Enabled = up.Enabled = index != 0;
-			down.Enabled = bottom.Enabled = index != SelectedScene.Items.Count - 1;
-		}
-
+		/// <summary>
+		/// Creates and shows a Source context menu at the mouse pointer
+		/// </summary>
+		/// <param name="sender">Form from which this method is called</param>
 		public void ShowSourceContextMenu(Form sender)
 		{
 			//TODO: actually use this somewhere :p
@@ -273,6 +279,10 @@ namespace test.Objects
 			filtermenu.Show(sender, sender.PointToClient(Cursor.Position));
 		}
 
+		/// <summary>
+		/// Creates and shows an Add Source context menu at the mouse pointer
+		/// </summary>
+		/// <param name="sender">Form from which this method is called</param>
 		public void ShowAddSourceContextMenu(Form sender, bool deleteaftercomplete = false)
 		{
 			// TODO: there's a dirty hack in place here
@@ -318,20 +328,70 @@ namespace test.Objects
 			inputmenu.Show(sender, sender.PointToClient(Cursor.Position));
 		}
 
-		public void Dispose()
+		/// <summary>
+		/// Creates and shows an Item context menu at the mouse pointer
+		/// </summary>
+		/// <param name="sender">Form from which this method is called</param>
+		public void ShowItemContextMenu(Form sender)
 		{
-			foreach (var scene in Scenes)
-				scene.ClearItems();
-
-			
-			foreach (var source in Sources)
+			var top = new ToolStripMenuItem("Move to &Top");
+			top.Click += (o, args) =>
 			{
-				source.Remove();
-				source.Dispose();
-			}
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
+			};
 
-			foreach (var scene in Scenes)
-				scene.Dispose();
+			var up = new ToolStripMenuItem("Move &Up");
+			up.Click += (o, args) =>
+			{
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
+			};
+
+			var down = new ToolStripMenuItem("Move &Down");
+			down.Click += (o, args) =>
+			{
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
+			};
+
+			var bottom = new ToolStripMenuItem("Move to &Bottom");
+			bottom.Click += (o, args) =>
+			{
+				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+			};
+
+			var transform = new ToolStripMenuItem("&Edit Transform Options...");
+			transform.Click += (o, args) =>
+			{
+				var transformfrm = new TestTransform(SelectedItem);
+				transformfrm.ShowDialog(sender);
+			};
+
+			var visible = new ToolStripBindableMenuItem
+			              {
+				              Text = "&Visible",
+				              CheckOnClick = true
+			              };
+			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+
+
+			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+
+			ordermenu.Items.AddRange(new ToolStripItem[]
+			                         {
+				                         top, 
+				                         up, 
+				                         down, 
+				                         bottom, 
+				                         new ToolStripSeparator(),
+				                         visible,
+				                         new ToolStripSeparator(), 
+				                         transform
+			                         });
+
+			ordermenu.Show(sender, sender.PointToClient(Cursor.Position));
+
+			int index = ItemIndex;
+			top.Enabled = up.Enabled = index != 0;
+			down.Enabled = bottom.Enabled = index != SelectedScene.Items.Count - 1;
 		}
 	}
 }

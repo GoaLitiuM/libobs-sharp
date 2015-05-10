@@ -43,6 +43,10 @@ namespace test
 			_instance = GetBase();
 		}
 
+		/// <summary>
+		/// The base class which this is inherited from
+		/// </summary>
+		/// <returns>The base ObsSource of this Source</returns>
 		public ObsSource GetInstance()
 		{
 			return _instance;

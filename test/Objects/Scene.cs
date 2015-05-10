@@ -45,16 +45,29 @@ namespace test
 			Items = new BindingList<Item>();
 		}
 
+		/// <summary>
+		/// The base class which this is inherited from
+		/// </summary>
+		/// <returns>The base ObsScene of this Scene</returns>
 		public ObsScene GetInstance()
 		{
 			return _instance;
 		}
 
+		/// <summary>
+		/// Returns the name of the scene from obs-lib
+		/// </summary>
 		public string Name
 		{
 			get { return GetName(); }
 		}
 
+		/// <summary>
+		/// Adds an Item to Items
+		/// </summary>
+		/// <param name="source">Source to use to create item</param>
+		/// <param name="name">Name of the item (UI only)</param>
+		/// <returns></returns>
 		public Item Add(Source source, string name)
 		{
 			var sceneitem = base.Add(source);
@@ -63,6 +76,9 @@ namespace test
 			return item;
 		}
 
+		/// <summary>
+		/// Removes, Disposes and Clears all items from Items
+		/// </summary>
 		public void ClearItems()
 		{
 			foreach (var item in Items)
@@ -74,6 +90,12 @@ namespace test
 			Items.Clear();
 		}
 
+		/// <summary>
+		///	Moves Item in both the local list and in the obs viewport
+		/// </summary>
+		/// <param name="item">Item to move</param>
+		/// <param name="direction">Where to move the item to</param>
+		/// <returns>New index of "item"</returns>
 		public int MoveItem(Item item, obs_order_movement direction)
 		{
 			var oldindex = Items.IndexOf(item);

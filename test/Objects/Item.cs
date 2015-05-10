@@ -31,8 +31,15 @@ namespace test
 			_instance = GetBase();
 		}
 
+		/// <summary>
+		/// Gets or Sets the Name of Item (UI only)
+		/// </summary>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// The base class which this is inherited from
+		/// </summary>
+		/// <returns>The base ObsSceneItem of this Item</returns>
 		public ObsSceneItem GetInstance()
 		{
 			return _instance;
