@@ -51,6 +51,7 @@ namespace test
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.okButton = new System.Windows.Forms.Button();
 			this.undoButton = new System.Windows.Forms.Button();
+			this.defaultButton = new System.Windows.Forms.Button();
 			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -79,6 +80,7 @@ namespace test
 			this.bottomPanel.AutoSize = true;
 			this.bottomPanel.Controls.Add(this.cancelButton);
 			this.bottomPanel.Controls.Add(this.okButton);
+			this.bottomPanel.Controls.Add(this.defaultButton);
 			this.bottomPanel.Controls.Add(this.undoButton);
 			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -109,12 +111,21 @@ namespace test
 			// 
 			// undoButton
 			// 
-			this.undoButton.Location = new System.Drawing.Point(538, 3);
+			this.undoButton.Location = new System.Drawing.Point(457, 3);
 			this.undoButton.Name = "undoButton";
 			this.undoButton.Size = new System.Drawing.Size(75, 23);
 			this.undoButton.TabIndex = 5;
 			this.undoButton.Text = "Undo";
 			this.undoButton.UseVisualStyleBackColor = true;
+			// 
+			// defaultButton
+			// 
+			this.defaultButton.Location = new System.Drawing.Point(538, 3);
+			this.defaultButton.Name = "defaultButton";
+			this.defaultButton.Size = new System.Drawing.Size(75, 23);
+			this.defaultButton.TabIndex = 6;
+			this.defaultButton.Text = "Default";
+			this.defaultButton.UseVisualStyleBackColor = true;
 			// 
 			// TestProperties
 			// 
@@ -147,5 +158,6 @@ namespace test
 		private System.Windows.Forms.Button cancelButton;
 		private System.Windows.Forms.Button okButton;
 		private System.Windows.Forms.Button undoButton;
+		private System.Windows.Forms.Button defaultButton;
 	}
 }
