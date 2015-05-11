@@ -56,7 +56,7 @@ namespace test.Controls
 			ReloadProperties();
 		}
 
-		private void ReloadProperties()
+		public void ReloadProperties()
 		{
 			properties = reloadDelegate();
 
