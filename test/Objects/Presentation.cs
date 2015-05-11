@@ -165,6 +165,7 @@ namespace test.Objects
 		public void AddItem(Item item)
 		{
 			SelectedScene.Items.Insert(0, item);
+
 			ItemIndex = 0;
 		}
 
@@ -207,8 +208,10 @@ namespace test.Objects
 		{
 			if (SelectedSource == null) return;
 
-			var pointer = SelectedSource.GetPointer();
+			var delsource = SelectedSource;
 
+			var pointer = delsource.GetPointer();
+			
 			foreach (var scene in Scenes)
 			{
 				scene.Items.RemoveAll(x =>
@@ -222,13 +225,13 @@ namespace test.Objects
 					return true;
 				});
 			}
+			
+			delsource.Remove();
+			delsource.Dispose();
 
-			SelectedSource.Remove();
-			SelectedSource.Dispose();
+			var oldindex = Sources.IndexOf(delsource);
 
-			var oldindex = Sources.IndexOf(SelectedSource);
-
-			Sources.Remove(SelectedSource);
+			Sources.Remove(delsource);
 
 			if (Sources.Any())
 			{
@@ -285,7 +288,7 @@ namespace test.Objects
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + inputType + ")")
 				               {
-					               Tag = CreateSource(inputType, displayname + (Sources.Count + 1))
+					               Tag = Tuple.Create(inputType,displayname+(Sources.Count+1))
 				               };
 
 				inputmenu.Items.Add(menuitem);

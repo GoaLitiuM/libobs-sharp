@@ -203,12 +203,15 @@ namespace test
 			var contextmenu = _presentation.AddSourceContextMenu();
 			contextmenu.ItemClicked += (o, args) =>
 			{
-				var source = (Source) args.ClickedItem.Tag;
+				var tag = (Tuple<string,string>)args.ClickedItem.Tag;
+				var source = _presentation.CreateSource(tag.Item1,tag.Item2);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					_presentation.AddSource(source);
+					
 					var item = _presentation.CreateItem(source);
 					_presentation.AddItem(item);
+					
 					ItemListBox.SelectedIndex = _presentation.ItemIndex;
 					SourceListBox.SelectedIndex = _presentation.SourceIndex;
 				}
@@ -267,7 +270,8 @@ namespace test
 			var contextmenu = _presentation.AddSourceContextMenu();
 			contextmenu.ItemClicked += (o, args) =>
 			{
-				var source = (Source) args.ClickedItem.Tag;
+				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
+				var source = _presentation.CreateSource(tag.Item1, tag.Item2);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					_presentation.AddSource(source);
@@ -289,11 +293,12 @@ namespace test
 
 		private void AddSourceToSceneButton_Click(object sender, EventArgs e)
 		{
-			// add currently selected source to the currently selected scene
 			if (_presentation.SelectedSource == null) return;
-			//TODO: check if this is what messes up the order
+
 			var item = _presentation.CreateItem(_presentation.SelectedSource);
+			
 			_presentation.AddItem(item);
+			
 			ItemListBox.SelectedIndex = _presentation.ItemIndex;
 		}
 
@@ -301,7 +306,6 @@ namespace test
 		{
 			_presentation.SourceIndex = SourceListBox.SelectedIndex;
 
-			// enable/disable the enable/mute checkboxes and set their value
 			if (_presentation.SelectedSource == null)
 			{
 				EnableSourceCheckBox.Enabled = false;
