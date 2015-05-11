@@ -56,12 +56,20 @@ namespace test
 				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
 			};
 
+			undoButton.Click += (sender, args) =>
+			{
+				sourceSettings.Clear();
+				source.Update(oldSettings);
+				view.ReloadProperties();
+			};
+
 			okButton.Click += (o, args) =>
 			{
 				view.UpdateSettings();
 				DialogResult = DialogResult.OK;
 				Close();
 			};
+
 			cancelButton.Click += (o, args) =>
 			{
 				sourceSettings.Clear();
