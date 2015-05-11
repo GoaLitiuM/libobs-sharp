@@ -349,7 +349,9 @@ namespace test.Controls
 		{
 			string name = property.Name;
 
-			Color color = Color.FromArgb((int)setting.GetInt(name));
+			// note: libobs stores color in ABGR instead of ARGB
+
+			Color color = ColorHelper.FromAbgr((int)setting.GetInt(name));
 			TextBox textbox = new TextBox
 			{
 				Width = 300,
@@ -362,11 +364,11 @@ namespace test.Controls
 
 			textbox.TextChanged += (sender, args) =>
 			{
-				Color newColor = Color.FromArgb((int)setting.GetInt(name));
+				Color newColor = ColorHelper.FromAbgr((int)setting.GetInt(name));
 				newColor = newColor.FromHtml(textbox.Text);
 
 				textbox.ForeColor = newColor.GetBrightness() > 0.93 ? Color.Black : newColor;
-				setting.SetInt(name, newColor.ToArgb());
+				setting.SetInt(name, newColor.ToAbgr());
 				view.PropertyChanged(property);
 			};
 

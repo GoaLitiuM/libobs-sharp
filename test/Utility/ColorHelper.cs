@@ -52,5 +52,25 @@ namespace test.Utility
 					color.G.ToString("X2") +
 					color.B.ToString("X2");
 		}
-	}
+
+		public static Color FromAbgr(int value)
+		{
+			int abgr = value;
+			int r = (abgr >> 16) & 0xFF;
+			int b = abgr & 0xFF;
+			abgr = (int)(abgr & 0xFF00FFFF) | r << 16;
+			abgr = (int)(abgr & 0xFFFFFF00) | b;
+			return Color.FromArgb(abgr);
+		}
+
+		public static int ToAbgr(this Color color)
+		{
+			int abgr = color.ToArgb();
+			int r = (abgr >> 16) & 0xFF;
+			int b = abgr & 0xFF;
+			abgr = (int)(abgr & 0xFFFFFF00) | r;
+			abgr = (int)(abgr & 0xFF00FFFF) | b << 16;
+			return abgr;
+		}
+    }
 }
