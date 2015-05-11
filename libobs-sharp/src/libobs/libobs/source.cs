@@ -54,7 +54,9 @@ namespace OBS
 		//EXPORT bool obs_source_removed(const obs_source_t *source);
 		//EXPORT uint32_t obs_source_get_output_flags(const obs_source_t *source);
 		//EXPORT uint32_t obs_get_source_output_flags(enum obs_source_type type, const char *id);
-		//EXPORT obs_data_t *obs_get_source_defaults(enum obs_source_type type, const char *id);
+		
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_data_t obs_get_source_defaults(obs_source_type type, string id);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_properties_t obs_get_source_properties(obs_source_type type,

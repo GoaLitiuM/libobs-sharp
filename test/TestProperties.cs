@@ -63,6 +63,13 @@ namespace test
 				view.ReloadProperties();
 			};
 
+			defaultButton.Click += (sender, args) =>
+			{
+				sourceSettings.Clear();
+				source.Update(source.GetDefaults());
+				view.ReloadProperties();
+			};
+
 			okButton.Click += (o, args) =>
 			{
 				view.UpdateSettings();
