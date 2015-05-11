@@ -151,12 +151,8 @@ namespace test.Objects
 			SelectedScene = oldindex < Scenes.Count ? Scenes[oldindex] : Scenes.Last();
 		}
 
-		/// <summary>
-		/// Creates and adds a new Item to the currently selected Scene
-		/// </summary>
-		/// <param name="source">Source to use to create a new item</param>
-		/// <returns>The newly created Item</returns>
-		public ObsSceneItem AddItem(Source source)
+
+		public Item CreateItem(Source source)
 		{
 			var item = SelectedScene.Add(source, source.Name);
 
@@ -164,9 +160,12 @@ namespace test.Objects
 			item.Scale = new Vector2(1.0f, 1.0f);
 			item.SetBounds(new Vector2(1280, 720), ObsBoundsType.ScaleInner, ObsAlignment.Center);
 
-			SelectedItem = item;
-
 			return item;
+		}
+		public void AddItem(Item item)
+		{
+			SelectedScene.Items.Insert(0, item);
+			ItemIndex = 0;
 		}
 
 		/// <summary>
@@ -189,23 +188,18 @@ namespace test.Objects
 			}
 		}
 
-		/// <summary>
-		/// Creates a new Source and adds it to the source list
-		/// </summary>
-		/// <param name="id">ID of type of source to use</param>
-		/// <param name="name">Name of the source</param>
-		/// <returns>The newly created source</returns>
-		public Source AddSource(string id, string name)
+		public Source CreateSource(string id, string name)
 		{
-			Source source = new Source(ObsSourceType.Input, id, name);
-
-			Sources.Add(source);
-
-			SelectedSource = source;
-
-			return source;
+			return new Source(ObsSourceType.Input, id, name);
 		}
 
+		public void AddSource(Source source)
+		{
+			Sources.Insert(0,source);
+
+			SourceIndex = 0;
+		}
+		
 		/// <summary>
 		/// Deletes the currently selected Source
 		/// </summary>
@@ -245,8 +239,7 @@ namespace test.Objects
 		/// <summary>
 		/// Creates and shows a Source context menu at the mouse pointer
 		/// </summary>
-		/// <param name="sender">Form from which this method is called</param>
-		public void ShowSourceContextMenu(Form sender)
+		public ContextMenuStrip SourceContextMenu()
 		{
 			//TODO: actually use this somewhere :p
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
@@ -272,67 +265,38 @@ namespace test.Objects
 			properties.Click += (s, args) =>
 			{
 				var propfrm = new TestProperties(SelectedSource);
-				propfrm.ShowDialog(sender);
+				propfrm.ShowDialog();
 			};
 			filtermenu.Items.Add(properties);
 
-			filtermenu.Show(sender, sender.PointToClient(Cursor.Position));
+			return filtermenu;
 		}
 
 		/// <summary>
 		/// Creates and shows an Add Source context menu at the mouse pointer
 		/// </summary>
-		/// <param name="sender">Form from which this method is called</param>
-		public void ShowAddSourceContextMenu(Form sender, bool deleteaftercomplete = false)
+		public ContextMenuStrip AddSourceContextMenu()
 		{
-			// TODO: there's a dirty hack in place here
-			/* 
-			 * adds an item then removes it once its complete because it wont render unless the source is visible on the scene
-			 * fix it so sources are displayed even if not being shown on canvas
-			 */
-
 			var inputmenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
 			foreach (string inputType in Obs.GetSourceInputTypes())
 			{
-				string type = inputType;
-
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
 
-				var menuitem = new ToolStripMenuItem(displayname + " (" + type + ")");
-
-				menuitem.Click += (s, args) =>
-				{
-					var source = AddSource(type, displayname + (Sources.Count + 1));
-
-					AddItem(source);
-
-					var prop = new TestProperties(source);
-
-					if (deleteaftercomplete)
-					{
-						prop.Disposed += (o, eventArgs) =>
-						{
-							Item item = SelectedScene.Items.Last();
-							item.Remove();
-							item.Dispose();
-							SelectedScene.Items.Remove(item);
-						};
-					}
-					prop.Show();
-				};
+				var menuitem = new ToolStripMenuItem(displayname + " (" + inputType + ")")
+				               {
+					               Tag = CreateSource(inputType, displayname + (Sources.Count + 1))
+				               };
 
 				inputmenu.Items.Add(menuitem);
 			}
-
-			inputmenu.Show(sender, sender.PointToClient(Cursor.Position));
+			return inputmenu;
 		}
 
 		/// <summary>
 		/// Creates and shows an Item context menu at the mouse pointer
 		/// </summary>
-		/// <param name="sender">Form from which this method is called</param>
-		public void ShowItemContextMenu(Form sender)
+		public ContextMenuStrip ItemContextMenu()
 		{
 			var top = new ToolStripMenuItem("Move to &Top");
 			top.Click += (o, args) =>
@@ -362,7 +326,7 @@ namespace test.Objects
 			transform.Click += (o, args) =>
 			{
 				var transformfrm = new TestTransform(SelectedItem);
-				transformfrm.ShowDialog(sender);
+				transformfrm.ShowDialog();
 			};
 
 			var visible = new ToolStripBindableMenuItem
@@ -387,11 +351,10 @@ namespace test.Objects
 				                         transform
 			                         });
 
-			ordermenu.Show(sender, sender.PointToClient(Cursor.Position));
-
 			int index = ItemIndex;
 			top.Enabled = up.Enabled = index != 0;
 			down.Enabled = bottom.Enabled = index != SelectedScene.Items.Count - 1;
+			return ordermenu;
 		}
 	}
 }

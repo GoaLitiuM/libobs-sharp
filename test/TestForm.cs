@@ -119,8 +119,10 @@ namespace test
 
 				ItemListBox.DataSource = SceneListBox.SelectedValue;
 
-				var source = _presentation.AddSource("random", "some random source");
-				_presentation.AddItem(source);
+				var source = _presentation.CreateSource("random", "some random source");
+				_presentation.AddSource(source);
+				var item = _presentation.CreateItem(source);
+				_presentation.AddItem(item);
 
 				_presentation.SceneIndex = SceneListBox.SelectedIndex;
 				_presentation.ItemIndex = ItemListBox.SelectedIndex;
@@ -196,11 +198,28 @@ namespace test
 
 		#region ItemControls
 
-
-
 		private void AddItemButton_Click(object sender, EventArgs e)
 		{
-			_presentation.ShowAddSourceContextMenu(this);
+			var contextmenu = _presentation.AddSourceContextMenu();
+			contextmenu.ItemClicked += (o, args) =>
+			{
+				var source = (Source) args.ClickedItem.Tag;
+				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
+				{
+					_presentation.AddSource(source);
+					var item = _presentation.CreateItem(source);
+					_presentation.AddItem(item);
+					ItemListBox.SelectedIndex = _presentation.ItemIndex;
+					SourceListBox.SelectedIndex = _presentation.SourceIndex;
+				}
+				else
+				{
+					source.Remove();
+					source.Dispose();
+				}
+			};
+			contextmenu.Show(this, PointToClient(Cursor.Position));
+
 		}
 
 		private void DelItemButton_Click(object sender, EventArgs e)
@@ -222,6 +241,10 @@ namespace test
 				}
 
 				_presentation.SelectedItem.Selected = true;
+
+				HideItemCheckBox.DataBindings.Clear();
+				HideItemCheckBox.DataBindings.Add(
+					new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
 			}
 		}
 
@@ -230,7 +253,9 @@ namespace test
 			if (_presentation.SelectedScene == null || _presentation.SelectedItem == null || e.Button != MouseButtons.Right)
 				return;
 
-			_presentation.ShowItemContextMenu(this);
+			var contextmenu = _presentation.ItemContextMenu();
+			contextmenu.Disposed += (o, args) => ItemListBox.SelectedIndex = _presentation.ItemIndex;
+			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
 		#endregion
@@ -239,7 +264,22 @@ namespace test
 
 		private void AddSourceButton_Click(object sender, EventArgs e)
 		{
-			_presentation.ShowAddSourceContextMenu(this, true);
+			var contextmenu = _presentation.AddSourceContextMenu();
+			contextmenu.ItemClicked += (o, args) =>
+			{
+				var source = (Source) args.ClickedItem.Tag;
+				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
+				{
+					_presentation.AddSource(source);
+					SourceListBox.SelectedIndex = _presentation.SourceIndex;
+				}
+				else
+				{
+					source.Remove();
+					source.Dispose();
+				}
+			};
+			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
 		private void DelSourceButton_Click(object sender, EventArgs e)
@@ -251,8 +291,10 @@ namespace test
 		{
 			// add currently selected source to the currently selected scene
 			if (_presentation.SelectedSource == null) return;
-
-			_presentation.AddItem(_presentation.SelectedSource);
+			//TODO: check if this is what messes up the order
+			var item = _presentation.CreateItem(_presentation.SelectedSource);
+			_presentation.AddItem(item);
+			ItemListBox.SelectedIndex = _presentation.ItemIndex;
 		}
 
 		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -271,6 +313,14 @@ namespace test
 			EnableSourceCheckBox.Enabled = true;
 			MuteSourceCheckBox.Enabled = true;
 			AddSourceToSceneButton.Enabled = true;
+
+			EnableSourceCheckBox.DataBindings.Clear();
+			EnableSourceCheckBox.DataBindings.Add(
+				new Binding("Checked", _presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			MuteSourceCheckBox.DataBindings.Clear();
+			MuteSourceCheckBox.DataBindings.Add(
+				new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 		}
 
 		private void SourceListBox_MouseDown(object sender, MouseEventArgs e)
@@ -278,7 +328,8 @@ namespace test
 			// display the filter menu when rightclicking on a source in the sourcelistbox
 			if (e.Button != MouseButtons.Right || _presentation.SelectedSource == null) return;
 
-			_presentation.ShowSourceContextMenu(this);
+			var contextmenu = _presentation.SourceContextMenu();
+			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
 		#endregion

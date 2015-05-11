@@ -59,12 +59,14 @@ namespace test
 			okButton.Click += (o, args) =>
 			{
 				view.UpdateSettings();
+				DialogResult = DialogResult.OK;
 				Close();
 			};
 			cancelButton.Click += (o, args) =>
 			{
 				sourceSettings.Clear();
 				source.Update(oldSettings);
+				DialogResult = DialogResult.Cancel;
 				Close();
 			};
 
