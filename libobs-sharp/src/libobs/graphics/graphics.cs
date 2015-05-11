@@ -31,7 +31,7 @@ namespace OBS
 	using gs_vertbuffer_t = IntPtr;
 	using quat = libobs.vec4;
 
-	using size_t = IntPtr;	//UIntPtr?
+	using size_t = UIntPtr;
 	using uint32_t = UInt32;
 	using uint8_t = Byte;
 
@@ -67,7 +67,8 @@ namespace OBS
 		//EXPORT void gs_effect_destroy(gs_effect_t *effect);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_technique_t gs_effect_get_technique(gs_effect_t effect, string name);
+		public static extern gs_technique_t gs_effect_get_technique(gs_effect_t effect,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		//EXPORT gs_technique_t *gs_effect_get_current_technique( const gs_effect_t *effect);
 
@@ -83,7 +84,8 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool gs_technique_begin_pass_by_name(gs_technique_t technique, string name);
+		public static extern bool gs_technique_begin_pass_by_name(gs_technique_t technique,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_technique_end_pass(gs_technique_t technique);
@@ -95,7 +97,8 @@ namespace OBS
 		public static extern gs_eparam_t gs_effect_get_param_by_idx(gs_effect_t effect, size_t param);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_eparam_t gs_effect_get_param_by_name(gs_effect_t effect, string name);
+		public static extern gs_eparam_t gs_effect_get_param_by_name(gs_effect_t effect,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		//EXPORT bool gs_effect_loop(gs_effect_t *effect, const char *name);
 		//EXPORT void gs_effect_update_params(gs_effect_t *effect);

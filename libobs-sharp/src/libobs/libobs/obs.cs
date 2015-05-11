@@ -25,7 +25,7 @@ namespace OBS
 	using obs_data_t = IntPtr;
 	using obs_source_t = IntPtr;
 
-	using size_t = IntPtr;	//UIntPtr?
+	using size_t = UIntPtr;
 	using uint32_t = UInt32;
 
 	public static partial class libobs
@@ -35,7 +35,8 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool obs_startup(string locale);
+		public static extern bool obs_startup(
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string locale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_shutdown();
@@ -83,57 +84,21 @@ namespace OBS
 		//EXPORT lookup_t *obs_module_load_locale(obs_module_t *module, const char *default_locale, const char *locale);
 		//EXPORT char *obs_find_module_file(obs_module_t *module, const char *file);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_input_types")]
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		private static extern bool import_obs_enum_input_types(size_t idx, out IntPtr id);
+		public static extern bool obs_enum_input_types(size_t idx,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] out string id);
 
-		public static bool obs_enum_input_types(int idx, out string id)
-		{
-			IntPtr strPtr = IntPtr.Zero;
-			bool ret = import_obs_enum_input_types((size_t)idx, out strPtr);
-
-			if (strPtr != IntPtr.Zero)
-				id = Marshal.PtrToStringAnsi(strPtr);
-			else
-				id = null;
-
-			return ret;
-		}
-
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_filter_types")]
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		private static extern bool import_obs_enum_filter_types(size_t idx, out IntPtr id);
+		public static extern bool obs_enum_filter_types(size_t idx,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] out string id);
 
-		public static bool obs_enum_filter_types(int idx, out string id)
-		{
-			IntPtr strPtr = IntPtr.Zero;
-			bool ret = import_obs_enum_filter_types((size_t)idx, out strPtr);
-
-			if (strPtr != IntPtr.Zero)
-				id = Marshal.PtrToStringAnsi(strPtr);
-			else
-				id = null;
-
-			return ret;
-		}
-
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_enum_transition_types")]
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		private static extern bool import_obs_enum_transition_types(size_t idx, out IntPtr id);
-
-		public static bool obs_enum_transition_types(int idx, out string id)
-		{
-			IntPtr strPtr = IntPtr.Zero;
-			bool ret = import_obs_enum_transition_types((size_t)idx, out strPtr);
-
-			if (strPtr != IntPtr.Zero)
-				id = Marshal.PtrToStringAnsi(strPtr);
-			else
-				id = null;
-
-			return ret;
-		}
-
+		public static extern bool obs_enum_transition_types(size_t idx,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] out string id);
+		
 		//EXPORT bool obs_enum_output_types(size_t idx, const char **id);
 		//EXPORT bool obs_enum_encoder_types(size_t idx, const char **id);
 		//EXPORT bool obs_enum_service_types(size_t idx, const char **id);
@@ -163,7 +128,8 @@ namespace OBS
 		//EXPORT void obs_enum_services(bool (*enum_proc)(void*, obs_service_t*), void *param);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_source_t obs_get_source_by_name(string name);
+		public static extern obs_source_t obs_get_source_by_name(
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		//EXPORT obs_output_t *obs_get_output_by_name(const char *name);
 		//EXPORT obs_encoder_t *obs_get_encoder_by_name(const char *name);

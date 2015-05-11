@@ -171,7 +171,7 @@ namespace OBS
 			List<string> names = new List<string>();
 
 			for (int i = 0; i < count; i++)
-				names.Add(libobs.obs_property_list_item_name(instance, (IntPtr)i));
+				names.Add(libobs.obs_property_list_item_name(instance, (UIntPtr)i));
 
 			return names.ToArray();
 		}
@@ -185,11 +185,11 @@ namespace OBS
 			for (int i = 0; i < count; i++)
 			{
 				if (format == ObsComboFormat.Int)
-					values.Add(libobs.obs_property_list_item_int(instance, (IntPtr)i));
+					values.Add(libobs.obs_property_list_item_int(instance, (UIntPtr)i));
 				else if (format == ObsComboFormat.Float)
-					values.Add(libobs.obs_property_list_item_float(instance, (IntPtr)i));
+					values.Add(libobs.obs_property_list_item_float(instance, (UIntPtr)i));
 				else if (format == ObsComboFormat.String)
-					values.Add(libobs.obs_property_list_item_string(instance, (IntPtr)i));
+					values.Add(libobs.obs_property_list_item_string(instance, (UIntPtr)i));
 			}
 
 			return values.ToArray();

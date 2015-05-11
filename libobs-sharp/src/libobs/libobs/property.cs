@@ -24,7 +24,7 @@ namespace OBS
 	using obs_properties_t = IntPtr;
 	using obs_property_t = IntPtr;
 
-	using size_t = IntPtr;	//UIntPtr?
+	using size_t = UIntPtr;
 	using int64_t = Int64;
 
 	public static partial class libobs
@@ -33,7 +33,8 @@ namespace OBS
 		public delegate bool obs_property_modified_t(obs_properties_t props, obs_property_t property, obs_data_t settings);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_property_set_modified_callback(obs_property_t p, [MarshalAs(UnmanagedType.FunctionPtr)] obs_property_modified_t modified);
+		public static extern void obs_property_set_modified_callback(obs_property_t p,
+			[MarshalAs(UnmanagedType.FunctionPtr)] obs_property_modified_t modified);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		[return: MarshalAs(UnmanagedType.I1)]
@@ -50,25 +51,16 @@ namespace OBS
 		public static extern void obs_property_set_enabled(obs_property_t p, bool enabled);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern void obs_property_set_description(obs_property_t p, string description);
+		public static extern void obs_property_set_description(obs_property_t p,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string description);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_name")]
-		private static extern IntPtr import_obs_property_name(obs_property_t p);
-
-		public static string obs_property_name(obs_property_t p)
-		{
-			IntPtr strPtr = import_obs_property_name(p);
-			return Marshal.PtrToStringAnsi(strPtr);
-		}
-
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_description")]
-		private static extern IntPtr import_obs_property_description(obs_property_t p);
-
-		public static string obs_property_description(obs_property_t p)
-		{
-			IntPtr strPtr = import_obs_property_description(p);
-			return Marshal.PtrToStringAnsi(strPtr);
-		}
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_name(obs_property_t p);
+		
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_description(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_property_type obs_property_get_type(obs_property_t p);
@@ -115,23 +107,13 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_path_type obs_property_path_type(obs_property_t p);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_path_filter")]
-		private static extern IntPtr import_obs_property_path_filter(obs_property_t p);
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_path_filter(obs_property_t p);
 
-		public static string obs_property_path_filter(obs_property_t p)
-		{
-			IntPtr strPtr = import_obs_property_path_filter(p);
-			return Marshal.PtrToStringAnsi(strPtr);
-		}
-
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_path_default_path")]
-		private static extern IntPtr import_obs_property_path_default_path(obs_property_t p);
-
-		public static string obs_property_path_default_path(obs_property_t p)
-		{
-			IntPtr strPtr = import_obs_property_path_default_path(p);
-			return Marshal.PtrToStringAnsi(strPtr);
-		}
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_path_default_path(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_combo_type obs_property_list_type(obs_property_t p);
@@ -154,23 +136,13 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern size_t obs_property_list_item_count(obs_property_t p);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_list_item_name")]
-		private static extern IntPtr import_obs_property_list_item_name(obs_property_t p, size_t idx);
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_list_item_name(obs_property_t p, size_t idx);
 
-		public static string obs_property_list_item_name(obs_property_t p, size_t idx)
-		{
-			IntPtr strPtr = import_obs_property_list_item_name(p, idx);
-			return MarshalUTF8String(strPtr);
-		}
-
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_property_list_item_string")]
-		private static extern IntPtr import_obs_property_list_item_string(obs_property_t p, size_t idx);
-
-		public static string obs_property_list_item_string(obs_property_t p, size_t idx)
-		{
-			IntPtr strPtr = import_obs_property_list_item_string(p, idx);
-			return MarshalUTF8String(strPtr);
-		}
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_list_item_string(obs_property_t p, size_t idx);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern int64_t obs_property_list_item_int(obs_property_t p, size_t idx);

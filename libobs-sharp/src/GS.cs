@@ -206,7 +206,7 @@ namespace OBS.Graphics
 
 		public static unsafe void TechniqueBeginPass(GSEffectTechnique tech, uint pass)
 		{
-			libobs.gs_technique_begin_pass((IntPtr)tech.GetPointer(), (IntPtr)pass);
+			libobs.gs_technique_begin_pass((IntPtr)tech.GetPointer(), (UIntPtr)pass);
 		}
 
 		public static unsafe void TechniqueEndPass(GSEffectTechnique tech)

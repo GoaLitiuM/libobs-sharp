@@ -157,11 +157,11 @@ namespace OBS
 
 		public static string[] GetSourceInputTypes()
 		{
-			int idx = 0;
+			uint idx = 0;
 			string id = null;
 			List<string> idList = new List<string>();
 
-			while (libobs.obs_enum_input_types(idx++, out id))
+			while (libobs.obs_enum_input_types((UIntPtr)idx++, out id))
 				if (id != "scene")
 					idList.Add(id);
 
@@ -170,11 +170,11 @@ namespace OBS
 
 		public static string[] GetSourceFilterTypes()
 		{
-			int idx = 0;
+			uint idx = 0;
 			string id = null;
 			List<string> idList = new List<string>();
 
-			while (libobs.obs_enum_filter_types(idx++, out id))
+			while (libobs.obs_enum_filter_types((UIntPtr)idx++, out id))
 				idList.Add(id);
 
 			return idList.ToArray();
@@ -182,11 +182,11 @@ namespace OBS
 
 		public static string[] GetSourceTransitionTypes()
 		{
-			int idx = 0;
+			uint idx = 0;
 			string id = null;
 			List<string> idList = new List<string>();
 
-			while (libobs.obs_enum_transition_types(idx++, out id))
+			while (libobs.obs_enum_transition_types((UIntPtr)idx++, out id))
 				idList.Add(id);
 
 			return idList.ToArray();

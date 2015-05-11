@@ -31,22 +31,15 @@ namespace OBS
 		/* ------------------------------------------------------------------------- */
 		/* Sources */
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_display_name")]
-		private static extern IntPtr import_obs_source_get_display_name(obs_source_type type, string id);
-
-		public static string obs_source_get_display_name(obs_source_type type, string id)
-		{
-			string str = null;
-			IntPtr strPtr = import_obs_source_get_display_name(type, id);
-
-			if (strPtr != IntPtr.Zero)
-				str = Marshal.PtrToStringAnsi(strPtr);
-
-			return str;
-		}
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_source_get_display_name(obs_source_type type,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string id);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_source_t obs_source_create(obs_source_type type, string id, string name, obs_data_t settings);
+		public static extern obs_source_t obs_source_create(obs_source_type type,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string id,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name, obs_data_t settings);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_addref(obs_source_t source);
@@ -63,7 +56,8 @@ namespace OBS
 		//EXPORT obs_data_t *obs_get_source_defaults(enum obs_source_type type, const char *id);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_properties_t obs_get_source_properties(obs_source_type type, string id);
+		public static extern obs_properties_t obs_get_source_properties(obs_source_type type,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string id);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_properties_t obs_source_properties(obs_source_t source);
@@ -97,17 +91,13 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_t obs_source_get_settings(obs_source_t source);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet, EntryPoint = "obs_source_get_name")]
-		private static extern IntPtr import_obs_source_get_name(obs_source_t source);
-
-		public static string obs_source_get_name(obs_source_t source)
-		{
-			IntPtr strPtr = import_obs_source_get_name(source);
-			return Marshal.PtrToStringAnsi(strPtr);
-		}
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler), MarshalCookie = "ret")]
+		public static extern string obs_source_get_name(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern void obs_source_set_name(obs_source_t source, string name);
+		public static extern void obs_source_set_name(obs_source_t source,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		//EXPORT enum obs_source_type obs_source_get_type(const obs_source_t *source);
 		//EXPORT const char *obs_source_get_id(const obs_source_t *source);

@@ -184,7 +184,7 @@ namespace OBS
 
 		public unsafe void SetInt(string name, int val)
 		{
-			libobs.obs_data_set_int((IntPtr)instance, name, val);
+			libobs.obs_data_set_int((IntPtr)instance, name, (long)val);
 		}
 
 		public unsafe void SetDouble(string name, double val)

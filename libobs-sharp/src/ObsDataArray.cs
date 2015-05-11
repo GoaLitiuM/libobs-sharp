@@ -66,7 +66,7 @@ namespace OBS
 			if (index < 0 || index > Count)
 				throw new IndexOutOfRangeException();
 
-			libobs.obs_data_array_insert(instance, (IntPtr)index, obj.GetPointer());
+			libobs.obs_data_array_insert(instance, (UIntPtr)index, obj.GetPointer());
 		}
 
 		public void RemoveAt(int index)
@@ -74,7 +74,7 @@ namespace OBS
 			if (index < 0 || index > Count)
 				throw new IndexOutOfRangeException();
 
-			libobs.obs_data_array_erase(instance, (IntPtr)index);
+			libobs.obs_data_array_erase(instance, (UIntPtr)index);
 		}
 
 		public ObsData this[int index]
@@ -84,7 +84,7 @@ namespace OBS
 				if (index < 0 || index > Count)
 					throw new IndexOutOfRangeException();
 
-				IntPtr ptr = libobs.obs_data_array_item(instance, (IntPtr)index);
+				IntPtr ptr = libobs.obs_data_array_item(instance, (UIntPtr)index);
 				if (ptr == IntPtr.Zero)
 					return null;
 
@@ -112,7 +112,7 @@ namespace OBS
 			if (index < 0 || index > Count)
 				throw new IndexOutOfRangeException();
 
-			IntPtr ptr = libobs.obs_data_array_item(instance, (IntPtr)index);
+			IntPtr ptr = libobs.obs_data_array_item(instance, (UIntPtr)index);
 			if (ptr == IntPtr.Zero)
 				return null;
 

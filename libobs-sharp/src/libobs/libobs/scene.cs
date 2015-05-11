@@ -27,7 +27,8 @@ namespace OBS
 	public static partial class libobs
 	{
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		public static extern obs_scene_t obs_scene_create(string name);
+		public static extern obs_scene_t obs_scene_create(
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_addref(obs_scene_t source);
@@ -42,7 +43,8 @@ namespace OBS
 		public static extern obs_scene_t obs_scene_from_source(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern obs_sceneitem_t obs_scene_find_source(obs_scene_t scene, string name);
+		public static extern obs_sceneitem_t obs_scene_find_source(obs_scene_t scene,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
 		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
 		public delegate bool sceneitem_enum_callback(obs_scene_t scene, obs_sceneitem_t sceneItem, IntPtr data);

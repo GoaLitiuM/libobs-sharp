@@ -22,7 +22,7 @@ namespace OBS
 {
 	using config_t = IntPtr;
 
-	using size_t = IntPtr;	//UIntPtr?
+	using size_t = UIntPtr;
 	using int64_t = Int64;
 	using uint64_t = UInt64;
 
