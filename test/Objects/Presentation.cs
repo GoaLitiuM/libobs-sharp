@@ -244,26 +244,49 @@ namespace test.Objects
 		/// </summary>
 		public ContextMenuStrip SourceContextMenu()
 		{
-			//TODO: actually use this somewhere :p
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
 			foreach (var filterType in Obs.GetSourceFilterTypes())
 			{
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType)+Sources.Count + 1;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + Sources.Count + 1;
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")")
-				               {
-					               Tag = Tuple.Create(filterType, displayname)
-				               };
+							   {
+								   Tag = Tuple.Create(filterType, displayname)
+							   };
 
 				filtermenu.Items.Add(menuitem);
 			}
-			filtermenu.Items.Add("-");
+			
+			var enabled = new ToolStripBindableMenuItem
+			{
+				Text = "&Enabled",
+				CheckOnClick = true,
+				Tag = Tuple.Create("prop","enabled")
+			};
+			enabled.DataBindings.Add(new Binding("Checked", SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			var muted = new ToolStripBindableMenuItem
+			{
+				Text = "&Muted",
+				CheckOnClick = true,
+				Tag = Tuple.Create("prop","visible")
+			};
+			muted.DataBindings.Add(new Binding("Checked", SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
+
 			var properties = new ToolStripMenuItem("Edit Source Properties...")
-			                 {
-				                 Tag = Tuple.Create("prop", "prop")
-			                 };
-			filtermenu.Items.Add(properties);
+							 {
+								 Tag = Tuple.Create("prop", "prop")
+							 };
+
+			filtermenu.Items.AddRange(new ToolStripItem[]
+			                          {
+				                          new ToolStripSeparator(), 
+										  enabled,
+										  muted,
+										  new ToolStripSeparator(), 
+										  properties
+			                          });
 
 			return filtermenu;
 		}
@@ -325,15 +348,23 @@ namespace test.Objects
 				transformfrm.ShowDialog();
 			};
 
+			var prop = new ToolStripMenuItem("&Edit Source Properties...");
+			prop.Click += (sender, args) =>
+			{
+				var propfrm = new TestProperties(SelectedItem.GetSource());
+				propfrm.ShowDialog();
+			};
 			var visible = new ToolStripBindableMenuItem
 						  {
 							  Text = "&Visible",
 							  CheckOnClick = true
 						  };
 			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-
-
-			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+	
+			var ordermenu = new ContextMenuStrip
+			                {
+				                Renderer = new AccessKeyMenuStripRenderer()
+			                };
 
 			ordermenu.Items.AddRange(new ToolStripItem[]
 			                         {
@@ -344,7 +375,8 @@ namespace test.Objects
 				                         new ToolStripSeparator(),
 				                         visible,
 				                         new ToolStripSeparator(), 
-				                         transform
+				                         transform,
+										 prop
 			                         });
 
 			int index = ItemIndex;
