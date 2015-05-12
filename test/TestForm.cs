@@ -351,7 +351,7 @@ namespace test
 						source.Dispose();
 					}
 				}
-				else
+				else if (tag.Item2 == "prop")
 				{
 					var sourceprop = new TestProperties(_presentation.SelectedSource);
 					sourceprop.ShowDialog();
