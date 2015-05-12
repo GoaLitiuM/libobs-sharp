@@ -47,26 +47,16 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.propertyPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.bottomPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.okButton = new System.Windows.Forms.Button();
 			this.defaultButton = new System.Windows.Forms.Button();
 			this.undoButton = new System.Windows.Forms.Button();
+			this.propertiesPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.propertyPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel.SuspendLayout();
+			this.propertiesPanel.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// propertyPanel
-			// 
-			this.propertyPanel.AutoScroll = true;
-			this.propertyPanel.AutoSize = true;
-			this.propertyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertyPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.propertyPanel.Location = new System.Drawing.Point(0, 0);
-			this.propertyPanel.Name = "propertyPanel";
-			this.propertyPanel.Size = new System.Drawing.Size(665, 463);
-			this.propertyPanel.TabIndex = 8;
 			// 
 			// bottomPanel
 			// 
@@ -120,6 +110,33 @@ namespace test
 			this.undoButton.Text = "Undo";
 			this.undoButton.UseVisualStyleBackColor = true;
 			// 
+			// propertiesPanel
+			// 
+			this.propertiesPanel.AutoSize = true;
+			this.propertiesPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.propertiesPanel.ColumnCount = 3;
+			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 600F));
+			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.propertiesPanel.Controls.Add(this.propertyPanel, 1, 0);
+			this.propertiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.propertiesPanel.Location = new System.Drawing.Point(0, 0);
+			this.propertiesPanel.Name = "propertiesPanel";
+			this.propertiesPanel.RowCount = 1;
+			this.propertiesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.propertiesPanel.Size = new System.Drawing.Size(665, 463);
+			this.propertiesPanel.TabIndex = 9;
+			// 
+			// propertyPanel
+			// 
+			this.propertyPanel.AutoSize = true;
+			this.propertyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.propertyPanel.Location = new System.Drawing.Point(35, 3);
+			this.propertyPanel.Name = "propertyPanel";
+			this.propertyPanel.Size = new System.Drawing.Size(594, 457);
+			this.propertyPanel.TabIndex = 0;
+			// 
 			// TestFilter
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -128,7 +145,7 @@ namespace test
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.ClientSize = new System.Drawing.Size(665, 492);
 			this.ControlBox = false;
-			this.Controls.Add(this.propertyPanel);
+			this.Controls.Add(this.propertiesPanel);
 			this.Controls.Add(this.bottomPanel);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -136,6 +153,8 @@ namespace test
 			this.ShowIcon = false;
 			this.Text = "TestFilter";
 			this.bottomPanel.ResumeLayout(false);
+			this.propertiesPanel.ResumeLayout(false);
+			this.propertiesPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -143,11 +162,12 @@ namespace test
 
 		#endregion
 
-		private System.Windows.Forms.FlowLayoutPanel propertyPanel;
 		private System.Windows.Forms.FlowLayoutPanel bottomPanel;
 		private System.Windows.Forms.Button cancelButton;
 		private System.Windows.Forms.Button okButton;
 		private System.Windows.Forms.Button undoButton;
 		private System.Windows.Forms.Button defaultButton;
+		private TableLayoutPanel propertiesPanel;
+		private Panel propertyPanel;
 	}
 }
