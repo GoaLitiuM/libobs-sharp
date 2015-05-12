@@ -326,6 +326,31 @@ namespace test
 			if (e.Button != MouseButtons.Right || _presentation.SelectedSource == null) return;
 
 			var contextmenu = _presentation.SourceContextMenu();
+			contextmenu.ItemClicked += (o, args) =>
+			{
+				var tag = (Tuple<string, string>) args.ClickedItem.Tag;
+				if (tag.Item1 != "prop")
+				{
+					var source = new Source(ObsSourceType.Filter, tag.Item1, tag.Item2);
+					if (new TestFilter(source).ShowDialog() == DialogResult.OK)
+					{
+
+						_presentation.SelectedSource.AddFilter(source);
+
+					}
+					else
+					{
+						source.Remove();
+						source.Dispose();
+					}
+				}
+				else
+				{
+					var sourceprop = new TestProperties(_presentation.SelectedSource);
+					sourceprop.ShowDialog();
+				}
+
+			};
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
