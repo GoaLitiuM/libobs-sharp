@@ -94,9 +94,6 @@ namespace OBS
 		//EXPORT const char* obs_key_to_name(obs_key_t key);
 		//EXPORT obs_key_t obs_key_from_name(const char* name);
 
-		public static readonly UIntPtr OBS_INVALID_HOTKEY_ID = (UIntPtr)(~(ulong)0);
-		public static readonly UIntPtr OBS_INVALID_HOTKEY_PAIR_ID = (UIntPtr)(~(ulong)0);
-
 		public enum obs_hotkey_registerer_t
 		{
 			OBS_HOTKEY_REGISTERER_FRONTEND,
