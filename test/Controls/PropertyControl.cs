@@ -37,7 +37,7 @@ namespace test.Controls
 			this.view = view;
 			DoubleBuffered = true;
 			Padding = new Padding(2);
-
+			
 			ObsPropertyType type = property.Type;
 			bool addLabel = true;
 			List<Control> controls = new List<Control>();
@@ -97,7 +97,7 @@ namespace test.Controls
 			{
 				Text = addLabel ? property.Description : "",
 				TextAlign = ContentAlignment.MiddleRight,
-				MinimumSize = new Size(170, 0),
+				MinimumSize = new Size(150, 0),
 				Dock = DockStyle.Left
 			};
 			controls.Insert(0, nameLabel);
@@ -360,7 +360,7 @@ namespace test.Controls
 				TextAlign = HorizontalAlignment.Center
 			};
 
-			Button button = new Button { Text = "Select..." };
+			Button button = new Button { Text = "Select..."};
 
 			textbox.TextChanged += (sender, args) =>
 			{
@@ -393,7 +393,7 @@ namespace test.Controls
 
 		private void AddButton(ObsProperty property, ObsData setting, List<Control> controls)
 		{
-			Button button = new Button { Text = property.Description };
+			Button button = new Button { Text = property.Description};
 			button.Click += (sender, args) => view.PropertyButtonClicked(property);
 
 			controls.Add(button);
