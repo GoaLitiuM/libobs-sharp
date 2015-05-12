@@ -82,6 +82,7 @@
     <Compile Include="src\libobs\libobs\data.cs" />
     <Compile Include="src\libobs\libobs\display.cs" />
     <Compile Include="src\libobs\libobs\encoder.cs" />
+    <Compile Include="src\libobs\libobs\hotkey.cs" />
     <Compile Include="src\libobs\libobs\obs.cs" />
     <Compile Include="src\libobs\libobs\output.cs" />
     <Compile Include="src\libobs\libobs\properties.cs" />

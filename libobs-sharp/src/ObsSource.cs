@@ -25,7 +25,7 @@ namespace OBS
 		
 		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{
-			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero);
+			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
@@ -33,7 +33,7 @@ namespace OBS
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name, ObsData settings)
 		{
-			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, settings.GetPointer());
+			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, settings.GetPointer(), IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");

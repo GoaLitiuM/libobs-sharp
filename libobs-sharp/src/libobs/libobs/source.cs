@@ -39,7 +39,8 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_source_create(obs_source_type type,
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string id,
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name, obs_data_t settings);
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name, obs_data_t settings,
+			obs_data_t hotkey_data);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_addref(obs_source_t source);
@@ -137,6 +138,18 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_source_set_muted(obs_source_t source, bool muted);
+
+		//EXPORT bool obs_source_push_to_mute_enabled(obs_source_t* source);
+		//EXPORT void obs_source_enable_push_to_mute(obs_source_t* source, bool enabled);
+
+		//EXPORT uint64_t obs_source_get_push_to_mute_delay(obs_source_t* source);
+		//EXPORT void obs_source_set_push_to_mute_delay(obs_source_t* source, uint64_t delay);
+
+		//EXPORT bool obs_source_push_to_talk_enabled(obs_source_t* source);
+		//EXPORT void obs_source_enable_push_to_talk(obs_source_t* source, bool enabled);
+
+		//EXPORT uint64_t obs_source_get_push_to_talk_delay(obs_source_t* source);
+		//EXPORT void obs_source_set_push_to_talk_delay(obs_source_t* source, uint64_t delay);
 
 		/* ------------------------------------------------------------------------- */
 		/* Functions used by sources */

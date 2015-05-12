@@ -23,7 +23,7 @@ namespace OBS
 		/* Outputs */
 
 		//EXPORT const char *obs_output_get_display_name(const char *id);
-		//EXPORT obs_output_t *obs_output_create(const char *id, const char *name, obs_data_t *settings);
+		//EXPORT obs_output_t *obs_output_create(const char *id, const char *name, obs_data_t *settings, obs_data_t *hotkey_data);
 		//EXPORT void obs_output_destroy(obs_output_t *output);
 		//EXPORT const char *obs_output_get_name(const obs_output_t *output);
 		//EXPORT bool obs_output_start(obs_output_t *output);
