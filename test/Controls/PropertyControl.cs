@@ -97,7 +97,7 @@ namespace test.Controls
 			{
 				Text = addLabel ? property.Description : "",
 				TextAlign = ContentAlignment.MiddleRight,
-				MinimumSize = new Size(170, 0),
+				MinimumSize = new Size(150, 0),
 				Dock = DockStyle.Left
 			};
 			controls.Insert(0, nameLabel);
@@ -191,9 +191,21 @@ namespace test.Controls
 
 			if (property.IntType == ObsNumberType.Slider)
 			{
-				//TODO: implement horizontal slider + numeric box control setup, insert slider before numeric box
-			}
+				numeric.Width = 50;
 
+				const int multiplier = 1000;
+				var trackbar = new TrackBar
+							   {
+								   Width = 250,
+								   Minimum = (int)(numeric.Minimum * multiplier),
+								   Maximum = (int)(numeric.Maximum * multiplier),
+								   SmallChange = (int)(numeric.Increment * multiplier),
+								   LargeChange = (int)(numeric.Increment * multiplier),
+								   Value = (int)(numeric.Value * multiplier)
+							   };
+				trackbar.ValueChanged += (sender, args) => numeric.Value = (decimal)trackbar.Value / multiplier;
+				controls.Add(trackbar);
+			}
 			controls.Add(numeric);
 		}
 

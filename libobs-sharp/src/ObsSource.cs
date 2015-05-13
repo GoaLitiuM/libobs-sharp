@@ -22,13 +22,19 @@ namespace OBS
 	public class ObsSource : IObsContextData, IDisposable
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
-		
+
+		private string _id;
+		private ObsSourceType _type;
+
 		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{
 			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
+
+			_id = id;
+			_type = type;
 		}
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name, ObsData settings)
@@ -37,6 +43,9 @@ namespace OBS
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
+
+			_id = id;
+			_type = type;
 		}
 
 		public unsafe ObsSource(IntPtr instance)
@@ -70,7 +79,7 @@ namespace OBS
 
 		public unsafe string Name
 		{
-			get	{ return libobs.obs_source_get_name(instance); }
+			get { return libobs.obs_source_get_name(instance); }
 			set { libobs.obs_source_set_name(instance, value); }
 		}
 
@@ -181,6 +190,15 @@ namespace OBS
 		public unsafe void Render()
 		{
 			libobs.obs_source_video_render(instance);
+		}
+
+		public ObsData GetDefaults()
+		{
+			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type)_type, _id);
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return new ObsData(ptr);
 		}
 	}
 

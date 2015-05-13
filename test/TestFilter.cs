@@ -21,7 +21,7 @@ using test.Controls;
 
 namespace test
 {
-	public partial class TestProperties : Form
+	public partial class TestFilter : Form
 	{
 		public ObsSource Source { get { return source; } }
 
@@ -30,7 +30,7 @@ namespace test
 		private ObsData sourceSettings;
 		private ObsData oldSettings;
 
-		private TestProperties()
+		private TestFilter()
 		{
 			InitializeComponent();
 		}
@@ -39,7 +39,7 @@ namespace test
 		/// Create a property dialog for an existing source
 		/// </summary>
 		/// <param name="source">Source of type ObsSource</param>
-		public TestProperties(ObsSource source)
+		public TestFilter(ObsSource source)
 			: this()
 		{
 			this.source = source;
@@ -51,10 +51,6 @@ namespace test
 
 			propertyPanel.Controls.Add(view);
 
-			previewPanel.SizeChanged += (sender, args) =>
-			{
-				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
-			};
 
 			undoButton.Click += (sender, args) =>
 			{
@@ -83,16 +79,6 @@ namespace test
 				source.Update(oldSettings);
 				DialogResult = DialogResult.Cancel;
 				Close();
-			};
-
-			Load += (sender, args) =>
-			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
-			};
-
-			FormClosed += (sender, args) =>
-			{
-				ClosePreview();
 			};
 		}
 	}

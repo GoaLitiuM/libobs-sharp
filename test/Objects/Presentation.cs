@@ -33,7 +33,7 @@ namespace test.Objects
 			foreach (var scene in Scenes)
 				scene.ClearItems();
 
-			
+
 			foreach (var source in Sources)
 			{
 				source.Remove();
@@ -77,7 +77,7 @@ namespace test.Objects
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the currently selected Item. Sets the selected Item by index.
 		/// </summary>
@@ -132,7 +132,7 @@ namespace test.Objects
 			SelectedScene = scene;
 			return scene;
 		}
-		
+
 		/// <summary>
 		/// Deletes the currently selected Scene
 		/// </summary>
@@ -196,11 +196,11 @@ namespace test.Objects
 
 		public void AddSource(Source source)
 		{
-			Sources.Insert(0,source);
+			Sources.Insert(0, source);
 
 			SourceIndex = 0;
 		}
-		
+
 		/// <summary>
 		/// Deletes the currently selected Source
 		/// </summary>
@@ -211,7 +211,7 @@ namespace test.Objects
 			var delsource = SelectedSource;
 
 			var pointer = delsource.GetPointer();
-			
+
 			foreach (var scene in Scenes)
 			{
 				scene.Items.RemoveAll(x =>
@@ -225,7 +225,7 @@ namespace test.Objects
 					return true;
 				});
 			}
-			
+
 			delsource.Remove();
 			delsource.Dispose();
 
@@ -244,33 +244,49 @@ namespace test.Objects
 		/// </summary>
 		public ContextMenuStrip SourceContextMenu()
 		{
-			//TODO: actually use this somewhere :p
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
 			foreach (var filterType in Obs.GetSourceFilterTypes())
 			{
-				string type = filterType;
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType);
-				int index = Sources.Count + 1;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + Sources.Count + 1;
 
-				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")");
-
-				menuitem.Click += (s, args) =>
-				{
-					ObsSource filter = new ObsSource(ObsSourceType.Filter, type, displayname + index);
-					SelectedSource.AddFilter(filter);
-				};
+				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")")
+							   {
+								   Tag = Tuple.Create(filterType, displayname)
+							   };
 
 				filtermenu.Items.Add(menuitem);
 			}
-			filtermenu.Items.Add("-");
-			var properties = new ToolStripMenuItem("Edit Source Properties...");
-			properties.Click += (s, args) =>
+			
+			var enabled = new ToolStripBindableMenuItem
 			{
-				var propfrm = new TestProperties(SelectedSource);
-				propfrm.ShowDialog();
+				Text = "&Enabled",
+				CheckOnClick = true,
+				Tag = Tuple.Create("prop","enabled")
 			};
-			filtermenu.Items.Add(properties);
+			enabled.DataBindings.Add(new Binding("Checked", SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			var muted = new ToolStripBindableMenuItem
+			{
+				Text = "&Muted",
+				CheckOnClick = true,
+				Tag = Tuple.Create("prop","visible")
+			};
+			muted.DataBindings.Add(new Binding("Checked", SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			var properties = new ToolStripMenuItem("Edit Source Properties...")
+							 {
+								 Tag = Tuple.Create("prop", "prop")
+							 };
+
+			filtermenu.Items.AddRange(new ToolStripItem[]
+			                          {
+				                          new ToolStripSeparator(), 
+										  enabled,
+										  muted,
+										  new ToolStripSeparator(), 
+										  properties
+			                          });
 
 			return filtermenu;
 		}
@@ -287,9 +303,9 @@ namespace test.Objects
 				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + inputType + ")")
-				               {
-					               Tag = Tuple.Create(inputType,displayname+(Sources.Count+1))
-				               };
+							   {
+								   Tag = Tuple.Create(inputType, displayname + (Sources.Count + 1))
+							   };
 
 				inputmenu.Items.Add(menuitem);
 			}
@@ -332,15 +348,23 @@ namespace test.Objects
 				transformfrm.ShowDialog();
 			};
 
+			var prop = new ToolStripMenuItem("&Edit Source Properties...");
+			prop.Click += (sender, args) =>
+			{
+				var propfrm = new TestProperties(SelectedItem.GetSource());
+				propfrm.ShowDialog();
+			};
 			var visible = new ToolStripBindableMenuItem
-			              {
-				              Text = "&Visible",
-				              CheckOnClick = true
-			              };
+						  {
+							  Text = "&Visible",
+							  CheckOnClick = true
+						  };
 			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-
-
-			var ordermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+	
+			var ordermenu = new ContextMenuStrip
+			                {
+				                Renderer = new AccessKeyMenuStripRenderer()
+			                };
 
 			ordermenu.Items.AddRange(new ToolStripItem[]
 			                         {
@@ -351,7 +375,8 @@ namespace test.Objects
 				                         new ToolStripSeparator(),
 				                         visible,
 				                         new ToolStripSeparator(), 
-				                         transform
+				                         transform,
+										 prop
 			                         });
 
 			int index = ItemIndex;
