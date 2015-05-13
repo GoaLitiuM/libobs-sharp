@@ -37,7 +37,7 @@ namespace test.Controls
 			this.view = view;
 			DoubleBuffered = true;
 			Padding = new Padding(2);
-			
+
 			ObsPropertyType type = property.Type;
 			bool addLabel = true;
 			List<Control> controls = new List<Control>();
@@ -191,9 +191,21 @@ namespace test.Controls
 
 			if (property.IntType == ObsNumberType.Slider)
 			{
-				//TODO: implement horizontal slider + numeric box control setup, insert slider before numeric box
-			}
+				numeric.Width = 50;
 
+				const int multiplier = 1000;
+				var trackbar = new TrackBar
+							   {
+								   Width = 250,
+								   Minimum = (int)(numeric.Minimum * multiplier),
+								   Maximum = (int)(numeric.Maximum * multiplier),
+								   SmallChange = (int)(numeric.Increment * multiplier),
+								   LargeChange = (int)(numeric.Increment * multiplier),
+								   Value = (int)(numeric.Value * multiplier)
+							   };
+				trackbar.ValueChanged += (sender, args) => numeric.Value = (decimal)trackbar.Value / multiplier;
+				controls.Add(trackbar);
+			}
 			controls.Add(numeric);
 		}
 
@@ -360,7 +372,7 @@ namespace test.Controls
 				TextAlign = HorizontalAlignment.Center
 			};
 
-			Button button = new Button { Text = "Select..."};
+			Button button = new Button { Text = "Select..." };
 
 			textbox.TextChanged += (sender, args) =>
 			{
@@ -393,7 +405,7 @@ namespace test.Controls
 
 		private void AddButton(ObsProperty property, ObsData setting, List<Control> controls)
 		{
-			Button button = new Button { Text = property.Description};
+			Button button = new Button { Text = property.Description };
 			button.Click += (sender, args) => view.PropertyButtonClicked(property);
 
 			controls.Add(button);
