@@ -59,6 +59,7 @@ namespace test
 		{
 			var sceneitem = base.Add(source);
 			var item = new Item(sceneitem.GetPointer()) { Name = name };
+			sceneitem.Dispose();
 			return item;
 		}
 
