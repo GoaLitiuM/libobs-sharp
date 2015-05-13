@@ -24,6 +24,10 @@ namespace OBS
 {
 	public static partial class Obs
 	{
+		// Keeps a list of all passed delegates in order to prevent them from
+		// getting garbage collected.
+		private static List<Delegate> delegateRefs = new List<Delegate>();
+
 		public static bool Startup(string locale)
 		{
 			return libobs.obs_startup(locale);
@@ -32,6 +36,7 @@ namespace OBS
 		public static void Shutdown()
 		{
 			libobs.obs_shutdown();
+			delegateRefs.Clear();
 		}
 
 		public static void LoadAllModules()
@@ -84,11 +89,13 @@ namespace OBS
 		public static void AddDrawCallback(libobs.draw_callback callback, IntPtr param)
 		{
 			libobs.obs_add_draw_callback(callback, param);
+			delegateRefs.Add(callback);
 		}
 
 		public static void RemoveDrawCallback(libobs.draw_callback callback, IntPtr param)
 		{
 			libobs.obs_remove_draw_callback(callback, param);
+			delegateRefs.Remove(callback);
 		}
 
 		/// <summary> Sets primary output to source for a channel. </summary>
@@ -138,11 +145,13 @@ namespace OBS
 		public static unsafe void AddDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
 		{
 			libobs.obs_display_add_draw_callback(display.GetPointer(), callback, param);
+			delegateRefs.Add(callback);
 		}
 
 		public static unsafe void RemoveDisplayDrawCallback(ObsDisplay display, libobs.draw_callback callback, IntPtr param)
 		{
 			libobs.obs_display_remove_draw_callback(display.GetPointer(), callback, param);
+			delegateRefs.Remove(callback);
 		}
 
 		public static unsafe void DisplayResize(ObsDisplay display, uint cx, uint cy)

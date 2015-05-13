@@ -30,9 +30,6 @@ namespace test
 	{
 		public readonly int MainWidth = 1280;
 		public readonly int MainHeight = 720;
-		private libobs.draw_callback _renderMain;
-
-		private libobs.sceneitem_enum_callback _enumSceneItem;
 
 		private Presentation _presentation;
 
@@ -48,10 +45,6 @@ namespace test
 
 			try
 			{
-				//callbacks
-				_renderMain = RenderMain;
-				_enumSceneItem = EnumSceneItem;
-
 				Debug.WriteLine("libobs version: " + Obs.GetVersion());
 
 				Obs.SetLogHandler((lvl, msg, p) =>
@@ -137,7 +130,7 @@ namespace test
 				MuteSourceCheckBox.DataBindings.Add(
 					new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 
-				Obs.AddDrawCallback(_renderMain, Handle);
+				Obs.AddDrawCallback(RenderMain, Handle);
 
 				Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
 			}
@@ -155,7 +148,7 @@ namespace test
 
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			Obs.RemoveDrawCallback(_renderMain, Handle);
+			Obs.RemoveDrawCallback(RenderMain, Handle);
 			_presentation.Dispose();
 
 			if (_boxPrimitive != null)

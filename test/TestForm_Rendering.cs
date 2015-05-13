@@ -152,7 +152,7 @@ namespace test
 
 			// enum every sceneitem in scene
 			if (_presentation.SelectedScene != null)
-				_presentation.SelectedScene.EnumItems(_enumSceneItem, data);
+				_presentation.SelectedScene.EnumItems(DrawSelectedItem, data);
 
 			GS.TechniqueEndPass(tech);
 			GS.TechniqueEnd(tech);
@@ -160,7 +160,7 @@ namespace test
 			GS.LoadVertexBuffer(null);
 		}
 
-		private bool EnumSceneItem(IntPtr scene, IntPtr item, IntPtr data)
+		private bool DrawSelectedItem(IntPtr scene, IntPtr item, IntPtr data)
 		{
 			if (!libobs.obs_sceneitem_selected(item))
 				return true;
