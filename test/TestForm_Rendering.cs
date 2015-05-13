@@ -26,7 +26,7 @@ namespace test
 	{
 		private GSVertexBuffer _boxPrimitive;
 		private GSVertexBuffer _circlePrimitive;
-		public float PreviewScale = 1;
+		private float previewScale = 1;
 
 		private const float HANDLE_RADIUS = 5.0f;
 		private const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
@@ -81,7 +81,7 @@ namespace test
 			int centerX = ((int)cx - newW) / 2;
 			int centerY = ((int)cy - newH) / 2;
 
-			window.PreviewScale = (float)newW / newH;
+			window.previewScale = (float)newW / baseWidth;
 
 			GS.ViewportPush();
 			GS.ProjectionPush();
@@ -97,8 +97,8 @@ namespace test
 			Obs.RenderMainView();
 
 			//calculate bottom-right corner on scene space
-			int right = newW - centerX;
-			int bottom = newH - centerY;
+			int right = (int)cx - centerX;
+			int bottom = (int)cy - centerY;
 
 			//ortho for the outer area which would normally not appear on scene
 			GS.Ortho(-centerX, right, -centerY, bottom, -100.0f, 100.0f);
@@ -151,9 +151,6 @@ namespace test
 			GS.TechniqueBeginPass(tech, 0);
 
 			// enum every sceneitem in scene
-			//if (_presentation.Scenes[_renderSceneIndex] != null)
-			//	_presentation.Scenes[_renderSceneIndex].EnumItems(_enumSceneItem, data);
-
 			if (_presentation.SelectedScene != null)
 				_presentation.SelectedScene.EnumItems(_enumSceneItem, data);
 
@@ -176,17 +173,17 @@ namespace test
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
 
 			//render the tiny circles on corners
-			DrawPrimitive(0.0f, 0.0f, boxTransform, PreviewScale);
-			DrawPrimitive(0.0f, 1.0f, boxTransform, PreviewScale);
-			DrawPrimitive(1.0f, 1.0f, boxTransform, PreviewScale);
-			DrawPrimitive(1.0f, 0.0f, boxTransform, PreviewScale);
+			DrawPrimitive(0.0f, 0.0f, boxTransform, window.previewScale);
+			DrawPrimitive(0.0f, 1.0f, boxTransform, window.previewScale);
+			DrawPrimitive(1.0f, 1.0f, boxTransform, window.previewScale);
+			DrawPrimitive(1.0f, 0.0f, boxTransform, window.previewScale);
 
 			//render the main selection rectangle
 
 			GS.LoadVertexBuffer(_boxPrimitive);
 
 			GS.MatrixPush();
-			GS.MatrixScale3f(PreviewScale, PreviewScale, 1.0f);
+			GS.MatrixScale3f(window.previewScale, window.previewScale, 1.0f);
 			GS.MatrixMul(boxTransform);
 			GS.Draw(GSDrawMode.LineStrip, 0, 0);
 			GS.MatrixPop();
