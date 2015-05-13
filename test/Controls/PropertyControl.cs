@@ -16,25 +16,32 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using OBS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+
+using OBS;
+
 using test.Utility;
 
 namespace test.Controls
 {
-	public partial class PropertyControl : FlowLayoutPanel
+	public class PropertyControl : FlowLayoutPanel
 	{
 		private PropertiesView view;
 
 		public PropertyControl(PropertiesView view, ObsProperty property, ObsData setting)
 		{
-			InitializeComponent();
-
+			SuspendLayout();
+			AutoSize = true;
+			Margin = new Padding(0, 1, 0, 1);
+			Size = new Size(600, 25);
+			ResumeLayout(false);
+			
 			this.view = view;
+			
 			DoubleBuffered = true;
 			Padding = new Padding(2);
 
@@ -89,14 +96,14 @@ namespace test.Controls
 					}
 				default:
 					{
-						throw new Exception(String.Format("Error, unimplemented property type {0} for property {1}", type.ToString(), property.Description));
+						throw new Exception(String.Format("Error, unimplemented property type {0} for property {1}", type, property.Description));
 					}
 			}
 
 			Label nameLabel = new Label
 			{
 				Text = addLabel ? property.Description : "",
-				TextAlign = ContentAlignment.MiddleRight,
+				TextAlign = ContentAlignment.TopRight,
 				MinimumSize = new Size(150, 0),
 				Dock = DockStyle.Left
 			};
@@ -128,7 +135,7 @@ namespace test.Controls
 				Height = 18,
 				Checked = setting.GetBool(name),
 				Text = property.Description,
-				TextAlign = ContentAlignment.MiddleLeft,
+				TextAlign = ContentAlignment.MiddleLeft
 			};
 
 			checkbox.CheckedChanged += (sender, args) =>
@@ -191,12 +198,15 @@ namespace test.Controls
 
 			if (property.IntType == ObsNumberType.Slider)
 			{
-				numeric.Width = 50;
+				numeric.Width = 75;
+				numeric.Height = 23;
 
 				const int multiplier = 1000;
 				var trackbar = new TrackBar
 							   {
-								   Width = 250,
+								   Width = 300,
+								   Height = 23,
+								   TickStyle = TickStyle.None,
 								   Minimum = (int)(numeric.Minimum * multiplier),
 								   Maximum = (int)(numeric.Maximum * multiplier),
 								   SmallChange = (int)(numeric.Increment * multiplier),
@@ -295,7 +305,7 @@ namespace test.Controls
 			string[] names = property.GetListItemNames();
 			object[] values = property.GetListItemValues();
 			EventHandler selectedIndexChanged = null;
-			ComboBox combobox = new ComboBox() { Width = 300 };
+			ComboBox combobox = new ComboBox { Width = 300 };
 
 			combobox.Items.AddRange(names.ToArray());
 
@@ -391,7 +401,7 @@ namespace test.Controls
 					AllowFullOpen = true,
 					AnyColor = true,
 					Color = ColorHelper.TryColorFromHtml(textbox.Text),
-					FullOpen = true,
+					FullOpen = true
 				};
 				colorDialog.Color = colorDialog.Color.FromHtml(textbox.Text);
 
@@ -421,7 +431,7 @@ namespace test.Controls
 				Height = 60,
 				AutoSize = false,
 				BorderStyle = BorderStyle.Fixed3D,
-				TextAlign = ContentAlignment.MiddleCenter,
+				TextAlign = ContentAlignment.MiddleCenter
 			};
 
 			Button button = new Button { Text = "Select..." };
