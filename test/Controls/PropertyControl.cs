@@ -103,8 +103,9 @@ namespace test.Controls
 			Label nameLabel = new Label
 			{
 				Text = addLabel ? property.Description : "",
-				TextAlign = ContentAlignment.TopRight,
-				MinimumSize = new Size(150, 0),
+				TextAlign = ContentAlignment.MiddleRight,
+				MinimumSize = new Size(170, 0),
+				AutoSize = true,
 				Dock = DockStyle.Left
 			};
 			controls.Insert(0, nameLabel);
@@ -204,6 +205,7 @@ namespace test.Controls
 				const int multiplier = 1000;
 				var trackbar = new TrackBar
 							   {
+								   AutoSize = false,
 								   Width = 300,
 								   Height = 23,
 								   TickStyle = TickStyle.None,

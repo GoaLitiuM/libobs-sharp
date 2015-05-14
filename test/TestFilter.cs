@@ -15,20 +15,29 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using OBS;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+
+using OBS;
+
 using test.Controls;
+using test.Utility;
 
 namespace test
 {
-	public partial class TestFilter : Form
+	public partial class TestFilter
 	{
-		public ObsSource Source { get { return source; } }
+		public Source Source { get { return _source; } }
 
-		private PropertiesView view;
-		private ObsSource source;
-		private ObsData sourceSettings;
-		private ObsData oldSettings;
+		private Source SelectedFilter { get; set; }
+
+		private PropertiesView _view;
+		private readonly Source _source;
+		private readonly ObsData _sourceSettings;
+		private readonly ObsData _oldSettings;
+
+		private readonly List<ObsData> _oldFilterSettings = new List<ObsData>();
 
 		private TestFilter()
 		{
@@ -39,47 +48,218 @@ namespace test
 		/// Create a property dialog for an existing source
 		/// </summary>
 		/// <param name="source">Source of type ObsSource</param>
-		public TestFilter(ObsSource source)
-			: this()
+		public TestFilter(Source source) : this()
 		{
-			this.source = source;
-			sourceSettings = source.GetSettings();
-			oldSettings = new ObsData(sourceSettings);
+			_source = source;
+			_sourceSettings = source.GetSettings();
+			_oldSettings = new ObsData(_sourceSettings);
 
-			view = new PropertiesView(sourceSettings, source,
-				source.GetProperties, source.Update);
+			FilterListBox.DisplayMember = "Name";
+			FilterListBox.DataSource = source.Filters;
 
-			propertyPanel.Controls.Add(view);
-
-
-			undoButton.Click += (sender, args) =>
+			if (_source.Filters.Any())
 			{
-				sourceSettings.Clear();
-				source.Update(oldSettings);
-				view.ReloadProperties();
+				foreach (var filter in _source.Filters)
+				{
+					_oldFilterSettings.Add(filter.GetSettings());
+				}
+
+				Select(_source.Filters.First());
+			}
+
+			Load += (sender, args) =>
+			{
+				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
+			};
+
+			previewPanel.SizeChanged += (sender, args) =>
+			{
+				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
 			};
 
 			defaultButton.Click += (sender, args) =>
 			{
-				sourceSettings.Clear();
-				source.Update(source.GetDefaults());
-				view.ReloadProperties();
+				SelectedFilter.GetSettings().Clear();
+				SelectedFilter.Update(SelectedFilter.GetDefaults());
+				_view.ReloadProperties();
 			};
 
 			okButton.Click += (o, args) =>
 			{
-				view.UpdateSettings();
+				_view.UpdateSettings();
 				DialogResult = DialogResult.OK;
 				Close();
 			};
 
 			cancelButton.Click += (o, args) =>
 			{
-				sourceSettings.Clear();
-				source.Update(oldSettings);
+				_sourceSettings.Clear();
+				source.Update(_oldSettings);
 				DialogResult = DialogResult.Cancel;
 				Close();
 			};
+
+			undoButton.Click += (sender, args) =>
+			{
+				SelectedFilter.GetSettings().Clear();
+				SelectedFilter.Update(_oldFilterSettings[_source.Filters.IndexOf(SelectedFilter)]);
+				_view.ReloadProperties();
+			};
+
+			AddFilterButton.Click += (sender, args) =>
+			{
+				FilterMenu().Show(this, PointToClient(Cursor.Position));
+			};
+
+			RemoveFilterButton.Click += (sender, args) =>
+			{
+				if (SelectedFilter != null)
+				{
+					_source.RemoveFilter(SelectedFilter);
+					_oldFilterSettings.RemoveAt(_source.Filters.IndexOf(SelectedFilter));
+				}
+			};
+		}
+
+		private void PopulateControls(Source filter)
+		{
+			if (propertyPanel.Controls.Contains(_view))
+			{
+				propertyPanel.Controls.Remove(_view);
+			}
+			_view = new PropertiesView(filter.GetSettings(), filter, filter.GetProperties, filter.Update);
+			propertyPanel.Controls.Add(_view);
+		}
+
+		private void Select(Source filter)
+		{
+			if (filter == SelectedFilter)
+				return;
+
+			SelectedFilter = filter;
+			FilterListBox.SelectedIndex = _source.Filters.IndexOf(filter);
+			PopulateControls(SelectedFilter);
+		}
+
+		private void Select(int filterindex)
+		{
+			if (filterindex != -1)
+			{
+				var filter = _source.Filters[filterindex];
+				if (SelectedFilter == filter)
+					return;
+
+				SelectedFilter = filter;
+				FilterListBox.SelectedIndex = filterindex;
+				PopulateControls(SelectedFilter);
+			}
+			else
+			{
+				SelectedFilter = null;
+			}
+		}
+
+		ContextMenuStrip FilterMenu()
+		{
+			var filtermenu = new ContextMenuStrip();
+			foreach (string filterType in Obs.GetSourceFilterTypes())
+			{
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + _source.Filters.Count + 1;
+
+				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")");
+
+				menuitem.Click += (o, args) =>
+				{
+					var source = new Source(ObsSourceType.Filter, filterType, displayname);
+					_source.AddFilter(source);
+					_oldFilterSettings.Insert(0,source.GetSettings());
+					Select(source);
+				};
+
+				filtermenu.Items.Add(menuitem);
+			}
+
+			return filtermenu;
+		}
+
+		private void FilterListBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			var index = FilterListBox.IndexFromPoint(e.Location);
+			Select(index);
+
+			if (e.Button != MouseButtons.Right)
+				return;
+
+			var contextmenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
+			var add = new ToolStripMenuItem("Add...") { DropDown = FilterMenu() };
+
+			var remove = new ToolStripMenuItem("Remove");
+			remove.Click += (o, args) =>
+			{
+				_source.RemoveFilter(SelectedFilter);
+			};
+
+			var top = new ToolStripMenuItem("Move to &Top");
+			top.Click += (o, args) =>
+			{
+				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_TOP));
+			};
+
+			var up = new ToolStripMenuItem("Move &Up");
+			up.Click += (o, args) =>
+			{
+				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_UP));
+			};
+
+			var down = new ToolStripMenuItem("Move &Down");
+			down.Click += (o, args) =>
+			{
+				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_DOWN));
+			};
+
+			var bottom = new ToolStripMenuItem("Move to &Bottom");
+			bottom.Click += (o, args) =>
+			{
+				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_BOTTOM));
+			};
+
+			if (SelectedFilter == null)
+			{
+				remove.Enabled = false;
+				top.Enabled = false;
+				up.Enabled = false;
+				down.Enabled = false;
+				bottom.Enabled = false;
+			}
+
+			if (index == 0)
+			{
+				top.Enabled = false;
+				up.Enabled = false;
+			}
+			if (index == _source.Filters.Count - 1)
+			{
+				down.Enabled = false;
+				bottom.Enabled = false;
+			}
+
+			contextmenu.Items.AddRange(new ToolStripItem[]
+			                           {
+				                           add,
+										   remove,
+										   new ToolStripSeparator(), 
+										   top,
+										   up,
+										   down,
+										   bottom
+			                           });
+
+			contextmenu.Show(this, PointToClient(Cursor.Position));
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
 		}
 	}
 }

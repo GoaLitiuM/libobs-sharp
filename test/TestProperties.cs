@@ -46,10 +46,15 @@ namespace test
 			sourceSettings = source.GetSettings();
 			oldSettings = new ObsData(sourceSettings);
 
-			view = new PropertiesView(sourceSettings, source,
-				source.GetProperties, source.Update);
+			view = new PropertiesView(sourceSettings, source, source.GetProperties, source.Update);
 
 			propertyPanel.Controls.Add(view);
+
+
+			Load += (sender, args) =>
+			{
+				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
+			};
 
 			previewPanel.SizeChanged += (sender, args) =>
 			{
@@ -83,11 +88,6 @@ namespace test
 				source.Update(oldSettings);
 				DialogResult = DialogResult.Cancel;
 				Close();
-			};
-
-			Load += (sender, args) =>
-			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
 			};
 
 			FormClosed += (sender, args) =>

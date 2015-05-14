@@ -246,23 +246,11 @@ namespace test.Objects
 		{
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
-			foreach (var filterType in Obs.GetSourceFilterTypes())
-			{
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + Sources.Count + 1;
-
-				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")")
-							   {
-								   Tag = Tuple.Create(filterType, displayname)
-							   };
-
-				filtermenu.Items.Add(menuitem);
-			}
 			
 			var enabled = new ToolStripBindableMenuItem
 			{
 				Text = "&Enabled",
 				CheckOnClick = true,
-				Tag = Tuple.Create("prop","enabled")
 			};
 			enabled.DataBindings.Add(new Binding("Checked", SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -270,21 +258,29 @@ namespace test.Objects
 			{
 				Text = "&Muted",
 				CheckOnClick = true,
-				Tag = Tuple.Create("prop","visible")
 			};
 			muted.DataBindings.Add(new Binding("Checked", SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 
-			var properties = new ToolStripMenuItem("Edit Source Properties...")
-							 {
-								 Tag = Tuple.Create("prop", "prop")
-							 };
+			var filters = new ToolStripMenuItem("Edit Source Filters...");
+			filters.Click += (sender, args) =>
+			{
+				var filterprop = new TestFilter(SelectedSource);
+				filterprop.ShowDialog();
+			};
+
+			var properties = new ToolStripMenuItem("Edit Source Properties...");
+			properties.Click += (sender, args) =>
+			{
+				var sourceprop = new TestProperties(SelectedSource);
+				sourceprop.ShowDialog();
+			};
 
 			filtermenu.Items.AddRange(new ToolStripItem[]
 			                          {
-				                          new ToolStripSeparator(), 
-										  enabled,
+				                          enabled,
 										  muted,
 										  new ToolStripSeparator(), 
+										  filters,
 										  properties
 			                          });
 

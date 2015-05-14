@@ -84,6 +84,9 @@
     <Compile Include="Objects\Presentation.cs" />
     <Compile Include="Objects\Scene.cs" />
     <Compile Include="Objects\Source.cs" />
+    <Compile Include="TestFilter_Rendering.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TestForm_Rendering.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -165,6 +165,11 @@ namespace OBS
 			return new ObsSource(ptr);
 		}
 
+		public void SetFilterOrder(ObsSource filter, obs_order_movement direction)
+		{
+			libobs.obs_source_filter_set_order(instance, filter.GetPointer(), direction);
+		}
+
 		public unsafe void Update()
 		{
 			libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));

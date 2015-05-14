@@ -47,35 +47,63 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.propertiesPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.bottomPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.okButton = new System.Windows.Forms.Button();
-			this.defaultButton = new System.Windows.Forms.Button();
 			this.undoButton = new System.Windows.Forms.Button();
-			this.propertiesPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.defaultButton = new System.Windows.Forms.Button();
+			this.FilterListBox = new System.Windows.Forms.ListBox();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AddFilterButton = new System.Windows.Forms.Button();
+			this.RemoveFilterButton = new System.Windows.Forms.Button();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.propertyPanel = new System.Windows.Forms.Panel();
-			this.bottomPanel.SuspendLayout();
+			this.previewPanel = new System.Windows.Forms.Panel();
 			this.propertiesPanel.SuspendLayout();
+			this.bottomPanel.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// propertiesPanel
+			// 
+			this.propertiesPanel.AutoSize = true;
+			this.propertiesPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.propertiesPanel.ColumnCount = 2;
+			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.propertiesPanel.Controls.Add(this.bottomPanel, 1, 1);
+			this.propertiesPanel.Controls.Add(this.FilterListBox, 0, 0);
+			this.propertiesPanel.Controls.Add(this.flowLayoutPanel1, 0, 1);
+			this.propertiesPanel.Controls.Add(this.tableLayoutPanel1, 1, 0);
+			this.propertiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.propertiesPanel.Location = new System.Drawing.Point(0, 0);
+			this.propertiesPanel.Name = "propertiesPanel";
+			this.propertiesPanel.RowCount = 2;
+			this.propertiesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.propertiesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+			this.propertiesPanel.Size = new System.Drawing.Size(797, 616);
+			this.propertiesPanel.TabIndex = 9;
 			// 
 			// bottomPanel
 			// 
 			this.bottomPanel.AutoSize = true;
 			this.bottomPanel.Controls.Add(this.cancelButton);
 			this.bottomPanel.Controls.Add(this.okButton);
-			this.bottomPanel.Controls.Add(this.defaultButton);
 			this.bottomPanel.Controls.Add(this.undoButton);
-			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.bottomPanel.Controls.Add(this.defaultButton);
+			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.bottomPanel.Location = new System.Drawing.Point(0, 463);
+			this.bottomPanel.Location = new System.Drawing.Point(203, 587);
 			this.bottomPanel.Name = "bottomPanel";
-			this.bottomPanel.Size = new System.Drawing.Size(665, 29);
-			this.bottomPanel.TabIndex = 7;
+			this.bottomPanel.Size = new System.Drawing.Size(591, 26);
+			this.bottomPanel.TabIndex = 10;
 			// 
 			// cancelButton
 			// 
 			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.cancelButton.Location = new System.Drawing.Point(587, 3);
+			this.cancelButton.Location = new System.Drawing.Point(513, 3);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 4;
@@ -85,57 +113,101 @@ namespace test
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.Location = new System.Drawing.Point(506, 3);
+			this.okButton.Location = new System.Drawing.Point(432, 3);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 3;
 			this.okButton.Text = "OK";
 			this.okButton.UseVisualStyleBackColor = true;
 			// 
+			// undoButton
+			// 
+			this.undoButton.Location = new System.Drawing.Point(351, 3);
+			this.undoButton.Name = "undoButton";
+			this.undoButton.Size = new System.Drawing.Size(75, 23);
+			this.undoButton.TabIndex = 7;
+			this.undoButton.Text = "Undo";
+			this.undoButton.UseVisualStyleBackColor = true;
+			// 
 			// defaultButton
 			// 
-			this.defaultButton.Location = new System.Drawing.Point(425, 3);
+			this.defaultButton.Location = new System.Drawing.Point(270, 3);
 			this.defaultButton.Name = "defaultButton";
 			this.defaultButton.Size = new System.Drawing.Size(75, 23);
 			this.defaultButton.TabIndex = 6;
 			this.defaultButton.Text = "Default";
 			this.defaultButton.UseVisualStyleBackColor = true;
 			// 
-			// undoButton
+			// FilterListBox
 			// 
-			this.undoButton.Location = new System.Drawing.Point(344, 3);
-			this.undoButton.Name = "undoButton";
-			this.undoButton.Size = new System.Drawing.Size(75, 23);
-			this.undoButton.TabIndex = 5;
-			this.undoButton.Text = "Undo";
-			this.undoButton.UseVisualStyleBackColor = true;
+			this.FilterListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.FilterListBox.FormattingEnabled = true;
+			this.FilterListBox.Location = new System.Drawing.Point(3, 3);
+			this.FilterListBox.Name = "FilterListBox";
+			this.FilterListBox.Size = new System.Drawing.Size(194, 578);
+			this.FilterListBox.TabIndex = 1;
+			this.FilterListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FilterListBox_MouseUp);
 			// 
-			// propertiesPanel
+			// flowLayoutPanel1
 			// 
-			this.propertiesPanel.AutoSize = true;
-			this.propertiesPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.propertiesPanel.ColumnCount = 3;
-			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 600F));
-			this.propertiesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.propertiesPanel.Controls.Add(this.propertyPanel, 1, 0);
-			this.propertiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertiesPanel.Location = new System.Drawing.Point(0, 0);
-			this.propertiesPanel.Name = "propertiesPanel";
-			this.propertiesPanel.RowCount = 1;
-			this.propertiesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.propertiesPanel.Size = new System.Drawing.Size(665, 463);
-			this.propertiesPanel.TabIndex = 9;
+			this.flowLayoutPanel1.Controls.Add(this.AddFilterButton);
+			this.flowLayoutPanel1.Controls.Add(this.RemoveFilterButton);
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 587);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(194, 26);
+			this.flowLayoutPanel1.TabIndex = 11;
+			// 
+			// AddFilterButton
+			// 
+			this.AddFilterButton.Location = new System.Drawing.Point(3, 3);
+			this.AddFilterButton.Name = "AddFilterButton";
+			this.AddFilterButton.Size = new System.Drawing.Size(91, 23);
+			this.AddFilterButton.TabIndex = 0;
+			this.AddFilterButton.Text = "Add Filter";
+			this.AddFilterButton.UseVisualStyleBackColor = true;
+			// 
+			// RemoveFilterButton
+			// 
+			this.RemoveFilterButton.Location = new System.Drawing.Point(100, 3);
+			this.RemoveFilterButton.Name = "RemoveFilterButton";
+			this.RemoveFilterButton.Size = new System.Drawing.Size(91, 23);
+			this.RemoveFilterButton.TabIndex = 1;
+			this.RemoveFilterButton.Text = "Remove Filter";
+			this.RemoveFilterButton.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel1.Controls.Add(this.propertyPanel, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.previewPanel, 0, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(203, 3);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(591, 578);
+			this.tableLayoutPanel1.TabIndex = 12;
+			this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
 			// 
 			// propertyPanel
 			// 
-			this.propertyPanel.AutoSize = true;
 			this.propertyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertyPanel.Location = new System.Drawing.Point(35, 3);
+			this.propertyPanel.Location = new System.Drawing.Point(3, 292);
 			this.propertyPanel.Name = "propertyPanel";
-			this.propertyPanel.Size = new System.Drawing.Size(594, 457);
-			this.propertyPanel.TabIndex = 0;
+			this.propertyPanel.Size = new System.Drawing.Size(585, 283);
+			this.propertyPanel.TabIndex = 1;
+			// 
+			// previewPanel
+			// 
+			this.previewPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.previewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.previewPanel.Location = new System.Drawing.Point(3, 3);
+			this.previewPanel.Name = "previewPanel";
+			this.previewPanel.Size = new System.Drawing.Size(585, 283);
+			this.previewPanel.TabIndex = 2;
 			// 
 			// TestFilter
 			// 
@@ -143,18 +215,19 @@ namespace test
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.ClientSize = new System.Drawing.Size(665, 492);
+			this.ClientSize = new System.Drawing.Size(797, 616);
 			this.ControlBox = false;
 			this.Controls.Add(this.propertiesPanel);
-			this.Controls.Add(this.bottomPanel);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "TestFilter";
 			this.ShowIcon = false;
 			this.Text = "TestFilter";
-			this.bottomPanel.ResumeLayout(false);
 			this.propertiesPanel.ResumeLayout(false);
 			this.propertiesPanel.PerformLayout();
+			this.bottomPanel.ResumeLayout(false);
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -162,12 +235,18 @@ namespace test
 
 		#endregion
 
-		private System.Windows.Forms.FlowLayoutPanel bottomPanel;
-		private System.Windows.Forms.Button cancelButton;
-		private System.Windows.Forms.Button okButton;
-		private System.Windows.Forms.Button undoButton;
-		private System.Windows.Forms.Button defaultButton;
 		private TableLayoutPanel propertiesPanel;
+		private ListBox FilterListBox;
+		private FlowLayoutPanel bottomPanel;
+		private Button cancelButton;
+		private Button okButton;
+		private Button defaultButton;
+		private FlowLayoutPanel flowLayoutPanel1;
+		private Button AddFilterButton;
+		private Button RemoveFilterButton;
+		private Button undoButton;
+		private TableLayoutPanel tableLayoutPanel1;
 		private Panel propertyPanel;
+		private Panel previewPanel;
 	}
 }
