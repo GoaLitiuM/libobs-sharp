@@ -15,14 +15,15 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using OBS;
-using OBS.Graphics;
 using System;
 using System.Windows.Forms;
 
+using OBS;
+using OBS.Graphics;
+
 namespace test
 {
-	public partial class TestFilter: Form
+	public partial class TestFilter
 	{
 		private ObsDisplay _display;
 		private libobs.draw_callback _RenderPreview;
@@ -37,21 +38,20 @@ namespace test
 				cx = width,
 				cy = height,
 				format = libobs.gs_color_format.GS_RGBA,
-				window = new libobs.gs_window()
-				{
-					hwnd = previewPanel.Handle
-				},
+				window = new libobs.gs_window {
+					hwnd = handle
+				}
 			};
 
 			_display = new ObsDisplay(initData);
 
 			if (_display != null)
-				Obs.AddDisplayDrawCallback(_display, _RenderPreview, this.Handle);
+				Obs.AddDisplayDrawCallback(_display, _RenderPreview, Handle);
 		}
 
 		private void ClosePreview()
 		{
-			Obs.RemoveDisplayDrawCallback(_display, _RenderPreview, this.Handle);
+			Obs.RemoveDisplayDrawCallback(_display, _RenderPreview, Handle);
 			_display.Dispose();
 		}
 
@@ -62,7 +62,7 @@ namespace test
 
 		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)
 		{
-			TestProperties window = Control.FromHandle(data) as TestProperties;
+			TestFilter window = FromHandle(data) as TestFilter;
 
 			if (window == null) return;
 

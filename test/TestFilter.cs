@@ -28,12 +28,10 @@ namespace test
 {
 	public partial class TestFilter
 	{
-		public Source Source { get { return _source; } }
-
 		private Source SelectedFilter { get; set; }
 
 		private PropertiesView _view;
-		private readonly Source _source;
+		private Source Source { get; set; }
 		private readonly ObsData _sourceSettings;
 		private readonly ObsData _oldSettings;
 
@@ -50,31 +48,36 @@ namespace test
 		/// <param name="source">Source of type ObsSource</param>
 		public TestFilter(Source source) : this()
 		{
-			_source = source;
+			Source = source;
 			_sourceSettings = source.GetSettings();
 			_oldSettings = new ObsData(_sourceSettings);
 
 			FilterListBox.DisplayMember = "Name";
 			FilterListBox.DataSource = source.Filters;
 
-			if (_source.Filters.Any())
+			if (Source.Filters.Any())
 			{
-				foreach (var filter in _source.Filters)
+				foreach (var filter in Source.Filters)
 				{
 					_oldFilterSettings.Add(filter.GetSettings());
 				}
 
-				Select(_source.Filters.First());
+				Select(Source.Filters.First());
 			}
 
 			Load += (sender, args) =>
 			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
+				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, previewPanel.Handle);
 			};
 
 			previewPanel.SizeChanged += (sender, args) =>
 			{
 				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
+			};
+
+			FormClosed += (sender, args) =>
+			{
+				ClosePreview();
 			};
 
 			defaultButton.Click += (sender, args) =>
@@ -102,7 +105,7 @@ namespace test
 			undoButton.Click += (sender, args) =>
 			{
 				SelectedFilter.GetSettings().Clear();
-				SelectedFilter.Update(_oldFilterSettings[_source.Filters.IndexOf(SelectedFilter)]);
+				SelectedFilter.Update(_oldFilterSettings[Source.Filters.IndexOf(SelectedFilter)]);
 				_view.ReloadProperties();
 			};
 
@@ -115,8 +118,8 @@ namespace test
 			{
 				if (SelectedFilter != null)
 				{
-					_source.RemoveFilter(SelectedFilter);
-					_oldFilterSettings.RemoveAt(_source.Filters.IndexOf(SelectedFilter));
+					Source.RemoveFilter(SelectedFilter);
+					_oldFilterSettings.RemoveAt(Source.Filters.IndexOf(SelectedFilter));
 				}
 			};
 		}
@@ -137,7 +140,7 @@ namespace test
 				return;
 
 			SelectedFilter = filter;
-			FilterListBox.SelectedIndex = _source.Filters.IndexOf(filter);
+			FilterListBox.SelectedIndex = Source.Filters.IndexOf(filter);
 			PopulateControls(SelectedFilter);
 		}
 
@@ -145,7 +148,7 @@ namespace test
 		{
 			if (filterindex != -1)
 			{
-				var filter = _source.Filters[filterindex];
+				var filter = Source.Filters[filterindex];
 				if (SelectedFilter == filter)
 					return;
 
@@ -164,14 +167,14 @@ namespace test
 			var filtermenu = new ContextMenuStrip();
 			foreach (string filterType in Obs.GetSourceFilterTypes())
 			{
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + _source.Filters.Count + 1;
+				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + Source.Filters.Count + 1;
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")");
 
 				menuitem.Click += (o, args) =>
 				{
 					var source = new Source(ObsSourceType.Filter, filterType, displayname);
-					_source.AddFilter(source);
+					Source.AddFilter(source);
 					_oldFilterSettings.Insert(0,source.GetSettings());
 					Select(source);
 				};
@@ -196,31 +199,31 @@ namespace test
 			var remove = new ToolStripMenuItem("Remove");
 			remove.Click += (o, args) =>
 			{
-				_source.RemoveFilter(SelectedFilter);
+				Source.RemoveFilter(SelectedFilter);
 			};
 
 			var top = new ToolStripMenuItem("Move to &Top");
 			top.Click += (o, args) =>
 			{
-				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_TOP));
+				Select(Source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_TOP));
 			};
 
 			var up = new ToolStripMenuItem("Move &Up");
 			up.Click += (o, args) =>
 			{
-				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_UP));
+				Select(Source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_UP));
 			};
 
 			var down = new ToolStripMenuItem("Move &Down");
 			down.Click += (o, args) =>
 			{
-				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_DOWN));
+				Select(Source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_DOWN));
 			};
 
 			var bottom = new ToolStripMenuItem("Move to &Bottom");
 			bottom.Click += (o, args) =>
 			{
-				Select(_source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_BOTTOM));
+				Select(Source.MoveItem(SelectedFilter, obs_order_movement.OBS_ORDER_MOVE_BOTTOM));
 			};
 
 			if (SelectedFilter == null)
@@ -237,7 +240,7 @@ namespace test
 				top.Enabled = false;
 				up.Enabled = false;
 			}
-			if (index == _source.Filters.Count - 1)
+			if (index == Source.Filters.Count - 1)
 			{
 				down.Enabled = false;
 				bottom.Enabled = false;

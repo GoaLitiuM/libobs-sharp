@@ -53,7 +53,7 @@ namespace test
 
 			Load += (sender, args) =>
 			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, this.Handle);
+				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, previewPanel.Handle);
 			};
 
 			previewPanel.SizeChanged += (sender, args) =>
