@@ -117,9 +117,9 @@ namespace test
 				var item = _presentation.CreateItem(source);
 				_presentation.AddItem(item);
 
-				_presentation.SceneIndex = SceneListBox.SelectedIndex;
-				_presentation.ItemIndex = ItemListBox.SelectedIndex;
-				_presentation.SourceIndex = SourceListBox.SelectedIndex;
+				_presentation.SetScene(SceneListBox.SelectedIndex);
+				_presentation.SetItem(ItemListBox.SelectedIndex);
+				_presentation.SetSource(SourceListBox.SelectedIndex);
 
 				HideItemCheckBox.DataBindings.Add(
 					new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
@@ -169,7 +169,7 @@ namespace test
 		private void AddSceneButton_Click(object sender, EventArgs e)
 		{
 			_presentation.AddScene();
-			SceneListBox.SelectedIndex = _presentation.SceneIndex;
+			SceneListBox.SelectedIndex = 0;
 		}
 
 		private void DelSceneButton_Click(object sender, EventArgs e)
@@ -179,7 +179,7 @@ namespace test
 
 		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.SceneIndex = SceneListBox.SelectedIndex;
+			_presentation.SetScene(SceneListBox.SelectedIndex);
 
 			if (_presentation.SelectedScene == null)
 				return;
@@ -196,17 +196,17 @@ namespace test
 			var contextmenu = _presentation.AddSourceContextMenu();
 			contextmenu.ItemClicked += (o, args) =>
 			{
-				var tag = (Tuple<string,string>)args.ClickedItem.Tag;
-				var source = _presentation.CreateSource(tag.Item1,tag.Item2);
+				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
+				var source = _presentation.CreateSource(tag.Item1, tag.Item2);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					_presentation.AddSource(source);
-					
+
 					var item = _presentation.CreateItem(source);
 					_presentation.AddItem(item);
-					
-					ItemListBox.SelectedIndex = _presentation.ItemIndex;
-					SourceListBox.SelectedIndex = _presentation.SourceIndex;
+
+					ItemListBox.SelectedIndex = 0;
+					SourceListBox.SelectedIndex = 0;
 				}
 				else
 				{
@@ -225,7 +225,7 @@ namespace test
 
 		private void ItemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.ItemIndex = ItemListBox.SelectedIndex;
+			_presentation.SetItem(ItemListBox.SelectedIndex);
 
 			HideItemCheckBox.Enabled = _presentation.SelectedItem != null;
 
@@ -250,7 +250,6 @@ namespace test
 				return;
 
 			var contextmenu = _presentation.ItemContextMenu();
-			contextmenu.Disposed += (o, args) => ItemListBox.SelectedIndex = _presentation.ItemIndex;
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
@@ -268,7 +267,7 @@ namespace test
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					_presentation.AddSource(source);
-					SourceListBox.SelectedIndex = _presentation.SourceIndex;
+					SourceListBox.SelectedIndex = 0;
 				}
 				else
 				{
@@ -289,15 +288,15 @@ namespace test
 			if (_presentation.SelectedSource == null) return;
 
 			var item = _presentation.CreateItem(_presentation.SelectedSource);
-			
+
 			_presentation.AddItem(item);
-			
-			ItemListBox.SelectedIndex = _presentation.ItemIndex;
+
+			ItemListBox.SelectedIndex = 0;
 		}
 
 		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.SourceIndex = SourceListBox.SelectedIndex;
+			_presentation.SetSource(SourceListBox.SelectedIndex);
 
 			if (_presentation.SelectedSource == null)
 			{

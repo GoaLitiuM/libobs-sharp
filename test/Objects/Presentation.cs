@@ -59,54 +59,39 @@ namespace test.Objects
 		/// </summary>
 		public Source SelectedSource { get; private set; }
 
-		/// <summary>
-		/// Gets the index of the currently selected Scene. Sets the selected Scene by index.
-		/// </summary>
-		public int SceneIndex
+		public void SetScene(int index)
 		{
-			get
-			{
-				return SelectedScene != null ? Scenes.IndexOf(SelectedScene) : -1;
-			}
-			set
-			{
-				SelectedScene = value != -1 ? Scenes[value] : null;
-				if (SelectedScene != null)
-				{
-					Obs.SetOutputScene(0, SelectedScene);
-				}
-			}
+			SelectedScene = Scenes[index];
+			Obs.SetOutputScene(0, SelectedScene);
 		}
 
-		/// <summary>
-		/// Gets the index of the currently selected Item. Sets the selected Item by index.
-		/// </summary>
-		public int ItemIndex
+		public void SetScene(Scene scene)
 		{
-			get
-			{
-				return SelectedItem != null ? SelectedScene.Items.IndexOf(SelectedItem) : -1;
-			}
-			set
-			{
-				SelectedItem = value != -1 ? SelectedScene.Items[value] : null;
-			}
+			if (scene == SelectedScene)
+				return;
+
+			SelectedScene = scene;
+			Obs.SetOutputScene(0, SelectedScene);
 		}
 
-		/// <summary>
-		/// Gets the index of the currently selected Source. Sets the selected Source by index.
-		/// </summary>
-		public int SourceIndex
+		public void SetItem(int index)
 		{
-			get
-			{
-				return SelectedSource != null ? Sources.IndexOf(SelectedSource) : -1;
-			}
-			set
-			{
+			SelectedItem = index == -1 ? null : SelectedScene.Items[index];
+		}
 
-				SelectedSource = value != -1 ? Sources[value] : null;
-			}
+		public void SetItem(Item item)
+		{
+			SelectedItem = item;
+		}
+
+		public void SetSource(int index)
+		{
+			SelectedSource = index == -1 ? null : Sources[index];
+		}
+
+		public void SetSource(Source source)
+		{
+			SelectedSource = source;
 		}
 
 		/// <summary>
@@ -166,7 +151,7 @@ namespace test.Objects
 		{
 			SelectedScene.Items.Insert(0, item);
 
-			ItemIndex = 0;
+			SetItem(0);
 		}
 
 		/// <summary>
@@ -185,7 +170,7 @@ namespace test.Objects
 
 			if (SelectedScene.Items.Any())
 			{
-				SelectedItem = oldindex < SelectedScene.Items.Count ? SelectedScene.Items[oldindex] : SelectedScene.Items.Last();
+				SetItem(oldindex < SelectedScene.Items.Count ? SelectedScene.Items[oldindex] : SelectedScene.Items.Last());
 			}
 		}
 
@@ -198,7 +183,7 @@ namespace test.Objects
 		{
 			Sources.Insert(0, source);
 
-			SourceIndex = 0;
+			SetSource(0);
 		}
 
 		/// <summary>
@@ -235,7 +220,7 @@ namespace test.Objects
 
 			if (Sources.Any())
 			{
-				SelectedSource = oldindex < Sources.Count ? Sources[oldindex] : Sources.Last();
+				SetSource(oldindex < Sources.Count ? Sources[oldindex] : Sources.Last());
 			}
 		}
 
@@ -246,7 +231,7 @@ namespace test.Objects
 		{
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
 
-			
+
 			var enabled = new ToolStripBindableMenuItem
 			{
 				Text = "&Enabled",
@@ -316,25 +301,25 @@ namespace test.Objects
 			var top = new ToolStripMenuItem("Move to &Top");
 			top.Click += (o, args) =>
 			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP);
+				SetItem(SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_TOP));
 			};
 
 			var up = new ToolStripMenuItem("Move &Up");
 			up.Click += (o, args) =>
 			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP);
+				SetItem(SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_UP));
 			};
 
 			var down = new ToolStripMenuItem("Move &Down");
 			down.Click += (o, args) =>
 			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN);
+				SetItem(SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_DOWN));
 			};
 
 			var bottom = new ToolStripMenuItem("Move to &Bottom");
 			bottom.Click += (o, args) =>
 			{
-				ItemIndex = SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM);
+				SetItem(SelectedScene.MoveItem(SelectedItem, obs_order_movement.OBS_ORDER_MOVE_BOTTOM));
 			};
 
 			var transform = new ToolStripMenuItem("&Edit Transform Options...");
@@ -356,11 +341,11 @@ namespace test.Objects
 							  CheckOnClick = true
 						  };
 			visible.DataBindings.Add(new Binding("Checked", SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-	
+
 			var ordermenu = new ContextMenuStrip
-			                {
-				                Renderer = new AccessKeyMenuStripRenderer()
-			                };
+							{
+								Renderer = new AccessKeyMenuStripRenderer()
+							};
 
 			ordermenu.Items.AddRange(new ToolStripItem[]
 			                         {
@@ -375,7 +360,7 @@ namespace test.Objects
 										 prop
 			                         });
 
-			int index = ItemIndex;
+			int index = SelectedScene.Items.IndexOf(SelectedItem);
 			top.Enabled = up.Enabled = index != 0;
 			down.Enabled = bottom.Enabled = index != SelectedScene.Items.Count - 1;
 			return ordermenu;
