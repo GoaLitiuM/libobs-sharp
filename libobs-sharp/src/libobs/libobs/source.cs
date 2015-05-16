@@ -103,8 +103,13 @@ namespace OBS
 		public static extern void obs_source_set_name(obs_source_t source,
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
-		//EXPORT enum obs_source_type obs_source_get_type(const obs_source_t *source);
-		//EXPORT const char *obs_source_get_id(const obs_source_t *source);
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_source_type obs_source_get_type(obs_source_t source);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler), MarshalCookie = "ret")]
+		public static extern string obs_source_get_id(obs_source_t source);
+
 		//EXPORT signal_handler_t *obs_source_get_signal_handler(const obs_source_t *source);
 		//EXPORT proc_handler_t *obs_source_get_proc_handler(const obs_source_t *source);
 		//EXPORT void obs_source_set_volume(obs_source_t *source, float volume);

@@ -23,18 +23,12 @@ namespace OBS
 	{
 		internal IntPtr instance;    //pointer to unmanaged object
 
-		private string _id;
-		private ObsSourceType _type;
-
 		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{
 			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
-
-			_id = id;
-			_type = type;
 		}
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name, ObsData settings)
@@ -43,9 +37,6 @@ namespace OBS
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
-
-			_id = id;
-			_type = type;
 		}
 
 		public unsafe ObsSource(IntPtr instance)
@@ -199,11 +190,21 @@ namespace OBS
 
 		public ObsData GetDefaults()
 		{
-			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type)_type, _id);
+			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type) GetSourceType(), GetId());
 			if (ptr == IntPtr.Zero)
 				return null;
 
 			return new ObsData(ptr);
+		}
+
+		public string GetId()
+		{
+			return libobs.obs_source_get_id(instance);
+		}
+
+		public ObsSourceType GetSourceType()
+		{
+			return (ObsSourceType)libobs.obs_source_get_type(instance);
 		}
 	}
 
