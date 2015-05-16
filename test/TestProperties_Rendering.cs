@@ -67,8 +67,8 @@ namespace test
 
 			int newW = (int)cx;
 			int newH = (int)cy;
-			int sourceWidth = (int)window.Source.Width;
-			int sourceHeight = (int)window.Source.Height;
+			int sourceWidth = (int)window.source.Width;
+			int sourceHeight = (int)window.source.Height;
 			float previewAspect = (float)cx / cy;
 			float sourceAspect = (float)sourceWidth / sourceHeight;
 
@@ -89,7 +89,7 @@ namespace test
 			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//render source content
-			window.Source.Render();
+			window.source.Render();
 
 			GS.ProjectionPop();
 			GS.ViewportPop();

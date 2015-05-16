@@ -23,8 +23,6 @@ namespace test
 {
 	public partial class TestProperties : Form
 	{
-		public ObsSource Source { get { return source; } }
-
 		private PropertiesView view;
 		private ObsSource source;
 		private ObsData sourceSettings;
