@@ -96,18 +96,18 @@ namespace OBS
 		public static extern obs_data_t obs_source_get_settings(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler), MarshalCookie = "ret")]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_source_get_name(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern void obs_source_set_name(obs_source_t source,
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
-		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_source_type obs_source_get_type(obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
-		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler), MarshalCookie = "ret")]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_source_get_id(obs_source_t source);
 
 		//EXPORT signal_handler_t *obs_source_get_signal_handler(const obs_source_t *source);

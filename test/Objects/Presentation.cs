@@ -28,11 +28,25 @@ namespace test.Objects
 {
 	public sealed class Presentation : IDisposable
 	{
+		/// <summary> Scenes contained in this presentation </summary>
+		public readonly BindingList<Scene> Scenes = new BindingList<Scene>();
+
+		/// <summary> Sources contained in this presentation </summary>
+		public readonly BindingList<Source> Sources = new BindingList<Source>();
+
+		/// <summary> The currently selected Scene </summary>
+		public Scene SelectedScene { get; private set; }
+
+		/// <summary> The currently selected Item </summary>
+		public Item SelectedItem { get; private set; }
+
+		/// <summary> The currently selected Source </summary>
+		public Source SelectedSource { get; private set; }
+
 		public void Dispose()
 		{
 			foreach (var scene in Scenes)
 				scene.ClearItems();
-
 
 			foreach (var source in Sources)
 			{
@@ -43,21 +57,6 @@ namespace test.Objects
 			foreach (var scene in Scenes)
 				scene.Dispose();
 		}
-
-		/// <summary>
-		/// The currently selected Scene
-		/// </summary>
-		public Scene SelectedScene { get; private set; }
-
-		/// <summary>
-		/// The currently selected Item
-		/// </summary>
-		public Item SelectedItem { get; private set; }
-
-		/// <summary>
-		/// The currently selected Source
-		/// </summary>
-		public Source SelectedSource { get; private set; }
 
 		public void SetScene(int index)
 		{
@@ -95,16 +94,6 @@ namespace test.Objects
 		}
 
 		/// <summary>
-		/// Scenes contained in this presentation
-		/// </summary>
-		public readonly BindingList<Scene> Scenes = new BindingList<Scene>();
-
-		/// <summary>
-		///  Sources contained in this presentation
-		/// </summary>
-		public readonly BindingList<Source> Sources = new BindingList<Source>();
-
-		/// <summary>
 		///  Creates and adds a new Scene to the presentation
 		/// </summary>
 		/// <returns>The newly created Scene</returns>
@@ -123,23 +112,21 @@ namespace test.Objects
 		/// </summary>
 		public void DelScene()
 		{
-			if (SelectedScene == null || Scenes.Count == 1) return;
+			if (SelectedScene == null || Scenes.Count == 1)
+				return;
 
 			SelectedScene.ClearItems();
-
 			SelectedScene.Dispose();
 
 			int oldindex = Scenes.IndexOf(SelectedScene);
-
 			Scenes.RemoveAt(oldindex);
 
 			SelectedScene = oldindex < Scenes.Count ? Scenes[oldindex] : Scenes.Last();
 		}
 
-
 		public Item CreateItem(Source source)
 		{
-			var item = SelectedScene.Add(source, source.Name);
+			Item item = SelectedScene.Add(source, source.Name);
 
 			item.Position = new Vector2(0f, 0f);
 			item.Scale = new Vector2(1.0f, 1.0f);
@@ -147,6 +134,7 @@ namespace test.Objects
 
 			return item;
 		}
+
 		public void AddItem(Item item)
 		{
 			SelectedScene.Items.Insert(0, item);
@@ -159,7 +147,8 @@ namespace test.Objects
 		/// </summary>
 		public void DelItem()
 		{
-			if (SelectedItem == null) return;
+			if (SelectedItem == null)
+				return;
 
 			SelectedItem.Remove();
 			SelectedItem.Dispose();
@@ -191,11 +180,10 @@ namespace test.Objects
 		/// </summary>
 		public void DelSource()
 		{
-			if (SelectedSource == null) return;
+			if (SelectedSource == null)
+				return;
 
-			var delsource = SelectedSource;
-
-			var pointer = delsource.GetPointer();
+			Source delsource = SelectedSource;
 
 			foreach (var scene in Scenes)
 			{
@@ -203,7 +191,7 @@ namespace test.Objects
 				{
 					using (var source = x.GetSource())
 					{
-						if (source.GetPointer() != pointer) return false;
+						if (source.GetPointer() != delsource.GetPointer()) return false;
 					}
 					x.Remove();
 					x.Dispose();
@@ -230,7 +218,6 @@ namespace test.Objects
 		public ContextMenuStrip SourceContextMenu()
 		{
 			var filtermenu = new ContextMenuStrip { Renderer = new AccessKeyMenuStripRenderer() };
-
 
 			var enabled = new ToolStripBindableMenuItem
 			{
@@ -335,6 +322,7 @@ namespace test.Objects
 				var propfrm = new TestProperties(SelectedItem.GetSource());
 				propfrm.ShowDialog();
 			};
+
 			var visible = new ToolStripBindableMenuItem
 						  {
 							  Text = "&Visible",
