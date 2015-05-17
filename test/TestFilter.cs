@@ -16,6 +16,7 @@
 ***************************************************************************/
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -33,7 +34,7 @@ namespace test
 		private PropertiesView _view;
 		private Source source { get; set; }
 		private readonly ObsData _sourceSettings;
-
+		private BindingList<Source> _oldfilters = new BindingList<Source>();
 		private TestFilter()
 		{
 			InitializeComponent();
@@ -43,7 +44,8 @@ namespace test
 		/// Create a property dialog for an existing source
 		/// </summary>
 		/// <param name="source">Source of type ObsSource</param>
-		public TestFilter(Source source) : this()
+		public TestFilter(Source source)
+			: this()
 		{
 			this.source = source;
 			_sourceSettings = source.GetSettings();
@@ -51,6 +53,8 @@ namespace test
 			FilterListBox.DisplayMember = "Name";
 			FilterListBox.DataSource = source.Filters;
 
+			_oldfilters = source.Filters;
+			
 			if (source.Filters.Any())
 			{
 				Select(source.Filters.First());
@@ -85,7 +89,13 @@ namespace test
 
 			cancelButton.Click += (o, args) =>
 			{
-				_view.ResetChanges();
+				source.ClearFilters();
+
+				foreach (Source oldfilter in _oldfilters)
+				{
+					source.AddFilter(oldfilter);
+				}
+
 				DialogResult = DialogResult.Cancel;
 				Close();
 			};

@@ -56,6 +56,7 @@ namespace test
 		{
 			foreach (Source filter in Filters)
 			{
+				base.RemoveFilter(filter);
 				filter.Remove();
 				filter.Dispose();
 			}
