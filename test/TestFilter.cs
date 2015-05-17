@@ -80,9 +80,12 @@ namespace test
 
 			defaultButton.Click += (sender, args) =>
 			{
-				SelectedFilter.GetSettings().Clear();
-				SelectedFilter.Update(SelectedFilter.GetDefaults());
-				_view.ReloadProperties();
+				if (SelectedFilter != null)
+				{
+					SelectedFilter.GetSettings().Clear();
+					SelectedFilter.Update(SelectedFilter.GetDefaults());
+					_view.ReloadProperties();
+				}
 			};
 
 			okButton.Click += (o, args) =>
@@ -102,9 +105,12 @@ namespace test
 
 			undoButton.Click += (sender, args) =>
 			{
-				SelectedFilter.GetSettings().Clear();
-				SelectedFilter.Update(_oldFilterSettings[source.Filters.IndexOf(SelectedFilter)]);
-				_view.ReloadProperties();
+				if (SelectedFilter != null)
+				{
+					SelectedFilter.GetSettings().Clear();
+					SelectedFilter.Update(_oldFilterSettings[source.Filters.IndexOf(SelectedFilter)]);
+					_view.ReloadProperties();
+				}
 			};
 
 			AddFilterButton.Click += (sender, args) =>
