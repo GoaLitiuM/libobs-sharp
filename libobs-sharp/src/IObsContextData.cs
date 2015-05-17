@@ -19,11 +19,13 @@ using System;
 
 namespace OBS
 {
-	//identifies classes that has obs_context_data structure
+	/// <summary> Identifies classes that has obs_context_data structure </summary>
 	public interface IObsContextData
 	{
-		//pointer to obs_context_data is the struct itself
-		//make sure the class implements this
+		/// <summary> Pointer to obs_context_data is the struct itself,
+		/// make sure the class implements this. </summary>
 		IntPtr GetPointer();
+
+		ObsData GetDefaults(string id);
 	}
 }

@@ -74,20 +74,41 @@ namespace OBS
 			set { libobs.obs_source_set_name(instance, value); }
 		}
 
+		/// <summary> Width of the video in source. </summary>
 		public unsafe uint Width
 		{
-			get
-			{
-				return libobs.obs_source_get_width(instance);
-			}
+			get	{ return libobs.obs_source_get_width(instance); }
 		}
 
+		/// <summary> Height of the video in source. </summary>
 		public unsafe uint Height
 		{
-			get
-			{
-				return libobs.obs_source_get_height(instance);
-			}
+			get	{ return libobs.obs_source_get_height(instance); }
+		}
+
+		/// <summary> Toggles if source should process and output anything. </summary>
+		public bool Enabled
+		{
+			get { return libobs.obs_source_enabled(instance); }
+			set { libobs.obs_source_set_enabled(instance, value); }
+		}
+
+		/// <summary> Toggles if source audio should be muted. </summary>
+		public bool Muted
+		{
+			get { return libobs.obs_source_muted(instance); }
+			set { libobs.obs_source_set_muted(instance, value); }
+		}
+
+		/// <summary> Source identifier, registered by plugins. </summary>
+		public string Id
+		{
+			get { return libobs.obs_source_get_id(instance); }
+		}
+
+		public ObsSourceType Type
+		{
+			get { return (ObsSourceType)libobs.obs_source_get_type(instance); }
 		}
 
 		/// <summary> Returns the underlying scene of this source if it's a scene. </summary>
@@ -166,18 +187,6 @@ namespace OBS
 			libobs.obs_source_update(instance, libobs.obs_source_get_settings(instance));
 		}
 
-		public bool Enabled
-		{
-			get { return libobs.obs_source_enabled(instance); }
-			set { libobs.obs_source_set_enabled(instance, value); }
-		}
-
-		public bool Muted
-		{
-			get { return libobs.obs_source_muted(instance); }
-			set { libobs.obs_source_set_muted(instance, value); }
-		}
-
 		public unsafe void Update(ObsData settings)
 		{
 			libobs.obs_source_update(instance, settings.GetPointer());
@@ -190,21 +199,27 @@ namespace OBS
 
 		public ObsData GetDefaults()
 		{
-			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type) GetSourceType(), GetId());
+			return GetDefaults(Type, Id);
+		}
+
+		public ObsData GetDefaults(string id)
+		{
+			return GetDefaults(Type, id);
+		}
+
+		/// <summary> Returns default settings of source. </summary>
+		/// <param name="type"> Type of source, context where the source is used. </param>
+		/// <param name="id">
+		/// Source identifier, registered by source plugins.
+		/// Another kind of type for sources.
+		/// </param>
+		public static ObsData GetDefaults(ObsSourceType type, string id)
+		{
+			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type) type, id);
 			if (ptr == IntPtr.Zero)
 				return null;
 
 			return new ObsData(ptr);
-		}
-
-		public string GetId()
-		{
-			return libobs.obs_source_get_id(instance);
-		}
-
-		public ObsSourceType GetSourceType()
-		{
-			return (ObsSourceType)libobs.obs_source_get_type(instance);
 		}
 	}
 
