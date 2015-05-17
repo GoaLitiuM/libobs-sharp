@@ -26,7 +26,6 @@ namespace test
 		private PropertiesView view;
 		private ObsSource source;
 		private ObsData sourceSettings;
-		private ObsData oldSettings;
 
 		private TestProperties()
 		{
@@ -42,12 +41,9 @@ namespace test
 		{
 			this.source = source;
 			sourceSettings = source.GetSettings();
-			oldSettings = new ObsData(sourceSettings);
 
-			view = new PropertiesView(sourceSettings, source, source.GetProperties, source.Update);
-
+			view = new PropertiesView(sourceSettings, source, source.GetProperties, source.GetDefaults, source.Update);
 			propertyPanel.Controls.Add(view);
-
 
 			Load += (sender, args) =>
 			{
@@ -61,16 +57,12 @@ namespace test
 
 			undoButton.Click += (sender, args) =>
 			{
-				sourceSettings.Clear();
-				source.Update(oldSettings);
-				view.ReloadProperties();
+				view.ResetChanges();
 			};
 
 			defaultButton.Click += (sender, args) =>
 			{
-				sourceSettings.Clear();
-				source.Update(source.GetDefaults());
-				view.ReloadProperties();
+				view.ResetToDefaults();
 			};
 
 			okButton.Click += (o, args) =>
@@ -82,8 +74,7 @@ namespace test
 
 			cancelButton.Click += (o, args) =>
 			{
-				sourceSettings.Clear();
-				source.Update(oldSettings);
+				view.ResetChanges();
 				DialogResult = DialogResult.Cancel;
 				Close();
 			};

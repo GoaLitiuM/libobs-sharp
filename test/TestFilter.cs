@@ -33,9 +33,6 @@ namespace test
 		private PropertiesView _view;
 		private Source source { get; set; }
 		private readonly ObsData _sourceSettings;
-		private readonly ObsData _oldSettings;
-
-		private readonly List<ObsData> _oldFilterSettings = new List<ObsData>();
 
 		private TestFilter()
 		{
@@ -50,16 +47,12 @@ namespace test
 		{
 			this.source = source;
 			_sourceSettings = source.GetSettings();
-			_oldSettings = new ObsData(_sourceSettings);
 
 			FilterListBox.DisplayMember = "Name";
 			FilterListBox.DataSource = source.Filters;
 
 			if (source.Filters.Any())
 			{
-				foreach (var filter in source.Filters)
-					_oldFilterSettings.Add(filter.GetSettings());
-
 				Select(source.Filters.First());
 			}
 
@@ -80,12 +73,7 @@ namespace test
 
 			defaultButton.Click += (sender, args) =>
 			{
-				if (SelectedFilter != null)
-				{
-					SelectedFilter.GetSettings().Clear();
-					SelectedFilter.Update(SelectedFilter.GetDefaults());
-					_view.ReloadProperties();
-				}
+				_view.ResetToDefaults();
 			};
 
 			okButton.Click += (o, args) =>
@@ -97,20 +85,14 @@ namespace test
 
 			cancelButton.Click += (o, args) =>
 			{
-				_sourceSettings.Clear();
-				source.Update(_oldSettings);
+				_view.ResetChanges();
 				DialogResult = DialogResult.Cancel;
 				Close();
 			};
 
 			undoButton.Click += (sender, args) =>
 			{
-				if (SelectedFilter != null)
-				{
-					SelectedFilter.GetSettings().Clear();
-					SelectedFilter.Update(_oldFilterSettings[source.Filters.IndexOf(SelectedFilter)]);
-					_view.ReloadProperties();
-				}
+				_view.ResetChanges();
 			};
 
 			AddFilterButton.Click += (sender, args) =>
@@ -121,10 +103,7 @@ namespace test
 			RemoveFilterButton.Click += (sender, args) =>
 			{
 				if (SelectedFilter != null)
-				{
 					source.RemoveFilter(SelectedFilter);
-					_oldFilterSettings.RemoveAt(source.Filters.IndexOf(SelectedFilter));
-				}
 			};
 		}
 
@@ -133,7 +112,7 @@ namespace test
 			if (propertyPanel.Controls.Contains(_view))
 				propertyPanel.Controls.Remove(_view);
 
-			_view = new PropertiesView(filter.GetSettings(), filter, filter.GetProperties, filter.Update);
+			_view = new PropertiesView(filter.GetSettings(), filter, filter.GetProperties, filter.GetDefaults, filter.Update);
 			propertyPanel.Controls.Add(_view);
 		}
 
@@ -178,7 +157,6 @@ namespace test
 				{
 					var filter = new Source(ObsSourceType.Filter, filterType, displayname);
 					source.AddFilter(filter);
-					_oldFilterSettings.Insert(0, filter.GetSettings());
 					Select(filter);
 				};
 

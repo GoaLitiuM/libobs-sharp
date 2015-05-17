@@ -25,7 +25,5 @@ namespace OBS
 		/// <summary> Pointer to obs_context_data is the struct itself,
 		/// make sure the class implements this. </summary>
 		IntPtr GetPointer();
-
-		ObsData GetDefaults(string id);
 	}
 }

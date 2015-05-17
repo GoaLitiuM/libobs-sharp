@@ -26,31 +26,61 @@ namespace test.Controls
 	public partial class PropertiesView : UserControl
 	{
 		private Func<ObsProperties> reloadDelegate;
+		private Func<ObsData> defaultsDelegate;
 		private Action<ObsData> updateDelegate;
 
 		private ObsProperties properties;
 		private IObsContextData context;
 		private ObsData settings;
+		private ObsData oldSettings;
 		private bool deferUpdate;
 		private int refreshCount = -1;
 
 		/// <summary> 
-		/// Initializes a view for ObsProperties.</summary> 
-		/// <param name="settings"> The source of properties.</param>
-		/// <param name="context"> Owner of the settings, receives callbacks when a change occurs.</param>
-		/// <param name="reloadDelegate"> Callback used for refreshing properties.</param>
-		/// <param name="updateDelegate"> Optional: Callback used for notifying the object when update is needed.</param>
+		/// Initializes a view for ObsProperties. </summary> 
+		/// <param name="settings"> The source of properties. </param>
+		/// <param name="context"> Owner of the settings, receives callbacks when a change occurs. </param>
+		/// <param name="reloadDelegate"> Callback used for refreshing properties. </param>
+		/// <param name="defaultsDelegate"> Optional: Callback used for reseting the settings to default values. </param>
+		/// <param name="updateDelegate"> Optional: Callback used for notifying the object when update is needed. </param>
 		public PropertiesView(ObsData settings, IObsContextData context,
-			Func<ObsProperties> reloadDelegate, Action<ObsData> updateDelegate = null)
+			Func<ObsProperties> reloadDelegate, Func<ObsData> defaultsDelegate = null,
+			Action<ObsData> updateDelegate = null)
 		{
 			InitializeComponent();
 
 			this.settings = settings;
 			this.context = context;
 			this.reloadDelegate = reloadDelegate;
+			this.defaultsDelegate = defaultsDelegate;
 			this.updateDelegate = updateDelegate;
 
-			//force double buffering on to eliminate control flickering during refresh
+			InitView();
+		}
+
+		/// <summary> 
+		/// Initializes a view for ObsProperties. </summary> 
+		/// <param name="settings"> The source of properties. </param>
+		/// <param name="type"> Type of the object. </param>
+		/// <param name="reloadDelegate"> Callback used for refreshing properties with given type. </param>
+		/// <param name="defaultsDelegate"> Optional: Callback used for reseting the settings to default values with given type. </param>
+		public PropertiesView(ObsData settings, string type,
+			Func<string, ObsProperties> reloadDelegate, Func<string, ObsData> defaultsDelegate = null)
+		{
+			InitializeComponent();
+
+			this.settings = settings;
+			this.reloadDelegate = () => { return reloadDelegate(type); };
+			this.defaultsDelegate = () => { return defaultsDelegate(type); };
+
+			InitView();
+		}
+
+		private void InitView()
+		{
+			oldSettings = new ObsData(settings);
+
+			// force double buffering on to eliminate control flickering during refresh
 			WinFormsHelper.DoubleBufferControl(panel);
 
 			ReloadProperties();
@@ -71,7 +101,7 @@ namespace test.Controls
 		/// <param name="focusProperty"> Optional: Sets focus to control of this property.</param>
 		private void RefreshProperties(ObsProperty focusProperty = null)
 		{
-			//prevent properties triggering another refresh when previous refresh is still ongoing
+			// prevent properties triggering another refresh when previous refresh is still ongoing
 			if (++refreshCount > 0)
 				return;
 
@@ -111,7 +141,7 @@ namespace test.Controls
 			panel.Select();
 			panel.Focus();
 
-			//restore last focused control and scroll state
+			// restore last focused control and scroll state
 			if (focusControl != null)
 			{
 				focusControl.Focus();
@@ -131,6 +161,23 @@ namespace test.Controls
 		{
 			if (updateDelegate != null)
 				updateDelegate(settings);
+		}
+
+		public void ResetToDefaults()
+		{
+			if (defaultsDelegate == null)
+				return;
+
+			settings.Clear();
+			updateDelegate(defaultsDelegate());
+			ReloadProperties();
+		}
+
+		public void ResetChanges()
+		{
+			settings.Clear();
+			updateDelegate(oldSettings);
+			ReloadProperties();
 		}
 
 		public void PropertyChanged(ObsProperty property)
