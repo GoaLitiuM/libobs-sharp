@@ -15,7 +15,7 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -31,10 +31,10 @@ namespace test
 	{
 		private Source SelectedFilter { get; set; }
 
-		private PropertiesView _view;
+		private PropertiesView view;
 		private Source source { get; set; }
-		private readonly ObsData _sourceSettings;
-		private BindingList<Source> _oldfilters = new BindingList<Source>();
+		private readonly ObsData sourceSettings;
+		private readonly BindingList<Source> oldfilters;
 		private TestFilter()
 		{
 			InitializeComponent();
@@ -48,16 +48,21 @@ namespace test
 			: this()
 		{
 			this.source = source;
-			_sourceSettings = source.GetSettings();
+			sourceSettings = source.GetSettings();
 
 			FilterListBox.DisplayMember = "Name";
 			FilterListBox.DataSource = source.Filters;
 
-			_oldfilters = source.Filters;
-			
+			oldfilters = source.Filters;
+
+			undoButton.Enabled = false;
+			defaultButton.Enabled = false;
+
 			if (source.Filters.Any())
 			{
 				Select(source.Filters.First());
+				undoButton.Enabled = true;
+				defaultButton.Enabled = true;
 			}
 
 			Load += (sender, args) =>
@@ -77,12 +82,15 @@ namespace test
 
 			defaultButton.Click += (sender, args) =>
 			{
-				_view.ResetToDefaults();
+				view.ResetToDefaults();
 			};
 
 			okButton.Click += (o, args) =>
 			{
-				_view.UpdateSettings();
+				if (view != null)
+				{
+					view.UpdateSettings();
+				}
 				DialogResult = DialogResult.OK;
 				Close();
 			};
@@ -91,7 +99,7 @@ namespace test
 			{
 				source.ClearFilters();
 
-				foreach (Source oldfilter in _oldfilters)
+				foreach (Source oldfilter in oldfilters)
 				{
 					source.AddFilter(oldfilter);
 				}
@@ -102,7 +110,7 @@ namespace test
 
 			undoButton.Click += (sender, args) =>
 			{
-				_view.ResetChanges();
+				view.ResetChanges();
 			};
 
 			AddFilterButton.Click += (sender, args) =>
@@ -113,17 +121,21 @@ namespace test
 			RemoveFilterButton.Click += (sender, args) =>
 			{
 				if (SelectedFilter != null)
+				{
 					source.RemoveFilter(SelectedFilter);
+					propertyPanel.Controls.Clear();
+					view = null;
+				}
 			};
 		}
 
 		private void PopulateControls(Source filter)
 		{
-			if (propertyPanel.Controls.Contains(_view))
-				propertyPanel.Controls.Remove(_view);
+			if (propertyPanel.Controls.Contains(view))
+				propertyPanel.Controls.Remove(view);
 
-			_view = new PropertiesView(filter.GetSettings(), filter, filter.GetProperties, filter.GetDefaults, filter.Update);
-			propertyPanel.Controls.Add(_view);
+			view = new PropertiesView(filter.GetSettings(), filter, filter.GetProperties, filter.GetDefaults, filter.Update);
+			propertyPanel.Controls.Add(view);
 		}
 
 		private void Select(Source filter)
@@ -191,6 +203,8 @@ namespace test
 			remove.Click += (o, args) =>
 			{
 				source.RemoveFilter(SelectedFilter);
+				propertyPanel.Controls.Clear();
+				view = null;
 			};
 
 			var top = new ToolStripMenuItem("Move to &Top");
@@ -251,9 +265,18 @@ namespace test
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
-		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		private void FilterListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-
+			if (FilterListBox.SelectedIndex == -1)
+			{
+				undoButton.Enabled = false;
+				defaultButton.Enabled = false;
+			}
+			else
+			{
+				undoButton.Enabled = true;
+				defaultButton.Enabled = true;
+			}
 		}
 	}
 }

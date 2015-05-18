@@ -146,6 +146,7 @@ namespace test
 			this.FilterListBox.Name = "FilterListBox";
 			this.FilterListBox.Size = new System.Drawing.Size(194, 578);
 			this.FilterListBox.TabIndex = 1;
+			this.FilterListBox.SelectedIndexChanged += new System.EventHandler(this.FilterListBox_SelectedIndexChanged);
 			this.FilterListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FilterListBox_MouseUp);
 			// 
 			// flowLayoutPanel1
@@ -189,7 +190,6 @@ namespace test
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(591, 578);
 			this.tableLayoutPanel1.TabIndex = 12;
-			this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
 			// 
 			// propertyPanel
 			// 
