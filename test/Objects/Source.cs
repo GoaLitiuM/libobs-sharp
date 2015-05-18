@@ -15,6 +15,7 @@
 	along with this program; if not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -38,6 +39,12 @@ namespace test
 			Filters = new BindingList<Source>();
 		}
 
+		public new void Dispose()
+		{
+			ClearFilters();
+			base.Dispose();
+		}
+
 		public BindingList<Source> Filters { get; set; }
 
 		public void AddFilter(Source filtersource)
@@ -46,10 +53,12 @@ namespace test
 			Filters.Insert(0, filtersource);
 		}
 
-		public void RemoveFilter(Source filtersource)
+		public void RemoveFilter(Source filter)
 		{
-			base.RemoveFilter(filtersource);
-			Filters.Remove(filtersource);
+			base.RemoveFilter(filter);
+			Filters.Remove(filter);
+			filter.Remove();
+			filter.Dispose();
 		}
 
 		public void ClearFilters()
