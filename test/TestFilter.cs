@@ -29,12 +29,12 @@ namespace test
 {
 	public partial class TestFilter
 	{
-		private Source SelectedFilter { get; set; }
+		private Filter SelectedFilter { get; set; }
 
 		private PropertiesView view;
 		private Source source { get; set; }
 		private readonly ObsData sourceSettings;
-		private readonly BindingList<Source> oldfilters;
+		private readonly BindingList<Filter> oldfilters;
 		private TestFilter()
 		{
 			InitializeComponent();
@@ -99,7 +99,7 @@ namespace test
 			{
 				source.ClearFilters();
 
-				foreach (Source oldfilter in oldfilters)
+				foreach (Filter oldfilter in oldfilters)
 				{
 					source.AddFilter(oldfilter);
 				}
@@ -129,7 +129,7 @@ namespace test
 			};
 		}
 
-		private void PopulateControls(Source filter)
+		private void PopulateControls(Filter filter)
 		{
 			if (propertyPanel.Controls.Contains(view))
 				propertyPanel.Controls.Remove(view);
@@ -138,7 +138,7 @@ namespace test
 			propertyPanel.Controls.Add(view);
 		}
 
-		private void Select(Source filter)
+		private void Select(Filter filter)
 		{
 			if (filter == SelectedFilter)
 				return;
@@ -177,7 +177,7 @@ namespace test
 
 				menuitem.Click += (o, args) =>
 				{
-					var filter = new Source(ObsSourceType.Filter, filterType, displayname);
+					var filter = new Filter(ObsSourceType.Filter, filterType, displayname);
 					source.AddFilter(filter);
 					Select(filter);
 				};

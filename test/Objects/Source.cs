@@ -30,13 +30,13 @@ namespace test
 		public Source(ObsSourceType type, string id, string name)
 			: base(type, id, name)
 		{
-			Filters = new BindingList<Source>();
+			Filters = new BindingList<Filter>();
 		}
 
 		public Source(ObsSourceType type, string id, string name, ObsData settings)
 			: base(type, id, name, settings)
 		{
-			Filters = new BindingList<Source>();
+			Filters = new BindingList<Filter>();
 		}
 
 		public new void Dispose()
@@ -45,15 +45,15 @@ namespace test
 			base.Dispose();
 		}
 
-		public BindingList<Source> Filters { get; set; }
+		public BindingList<Filter> Filters { get; set; }
 
-		public void AddFilter(Source filtersource)
+		public void AddFilter(Filter filtersource)
 		{
 			base.AddFilter(filtersource);
 			Filters.Insert(0, filtersource);
 		}
 
-		public void RemoveFilter(Source filter)
+		public void RemoveFilter(Filter filter)
 		{
 			base.RemoveFilter(filter);
 			Filters.Remove(filter);
@@ -63,7 +63,7 @@ namespace test
 
 		public void ClearFilters()
 		{
-			foreach (Source filter in Filters)
+			foreach (Filter filter in Filters)
 			{
 				base.RemoveFilter(filter);
 				filter.Remove();
@@ -72,7 +72,7 @@ namespace test
 			Filters.Clear();
 		}
 
-		public int MoveItem(Source filter, obs_order_movement direction)
+		public int MoveItem(Filter filter, obs_order_movement direction)
 		{
 			var oldindex = Filters.IndexOf(filter);
 			int newindex = -1;

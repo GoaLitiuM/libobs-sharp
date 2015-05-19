@@ -80,6 +80,7 @@
     <Compile Include="Controls\PropertyControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Objects\Filter.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Presentation.cs" />
     <Compile Include="Objects\Scene.cs" />
