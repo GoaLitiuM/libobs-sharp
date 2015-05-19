@@ -177,7 +177,7 @@ namespace test
 
 				menuitem.Click += (o, args) =>
 				{
-					var filter = new Filter(ObsSourceType.Filter, filterType, displayname);
+					var filter = new Filter(filterType, displayname);
 					source.AddFilter(filter);
 					Select(filter);
 				};
