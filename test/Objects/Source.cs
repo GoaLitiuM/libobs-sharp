@@ -27,16 +27,20 @@ namespace test
 {
 	public class Source : ObsSource
 	{
-		public Source(ObsSourceType type, string id, string name)
-			: base(type, id, name)
+		public Source(string id, string name)
+			: base(ObsSourceType.Input, id, name)
 		{
 			Filters = new BindingList<Filter>();
 		}
 
-		public Source(ObsSourceType type, string id, string name, ObsData settings)
-			: base(type, id, name, settings)
+		public Source(string id, string name, ObsData settings)
+			: base(ObsSourceType.Input, id, name, settings)
 		{
 			Filters = new BindingList<Filter>();
+		}
+
+		public Source(IntPtr instance) : base(instance)
+		{
 		}
 
 		public new void Dispose()

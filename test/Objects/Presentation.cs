@@ -165,7 +165,7 @@ namespace test.Objects
 
 		public Source CreateSource(string id, string name)
 		{
-			return new Source(ObsSourceType.Input, id, name);
+			return new Source(id, name);
 		}
 
 		public void AddSource(Source source)
