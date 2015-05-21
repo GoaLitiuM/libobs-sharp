@@ -74,6 +74,9 @@
     <Compile Include="Controls\DisplayPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\PreviewPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\PropertiesView.cs">
       <SubType>UserControl</SubType>
     </Compile>

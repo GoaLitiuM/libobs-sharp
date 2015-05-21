@@ -29,7 +29,7 @@ namespace test
 	{
 		private Presentation presentation;
 
-		private DisplayPanel previewPanel;
+		private PreviewPanel previewPanel;
 
 		public TestForm()
 		{
@@ -42,8 +42,6 @@ namespace test
 				Text += " (64-bit)";
 			else
 				Text += " (32-bit)";
-
-			InitPrimitives();
 
 			presentation = new Presentation();
 
@@ -85,28 +83,19 @@ namespace test
 
 
 			// setup scene preview panel
-			previewPanel = new Controls.DisplayPanel();
-			previewPanel.displayCreated += () =>
-			{
-				previewPanel.Display.AddDrawCallback(RenderMain);
-			};
+			previewPanel = new PreviewPanel();
+			previewPanel.Dock = DockStyle.Fill;
 
 			topPanel.Controls.Add(previewPanel);
-			previewPanel.Dock = DockStyle.Fill;
 			previewPanel.Show();
+
+			previewPanel.SetScene(presentation.SelectedScene);
 		}
 
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderMain);
 			previewPanel.Dispose();
-
 			presentation.Dispose();
-
-			if (boxPrimitive != null)
-				boxPrimitive.Dispose();
-			if (circlePrimitive != null)
-				circlePrimitive.Dispose();
 
 			Obs.Shutdown();
 		}
