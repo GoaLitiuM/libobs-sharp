@@ -136,6 +136,21 @@ namespace OBS
 			get { return libobs.obs_property_path_default_path(instance); }
 		}
 
+		public unsafe bool EditableListAllowFiles
+		{
+			get { return libobs.obs_property_editable_list_allow_files(instance); }
+        }
+
+		public unsafe FileFilter EditableListFilter
+		{
+			get { return FileFilter.QtFilter(libobs.obs_property_editable_list_filter(instance)); }
+		}
+
+		public unsafe string EditableListPathDefault
+		{
+			get { return libobs.obs_property_editable_list_default_path(instance); }
+		}
+
 		public unsafe ObsComboType ListType
 		{
 			get { return (ObsComboType)libobs.obs_property_list_type(instance); }
@@ -159,11 +174,6 @@ namespace OBS
 		public unsafe bool ButtonClicked(IntPtr obj)
 		{
 			return libobs.obs_property_button_clicked(instance, obj);
-		}
-
-		public unsafe bool ButtonClicked(libobs.obs_property_clicked_t clicked, ObsProperties properties, IntPtr obj)
-		{
-			return clicked(properties.GetPointer(), instance, obj);
 		}
 
 		public unsafe string[] GetListItemNames()
@@ -209,6 +219,7 @@ namespace OBS
 		Color,
 		Button,
 		Font,
+		EditableList,
 	};
 
 	public enum ObsComboFormat : int
@@ -242,6 +253,11 @@ namespace OBS
 	public enum ObsNumberType : int
 	{
 		Scroller,
-		Slider
+		Slider,
+	};
+
+	public enum ObsEditableListType : int
+	{
+		Path,
 	};
 }

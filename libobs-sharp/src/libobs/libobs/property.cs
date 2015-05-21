@@ -153,8 +153,17 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_properties_text_set_type(obs_property_t p, obs_text_type type);
 
-		[UnmanagedFunctionPointer(importCall)]
-		public delegate bool obs_property_clicked_t(obs_properties_t props, obs_property_t property, IntPtr data);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_property_editable_list_allow_files(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_editable_list_filter(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_editable_list_default_path(obs_property_t p);
 
 		public enum obs_property_type : int
 		{
@@ -168,6 +177,7 @@ namespace OBS
 			OBS_PROPERTY_COLOR,
 			OBS_PROPERTY_BUTTON,
 			OBS_PROPERTY_FONT,
+			OBS_PROPERTY_EDITABLE_LIST,
 		};
 
 		public enum obs_combo_format : int
@@ -201,7 +211,7 @@ namespace OBS
 		public enum obs_number_type : int
 		{
 			OBS_NUMBER_SCROLLER,
-			OBS_NUMBER_SLIDER
+			OBS_NUMBER_SLIDER,
 		};
 	}
 }

@@ -94,6 +94,12 @@ namespace test.Controls
 						AddFont(property, setting, controls);
 						break;
 					}
+				case ObsPropertyType.EditableList:
+					{
+						addLabel = false;
+						AddEditableList(property, setting, controls);
+						break;
+					}
 				default:
 					{
 						throw new Exception(String.Format("Error, unimplemented property type {0} for property {1}", type, property.Description));
@@ -480,6 +486,198 @@ namespace test.Controls
 
 			controls.Add(label);
 			controls.Add(button);
+		}
+
+		private void AddEditableList(ObsProperty property, ObsData setting, List<Control> controls)
+		{
+			string name = property.Name;
+			bool allowFiles = property.EditableListAllowFiles;
+
+			FlowLayoutPanel layoutPanel = new FlowLayoutPanel()
+			{
+				FlowDirection = FlowDirection.TopDown,
+				AutoSize = true,
+				AutoSizeMode = AutoSizeMode.GrowAndShrink
+			};
+
+			ListBox listBox = new ListBox()
+			{
+				Width = 300,
+				Height = 180,
+				IntegralHeight = false,
+				SelectionMode = SelectionMode.MultiExtended,
+			};
+
+			//TODO: use icons for list buttons
+			Button buttonAdd = new Button { Text = "+", Width = 25, Tag = listBox };
+			Button buttonAddMulti = new Button { Text = "B", Width = 25, Tag = listBox };
+			Button buttonRemove = new Button { Text = "-", Width = 25, Tag = listBox };
+			Button buttonConfig = new Button { Text = "C", Width = 25, Tag = listBox };
+			Button buttonUp = new Button { Text = "^", Width = 25, Tag = listBox };
+			Button buttonDown = new Button { Text = "v", Width = 25, Tag = listBox };
+
+			using (ObsDataArray array = setting.GetArray(name))
+			{
+				listBox.BeginUpdate();
+
+				if (array != null)
+					foreach (ObsData item in array)
+						listBox.Items.Add(item.GetString("value"));
+
+				listBox.EndUpdate();
+			}
+
+			buttonAdd.Click += (sender, args) =>
+			{
+				//TODO: open dialog with ok/cancel options, text field and browse button (with allowFiles)
+			};
+
+			buttonAddMulti.Click += (sender, args) =>
+			{
+				OpenFileDialog dialog = new OpenFileDialog
+				{
+					AutoUpgradeEnabled = true,
+					Filter = property.EditableListFilter.ToString(),
+					FilterIndex = 1,
+					InitialDirectory = property.EditableListPathDefault,
+					Multiselect = true
+				};
+
+				if (dialog.ShowDialog(this) == DialogResult.OK)
+				{
+					listBox.BeginUpdate();
+					listBox.Items.AddRange(dialog.FileNames);
+					listBox.EndUpdate();
+
+					EditableListChanged(listBox, property, setting);
+				}
+			};
+
+			buttonRemove.Click += (sender, args) =>
+			{
+				if (listBox.SelectedItems.Count == 0)
+					return;
+
+				listBox.BeginUpdate();
+
+				for (int i = listBox.SelectedItems.Count - 1; i >= 0; i--)
+					listBox.Items.RemoveAt(listBox.SelectedIndices[i]);
+
+				listBox.EndUpdate();
+
+				EditableListChanged(listBox, property, setting);
+			};
+
+			buttonConfig.Click += (sender, args) =>
+			{
+				// To avoid confusion, only allow to edit one item at the time
+				if (listBox.SelectedItems.Count != 1)
+					return;
+
+
+				//TODO: open dialog with ok/cancel options, text field and browse button (with allowFiles), same as in add
+
+				/*OpenFileDialog dialog = new OpenFileDialog
+				{
+					FileName = listBox.SelectedItem.ToString(),
+					AutoUpgradeEnabled = true,
+					Filter = property.EditableListFilter.ToString(),
+					FilterIndex = 1,
+					InitialDirectory = property.EditableListPathDefault,
+					Multiselect = true
+				};
+
+				if (dialog.ShowDialog(this) == DialogResult.OK)
+				{
+					listBox.Items[listBox.SelectedIndex] = dialog.FileName;
+					EditableListChanged(listBox, property, setting);
+				}*/
+			};
+
+			buttonUp.Click += (sender, args) =>
+			{
+				if (listBox.SelectedItems.Count == 0)
+					return;
+
+				listBox.BeginUpdate();
+
+				int lastIndex = -1;
+				for (int i = 0; i < listBox.SelectedItems.Count; i++)
+				{
+					int index = listBox.SelectedIndices[i];
+					int newIndex = Math.Max(index - 1, 0);
+					object item = listBox.Items[index];
+
+					if (index != newIndex && newIndex != lastIndex)
+					{
+						listBox.Items.RemoveAt(index);
+						listBox.Items.Insert(newIndex, item);
+						listBox.SetSelected(newIndex, true);
+					}
+					lastIndex = newIndex;
+				}
+
+				listBox.EndUpdate();
+
+				EditableListChanged(listBox, property, setting);
+			};
+
+			buttonDown.Click += (sender, args) =>
+			{
+				if (listBox.SelectedItems.Count == 0)
+					return;
+
+				listBox.BeginUpdate();
+
+				int lastIndex = -1;
+				for (int i = listBox.SelectedItems.Count - 1; i >= 0; i--)
+				{
+					int index = listBox.SelectedIndices[i];
+					int newIndex = Math.Min(index + 1, listBox.Items.Count - 1);
+					object item = listBox.Items[index];
+
+					if (index != newIndex && newIndex != lastIndex)
+					{
+						listBox.Items.RemoveAt(index);
+						listBox.Items.Insert(newIndex, item);
+						listBox.SetSelected(newIndex, true);
+					}
+					lastIndex = newIndex;
+				}
+
+				listBox.EndUpdate();
+
+				EditableListChanged(listBox, property, setting);
+			};
+
+			layoutPanel.Controls.Add(buttonAdd);
+			if (allowFiles)
+				layoutPanel.Controls.Add(buttonAddMulti);
+			layoutPanel.Controls.Add(buttonRemove);
+			layoutPanel.Controls.Add(buttonConfig);
+			layoutPanel.Controls.Add(buttonUp);
+			layoutPanel.Controls.Add(buttonDown);
+
+			controls.Add(listBox);
+			controls.Add(layoutPanel);
+		}
+
+		private void EditableListChanged(ListBox listBox, ObsProperty property, ObsData setting)
+		{
+			string propertyName = property.Name;
+			ObsDataArray array = new ObsDataArray();
+
+			foreach (string item in listBox.Items)
+			{
+				ObsData itemArray = new ObsData();
+				itemArray.SetString("value", item);
+
+				array.Add(itemArray);
+				itemArray.Dispose();
+			}
+
+			setting.SetArray(propertyName, array);
+			array.Dispose();
 		}
 	}
 }

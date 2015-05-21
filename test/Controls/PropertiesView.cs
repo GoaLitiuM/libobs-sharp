@@ -194,14 +194,5 @@ namespace test.Controls
 			if (property.ButtonClicked(context.GetPointer()))
 				RefreshProperties(property);
 		}
-
-		public void PropertyButtonClicked(ObsProperty property, libobs.obs_property_clicked_t clicked)
-		{
-			if (clicked == null)
-				return;
-
-			if (property.ButtonClicked(clicked, properties, context.GetPointer()))
-				RefreshProperties(property);
-		}
 	}
 }
