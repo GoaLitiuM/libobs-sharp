@@ -118,6 +118,7 @@ namespace OBS
 		public unsafe ObsTextType TextType
 		{
 			get { return (ObsTextType)libobs.obs_proprety_text_type(instance); }
+			set { libobs.obs_properties_text_set_type(instance, (libobs.obs_text_type)value); }
 		}
 
 		public unsafe ObsPathType PathType

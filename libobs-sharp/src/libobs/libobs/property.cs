@@ -150,6 +150,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern double obs_property_list_item_float(obs_property_t p, size_t idx);
 
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_properties_text_set_type(obs_property_t p, obs_text_type type);
+
 		[UnmanagedFunctionPointer(importCall)]
 		public delegate bool obs_property_clicked_t(obs_properties_t props, obs_property_t property, IntPtr data);
 
