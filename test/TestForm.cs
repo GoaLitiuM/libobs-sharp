@@ -198,11 +198,11 @@ namespace test
 			{
 				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
 				var source = _presentation.CreateSource(tag.Item1, tag.Item2);
+				var item = _presentation.CreateItem(source);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					_presentation.AddSource(source);
-
-					var item = _presentation.CreateItem(source);
+					
 					_presentation.AddItem(item);
 
 					ItemListBox.SelectedIndex = 0;
@@ -210,6 +210,8 @@ namespace test
 				}
 				else
 				{
+					item.Remove();
+					item.Dispose();
 					source.Remove();
 					source.Dispose();
 				}
