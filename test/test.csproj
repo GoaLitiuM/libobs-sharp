@@ -142,7 +142,6 @@
     <Compile Include="Utility\ColorHelper.cs" />
     <Compile Include="Utility\BindingListHelper.cs" />
     <Compile Include="Utility\AccessKeyMenuStripRenderer.cs" />
-    <Compile Include="Utility\ListBoxHelper.cs" />
     <Compile Include="Utility\ToolStripBindableMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
