@@ -78,7 +78,7 @@ namespace test
 			previewPanel = new DisplayPanel();
 			previewPanel.displayCreated += () =>
 			{
-				previewPanel.Display.AddDrawCallback(RenderPreview, Handle);
+				previewPanel.Display.AddDrawCallback(RenderPreview);
 			};
 
 			topPanel.Controls.Add(previewPanel);
@@ -88,20 +88,16 @@ namespace test
 
 		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderPreview, Handle);
+			previewPanel.Display.RemoveDrawCallback(RenderPreview);
 			previewPanel.Dispose();
 		}
 
-		private static void RenderPreview(IntPtr data, uint cx, uint cy)
+		private void RenderPreview(IntPtr data, uint cx, uint cy)
 		{
-			TestProperties window = FromHandle(data) as TestProperties;
-			if (window == null)
-				return;
-
 			int newW = (int)cx;
 			int newH = (int)cy;
-			int sourceWidth = (int)window.source.Width;
-			int sourceHeight = (int)window.source.Height;
+			int sourceWidth = (int)source.Width;
+			int sourceHeight = (int)source.Height;
 			float previewAspect = (float)cx / cy;
 			float sourceAspect = (float)sourceWidth / sourceHeight;
 
@@ -122,7 +118,7 @@ namespace test
 			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//render source content
-			window.source.Render();
+			source.Render();
 
 			GS.ProjectionPop();
 			GS.ViewportPop();

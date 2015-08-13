@@ -17,7 +17,6 @@
 
 using System;
 using System.ComponentModel;
-using System;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -122,7 +121,7 @@ namespace test
 			previewPanel = new DisplayPanel();
 			previewPanel.displayCreated += () =>
 			{
-				previewPanel.Display.AddDrawCallback(RenderPreview, Handle);
+				previewPanel.Display.AddDrawCallback(RenderPreview);
 			};
 
 			topPanel.Controls.Add(previewPanel);
@@ -132,7 +131,7 @@ namespace test
 
 		private void TestFilter_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderPreview, Handle);
+			previewPanel.Display.RemoveDrawCallback(RenderPreview);
 			previewPanel.Dispose();
 		}
 
@@ -286,16 +285,12 @@ namespace test
 			}
 		}
 
-		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)
+		private void RenderPreview(IntPtr data, uint cx, uint cy)
 		{
-			TestFilter window = FromHandle(data) as TestFilter;
-
-			if (window == null) return;
-
 			int newW = (int)cx;
 			int newH = (int)cy;
-			int sourceWidth = (int)window.source.Width;
-			int sourceHeight = (int)window.source.Height;
+			int sourceWidth = (int)source.Width;
+			int sourceHeight = (int)source.Height;
 			float previewAspect = (float)cx / cy;
 			float sourceAspect = (float)sourceWidth / sourceHeight;
 
@@ -316,7 +311,7 @@ namespace test
 			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//render source content
-			window.source.Render();
+			source.Render();
 
 			GS.ProjectionPop();
 			GS.ViewportPop();

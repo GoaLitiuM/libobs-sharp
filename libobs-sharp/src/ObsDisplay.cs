@@ -62,6 +62,11 @@ namespace OBS
 			libobs.obs_display_resize(instance, cx, cy);
 		}
 
+		public unsafe void AddDrawCallback(libobs.draw_callback callback)
+		{
+			AddDrawCallback(callback, IntPtr.Zero);
+		}
+
 		public unsafe void AddDrawCallback(libobs.draw_callback callback, IntPtr param)
 		{
 			// store the delegate tuple to prevent delegate getting removed
@@ -70,6 +75,11 @@ namespace OBS
 			delegateTuple tuple = new delegateTuple(callback, param);
 			delegateRefs.Add(tuple);
 			libobs.obs_display_add_draw_callback(instance, tuple.Item1, tuple.Item2);
+		}
+
+		public unsafe void RemoveDrawCallback(libobs.draw_callback callback)
+		{
+			RemoveDrawCallback(callback, IntPtr.Zero);
 		}
 
 		public unsafe void RemoveDrawCallback(libobs.draw_callback callback, IntPtr param)

@@ -57,12 +57,8 @@ namespace test
 			GS.LeaveGraphics();
 		}
 
-		private static void RenderMain(IntPtr data, UInt32 cx, UInt32 cy)
+		private void RenderMain(IntPtr data, uint cx, uint cy)
 		{
-			TestForm window = Control.FromHandle(data) as TestForm;
-			if (window == null)
-				return;
-
 			libobs.obs_video_info ovi = Obs.GetVideoInfo();
 
 			int newW = (int)cx;
@@ -81,7 +77,7 @@ namespace test
 			int centerX = ((int)cx - newW) / 2;
 			int centerY = ((int)cy - newH) / 2;
 
-			window.previewScale = (float)newW / baseWidth;
+			previewScale = (float)newW / baseWidth;
 
 			GS.ViewportPush();
 			GS.ProjectionPush();
@@ -91,7 +87,7 @@ namespace test
 			GS.SetViewport(centerX, centerY, newW, newH);
 
 			//draw scene background
-			window.ClearBackground(baseWidth, baseHeight);
+			ClearBackground(baseWidth, baseHeight);
 
 			//render all visible sources
 			Obs.RenderMainView();
@@ -105,7 +101,7 @@ namespace test
 			GS.ResetViewport();
 
 			//render editing overlays
-			window.RenderSceneEditing(data);
+			RenderSceneEditing(data);
 
 			GS.ProjectionPop();
 			GS.ViewportPop();
@@ -113,7 +109,7 @@ namespace test
 			GS.LoadVertexBuffer(null);
 		}
 
-		private void ClearBackground(UInt32 cx, UInt32 cy)
+		private void ClearBackground(uint cx, uint cy)
 		{
 			GSEffect solid = Obs.GetSolidEffect();
 			solid.SetParameterValue("color", new libobs.vec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -165,25 +161,23 @@ namespace test
 			if (!libobs.obs_sceneitem_selected(item))
 				return true;
 
-			TestForm window = Control.FromHandle(data) as TestForm;
-
 			GS.LoadVertexBuffer(_circlePrimitive);
 
 			libobs.matrix4 boxTransform;
 			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
 
 			//render the tiny circles on corners
-			DrawPrimitive(0.0f, 0.0f, boxTransform, window.previewScale);
-			DrawPrimitive(0.0f, 1.0f, boxTransform, window.previewScale);
-			DrawPrimitive(1.0f, 1.0f, boxTransform, window.previewScale);
-			DrawPrimitive(1.0f, 0.0f, boxTransform, window.previewScale);
+			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);
+			DrawPrimitive(0.0f, 1.0f, boxTransform, previewScale);
+			DrawPrimitive(1.0f, 1.0f, boxTransform, previewScale);
+			DrawPrimitive(1.0f, 0.0f, boxTransform, previewScale);
 
 			//render the main selection rectangle
 
 			GS.LoadVertexBuffer(_boxPrimitive);
 
 			GS.MatrixPush();
-			GS.MatrixScale3f(window.previewScale, window.previewScale, 1.0f);
+			GS.MatrixScale3f(previewScale, previewScale, 1.0f);
 			GS.MatrixMul(boxTransform);
 			GS.Draw(GSDrawMode.LineStrip, 0, 0);
 			GS.MatrixPop();

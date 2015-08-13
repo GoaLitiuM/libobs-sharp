@@ -88,7 +88,7 @@ namespace test
 			previewPanel = new Controls.DisplayPanel();
 			previewPanel.displayCreated += () =>
 			{
-				previewPanel.Display.AddDrawCallback(RenderMain, Handle);
+				previewPanel.Display.AddDrawCallback(RenderMain);
 			};
 
 			topPanel.Controls.Add(previewPanel);
@@ -98,7 +98,7 @@ namespace test
 
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderMain, Handle);
+			previewPanel.Display.RemoveDrawCallback(RenderMain);
 			previewPanel.Dispose();
 
 			_presentation.Dispose();
