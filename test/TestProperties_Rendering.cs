@@ -25,13 +25,9 @@ namespace test
 	public partial class TestProperties
 	{
 		private ObsDisplay _display;
-		private libobs.draw_callback _renderPreview;
 
 		private void InitPreview(uint width, uint height, IntPtr handle)
 		{
-			//assign callbacks
-			_renderPreview = RenderPreview;
-
 			libobs.gs_init_data initData = new libobs.gs_init_data
 			{
 				cx = width,
@@ -43,20 +39,18 @@ namespace test
 			};
 
 			_display = new ObsDisplay(initData);
-
-			if (_display != null)
-				Obs.AddDisplayDrawCallback(_display, _renderPreview, Handle);
+			_display.AddDrawCallback(RenderPreview, Handle);
 		}
 
 		private void ClosePreview()
 		{
-			Obs.RemoveDisplayDrawCallback(_display, _renderPreview, Handle);
+			_display.RemoveDrawCallback(RenderPreview, Handle);
 			_display.Dispose();
 		}
 
 		private void ResizePreview(uint width, uint height)
 		{
-			Obs.DisplayResize(_display, width, height);
+			_display.Resize(width, height);
 		}
 
 		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)
