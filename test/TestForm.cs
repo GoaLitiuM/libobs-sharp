@@ -16,20 +16,20 @@
 ***************************************************************************/
 
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 
 using OBS;
 
 using test.Objects;
+using test.Controls;
 
 namespace test
 {
 	public partial class TestForm
 	{
-		private Controls.DisplayPanel previewPanel;
-		private Presentation _presentation;
+		private Presentation presentation;
+
+		private DisplayPanel previewPanel;
 
 		public TestForm()
 		{
@@ -45,43 +45,43 @@ namespace test
 
 			InitPrimitives();
 
-			_presentation = new Presentation();
+			presentation = new Presentation();
 
 			// Bindings
 			// Scene
 			SceneListBox.DisplayMember = "Name";
 			SceneListBox.ValueMember = "Items";
-			SceneListBox.DataSource = _presentation.Scenes;
+			SceneListBox.DataSource = presentation.Scenes;
 
 			// Item
 			ItemListBox.DisplayMember = "Name";
 
 			// Source
 			SourceListBox.DisplayMember = "Name";
-			SourceListBox.DataSource = _presentation.Sources;
+			SourceListBox.DataSource = presentation.Sources;
 
 
-			_presentation.AddScene();
+			presentation.AddScene();
 
 			ItemListBox.DataSource = SceneListBox.SelectedValue;
 
-			var source = _presentation.CreateSource("random", "some random source");
-			_presentation.AddSource(source);
-			var item = _presentation.CreateItem(source);
-			_presentation.AddItem(item);
+			var source = presentation.CreateSource("random", "some random source");
+			presentation.AddSource(source);
+			var item = presentation.CreateItem(source);
+			presentation.AddItem(item);
 
-			_presentation.SetScene(SceneListBox.SelectedIndex);
-			_presentation.SetItem(ItemListBox.SelectedIndex);
-			_presentation.SetSource(SourceListBox.SelectedIndex);
+			presentation.SetScene(SceneListBox.SelectedIndex);
+			presentation.SetItem(ItemListBox.SelectedIndex);
+			presentation.SetSource(SourceListBox.SelectedIndex);
 
 			HideItemCheckBox.DataBindings.Add(
-				new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+				new Binding("Checked", presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
 
 			EnableSourceCheckBox.DataBindings.Add(
-				new Binding("Checked", _presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+				new Binding("Checked", presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
 
 			MuteSourceCheckBox.DataBindings.Add(
-				new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
+				new Binding("Checked", presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 
 
 			// setup scene preview panel
@@ -101,12 +101,12 @@ namespace test
 			previewPanel.Display.RemoveDrawCallback(RenderMain);
 			previewPanel.Dispose();
 
-			_presentation.Dispose();
+			presentation.Dispose();
 
-			if (_boxPrimitive != null)
-				_boxPrimitive.Dispose();
-			if (_circlePrimitive != null)
-				_circlePrimitive.Dispose();
+			if (boxPrimitive != null)
+				boxPrimitive.Dispose();
+			if (circlePrimitive != null)
+				circlePrimitive.Dispose();
 
 			Obs.Shutdown();
 		}
@@ -115,20 +115,20 @@ namespace test
 
 		private void AddSceneButton_Click(object sender, EventArgs e)
 		{
-			_presentation.AddScene();
+			presentation.AddScene();
 			SceneListBox.SelectedIndex = 0;
 		}
 
 		private void DelSceneButton_Click(object sender, EventArgs e)
 		{
-			_presentation.DelScene();
+			presentation.DelScene();
 		}
 
 		private void SceneListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.SetScene(SceneListBox.SelectedIndex);
+			presentation.SetScene(SceneListBox.SelectedIndex);
 
-			if (_presentation.SelectedScene == null)
+			if (presentation.SelectedScene == null)
 				return;
 
 			ItemListBox.DataSource = SceneListBox.SelectedValue;
@@ -140,17 +140,17 @@ namespace test
 
 		private void AddItemButton_Click(object sender, EventArgs e)
 		{
-			var contextmenu = _presentation.AddSourceContextMenu();
+			var contextmenu = presentation.AddSourceContextMenu();
 			contextmenu.ItemClicked += (o, args) =>
 			{
 				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
-				var source = _presentation.CreateSource(tag.Item1, tag.Item2);
-				var item = _presentation.CreateItem(source);
+				var source = presentation.CreateSource(tag.Item1, tag.Item2);
+				var item = presentation.CreateItem(source);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
-					_presentation.AddSource(source);
+					presentation.AddSource(source);
 					
-					_presentation.AddItem(item);
+					presentation.AddItem(item);
 
 					ItemListBox.SelectedIndex = 0;
 					SourceListBox.SelectedIndex = 0;
@@ -169,36 +169,36 @@ namespace test
 
 		private void DelItemButton_Click(object sender, EventArgs e)
 		{
-			_presentation.DelItem();
+			presentation.DelItem();
 		}
 
 		private void ItemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.SetItem(ItemListBox.SelectedIndex);
+			presentation.SetItem(ItemListBox.SelectedIndex);
 
-			HideItemCheckBox.Enabled = _presentation.SelectedItem != null;
+			HideItemCheckBox.Enabled = presentation.SelectedItem != null;
 
-			if (_presentation.SelectedItem != null)
+			if (presentation.SelectedItem != null)
 			{
-				foreach (Item item in _presentation.SelectedScene.Items)
+				foreach (Item item in presentation.SelectedScene.Items)
 				{
 					item.Selected = false;
 				}
 
-				_presentation.SelectedItem.Selected = true;
+				presentation.SelectedItem.Selected = true;
 
 				HideItemCheckBox.DataBindings.Clear();
 				HideItemCheckBox.DataBindings.Add(
-					new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+					new Binding("Checked", presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
 			}
 		}
 
 		private void ItemListBox_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (_presentation.SelectedScene == null || _presentation.SelectedItem == null || e.Button != MouseButtons.Right)
+			if (presentation.SelectedScene == null || presentation.SelectedItem == null || e.Button != MouseButtons.Right)
 				return;
 
-			var contextmenu = _presentation.ItemContextMenu();
+			var contextmenu = presentation.ItemContextMenu();
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 
@@ -208,14 +208,14 @@ namespace test
 
 		private void AddSourceButton_Click(object sender, EventArgs e)
 		{
-			var contextmenu = _presentation.AddSourceContextMenu();
+			var contextmenu = presentation.AddSourceContextMenu();
 			contextmenu.ItemClicked += (o, args) =>
 			{
 				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
-				var source = _presentation.CreateSource(tag.Item1, tag.Item2);
+				var source = presentation.CreateSource(tag.Item1, tag.Item2);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
-					_presentation.AddSource(source);
+					presentation.AddSource(source);
 					SourceListBox.SelectedIndex = 0;
 				}
 				else
@@ -229,25 +229,25 @@ namespace test
 
 		private void DelSourceButton_Click(object sender, EventArgs e)
 		{
-			_presentation.DelSource();
+			presentation.DelSource();
 		}
 
 		private void AddSourceToSceneButton_Click(object sender, EventArgs e)
 		{
-			if (_presentation.SelectedSource == null) return;
+			if (presentation.SelectedSource == null) return;
 
-			var item = _presentation.CreateItem(_presentation.SelectedSource);
+			var item = presentation.CreateItem(presentation.SelectedSource);
 
-			_presentation.AddItem(item);
+			presentation.AddItem(item);
 
 			ItemListBox.SelectedIndex = 0;
 		}
 
 		private void SourceListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentation.SetSource(SourceListBox.SelectedIndex);
+			presentation.SetSource(SourceListBox.SelectedIndex);
 
-			if (_presentation.SelectedSource == null)
+			if (presentation.SelectedSource == null)
 			{
 				EnableSourceCheckBox.Enabled = false;
 				MuteSourceCheckBox.Enabled = false;
@@ -261,19 +261,19 @@ namespace test
 
 			EnableSourceCheckBox.DataBindings.Clear();
 			EnableSourceCheckBox.DataBindings.Add(
-				new Binding("Checked", _presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+				new Binding("Checked", presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
 
 			MuteSourceCheckBox.DataBindings.Clear();
 			MuteSourceCheckBox.DataBindings.Add(
-				new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
+				new Binding("Checked", presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
 		}
 
 		private void SourceListBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			// display the filter menu when rightclicking on a source in the sourcelistbox
-			if (e.Button != MouseButtons.Right || _presentation.SelectedSource == null) return;
+			if (e.Button != MouseButtons.Right || presentation.SelectedSource == null) return;
 
-			var contextmenu = _presentation.SourceContextMenu();
+			var contextmenu = presentation.SourceContextMenu();
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
 

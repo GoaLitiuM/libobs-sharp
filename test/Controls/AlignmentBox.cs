@@ -30,7 +30,7 @@ namespace test.Controls
 	{
 		public delegate void AlignmentChangedHandler(ObsAlignment e);
 
-		private ObsAlignment _align = ObsAlignment.Center;
+		private ObsAlignment align = ObsAlignment.Center;
 
 		public AlignmentBox()
 		{
@@ -56,10 +56,10 @@ namespace test.Controls
 
 		public ObsAlignment Alignment
 		{
-			get { return _align; }
+			get { return align; }
 			set
 			{
-				_align = value;
+				align = value;
 				SetAlign();
 			}
 		}
@@ -85,7 +85,7 @@ namespace test.Controls
 			Alignment = (ObsAlignment)btn.Tag;
 			if (AlignmentChanged != null)
 			{
-				AlignmentChanged(_align);
+				AlignmentChanged(align);
 			}
 		}
 	}

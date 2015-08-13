@@ -25,10 +25,10 @@ namespace test
 {
 	public partial class TestProperties : Form
 	{
+		private readonly PropertiesView view;
+		private readonly ObsSource source;
+
 		private DisplayPanel previewPanel;
-		private PropertiesView view;
-		private ObsSource source;
-		private ObsData sourceSettings;
 
 		private TestProperties()
 		{
@@ -43,7 +43,7 @@ namespace test
 			: this()
 		{
 			this.source = source;
-			sourceSettings = source.GetSettings();
+			ObsData sourceSettings = source.GetSettings();
 
 			view = new PropertiesView(sourceSettings, source, source.GetProperties, source.GetDefaults, source.Update);
 			propertyPanel.Controls.Add(view);
