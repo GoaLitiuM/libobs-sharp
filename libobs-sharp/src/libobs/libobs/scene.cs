@@ -24,6 +24,8 @@ namespace OBS
 	using obs_sceneitem_t = IntPtr;
 	using obs_source_t = IntPtr;
 
+	using size_t = UIntPtr;
+
 	public static partial class libobs
 	{
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
@@ -53,6 +55,16 @@ namespace OBS
 		public static extern void obs_scene_enum_items(obs_scene_t scene, sceneitem_enum_callback callback, IntPtr param);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_scene_reorder_items(obs_scene_t scene, obs_sceneitem_t item_order, size_t item_order_size);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_sceneitem_t obs_scene_add(obs_scene_t scene, obs_source_t source);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		public delegate void obs_scene_atomic_update_func(IntPtr data, obs_scene_t scene);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_scene_atomic_update(obs_scene_t scene, obs_scene_atomic_update_func func, IntPtr data);
 	}
 }

@@ -16,6 +16,8 @@
 ***************************************************************************/
 
 using OBS;
+using OBS.Graphics;
+using System;
 using System.Windows.Forms;
 using test.Controls;
 
@@ -23,6 +25,7 @@ namespace test
 {
 	public partial class TestProperties : Form
 	{
+		private DisplayPanel previewPanel;
 		private PropertiesView view;
 		private ObsSource source;
 		private ObsData sourceSettings;
@@ -44,16 +47,6 @@ namespace test
 
 			view = new PropertiesView(sourceSettings, source, source.GetProperties, source.GetDefaults, source.Update);
 			propertyPanel.Controls.Add(view);
-
-			Load += (sender, args) =>
-			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, previewPanel.Handle);
-			};
-
-			previewPanel.SizeChanged += (sender, args) =>
-			{
-				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
-			};
 
 			undoButton.Click += (sender, args) =>
 			{
@@ -78,11 +71,63 @@ namespace test
 				DialogResult = DialogResult.Cancel;
 				Close();
 			};
+		}
 
-			FormClosed += (sender, args) =>
+		private void TestProperties_Load(object sender, System.EventArgs e)
+		{
+			previewPanel = new DisplayPanel();
+			previewPanel.displayCreated += () =>
 			{
-				ClosePreview();
+				previewPanel.Display.AddDrawCallback(RenderPreview, Handle);
 			};
+
+			topPanel.Controls.Add(previewPanel);
+			previewPanel.Dock = DockStyle.Fill;
+			previewPanel.Show();
+		}
+
+		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			previewPanel.Display.RemoveDrawCallback(RenderPreview, Handle);
+			previewPanel.Dispose();
+		}
+
+		private static void RenderPreview(IntPtr data, uint cx, uint cy)
+		{
+			TestProperties window = FromHandle(data) as TestProperties;
+			if (window == null)
+				return;
+
+			int newW = (int)cx;
+			int newH = (int)cy;
+			int sourceWidth = (int)window.source.Width;
+			int sourceHeight = (int)window.source.Height;
+			float previewAspect = (float)cx / cy;
+			float sourceAspect = (float)sourceWidth / sourceHeight;
+
+			//calculate new width and height for source to make it fit inside the preview area
+			if (previewAspect > sourceAspect)
+				newW = (int)(cy * sourceAspect);
+			else
+				newH = (int)(cx / sourceAspect);
+
+			int centerX = ((int)cx - newW) / 2;
+			int centerY = ((int)cy - newH) / 2;
+
+			GS.ViewportPush();
+			GS.ProjectionPush();
+
+			//setup orthographic projection of the source
+			GS.Ortho(0.0f, sourceWidth, 0.0f, sourceHeight, -100.0f, 100.0f);
+			GS.SetViewport(centerX, centerY, newW, newH);
+
+			//render source content
+			window.source.Render();
+
+			GS.ProjectionPop();
+			GS.ViewportPop();
+
+			GS.LoadVertexBuffer(null);
 		}
 	}
 }

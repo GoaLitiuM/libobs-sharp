@@ -24,6 +24,7 @@ namespace OBS
 	using obs_data_array_t = IntPtr;
 	using obs_data_t = IntPtr;
 	using obs_source_t = IntPtr;
+	using profiler_name_store_t = IntPtr;
 
 	using size_t = UIntPtr;
 	using uint32_t = UInt32;
@@ -36,7 +37,7 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_startup(
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string locale);
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string locale, profiler_name_store_t store);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_shutdown();
@@ -50,6 +51,7 @@ namespace OBS
 
 		//EXPORT void obs_set_locale(const char *locale);
 		//EXPORT const char *obs_get_locale(void);
+		//EXPORT profiler_name_store_t *obs_get_profiler_name_store(void);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern int obs_reset_video(ref obs_video_info ovi);
@@ -163,15 +165,6 @@ namespace OBS
 		public delegate void draw_callback(IntPtr param, uint32_t cx, uint32_t cy);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_add_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_remove_draw_callback([MarshalAs(UnmanagedType.FunctionPtr)] draw_callback draw, IntPtr param);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_resize(uint32_t cx, uint32_t cy);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_render_main_view();
 
 		//EXPORT void obs_set_master_volume(float volume);
@@ -191,13 +184,6 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_array_t obs_save_sources();
 
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_preview_set_enabled([MarshalAs(UnmanagedType.I1)] bool enable);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool obs_preview_enabled();
-
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public struct obs_video_info
 		{
@@ -205,9 +191,6 @@ namespace OBS
 
 			public uint32_t fps_num;       //Output FPS numerator
 			public uint32_t fps_den;       //Output FPS denominator
-
-			public uint32_t window_width;  //Window width
-			public uint32_t window_height; //Window height
 
 			public uint32_t base_width;    //Base compositing width
 			public uint32_t base_height;   //Base compositing height
@@ -218,8 +201,6 @@ namespace OBS
 
 			//Video adapter index to use (NOTE: avoid for optimus laptops)
 			public uint32_t adapter;
-
-			public gs_window window;        //Window to render to
 
 			//Use shaders to convert to different color formats
 

@@ -6,7 +6,7 @@ C# wrapper for libobs (part of obs-studio, multiplatform rewrite of Open Broadca
 ### Requirements
 
 * [obs-studio](https://github.com/jp9000/OBS-studio)
-* .NET Framework 4.5 / Mono
+* .NET Framework 4.5.2 / Mono
 
 ### Installation
 

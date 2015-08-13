@@ -45,7 +45,6 @@ namespace test
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.previewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.okButton = new System.Windows.Forms.Button();
@@ -53,17 +52,10 @@ namespace test
 			this.undoButton = new System.Windows.Forms.Button();
 			this.propertiesPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.propertyPanel = new System.Windows.Forms.Panel();
+			this.topPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel.SuspendLayout();
 			this.propertiesPanel.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// previewPanel
-			// 
-			this.previewPanel.Dock = System.Windows.Forms.DockStyle.Top;
-			this.previewPanel.Location = new System.Drawing.Point(0, 0);
-			this.previewPanel.Name = "previewPanel";
-			this.previewPanel.Size = new System.Drawing.Size(778, 278);
-			this.previewPanel.TabIndex = 3;
 			// 
 			// bottomPanel
 			// 
@@ -144,6 +136,14 @@ namespace test
 			this.propertyPanel.Size = new System.Drawing.Size(594, 202);
 			this.propertyPanel.TabIndex = 0;
 			// 
+			// topPanel
+			// 
+			this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.topPanel.Location = new System.Drawing.Point(0, 0);
+			this.topPanel.Name = "topPanel";
+			this.topPanel.Size = new System.Drawing.Size(778, 278);
+			this.topPanel.TabIndex = 3;
+			// 
 			// TestProperties
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -154,13 +154,15 @@ namespace test
 			this.ControlBox = false;
 			this.Controls.Add(this.propertiesPanel);
 			this.Controls.Add(this.bottomPanel);
-			this.Controls.Add(this.previewPanel);
+			this.Controls.Add(this.topPanel);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(675, 525);
 			this.Name = "TestProperties";
 			this.ShowIcon = false;
 			this.Text = "TestProperties";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestProperties_FormClosed);
+			this.Load += new System.EventHandler(this.TestProperties_Load);
 			this.bottomPanel.ResumeLayout(false);
 			this.propertiesPanel.ResumeLayout(false);
 			this.propertiesPanel.PerformLayout();
@@ -170,8 +172,6 @@ namespace test
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Panel previewPanel;
 		private System.Windows.Forms.FlowLayoutPanel bottomPanel;
 		private System.Windows.Forms.Button cancelButton;
 		private System.Windows.Forms.Button okButton;
@@ -179,5 +179,6 @@ namespace test
 		private System.Windows.Forms.Button defaultButton;
 		private System.Windows.Forms.TableLayoutPanel propertiesPanel;
 		private System.Windows.Forms.Panel propertyPanel;
+		private System.Windows.Forms.Panel topPanel;
 	}
 }

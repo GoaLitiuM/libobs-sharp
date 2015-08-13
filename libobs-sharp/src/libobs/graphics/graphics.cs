@@ -155,7 +155,7 @@ namespace OBS
 		//EXPORT int gs_get_device_type(void);
 		//EXPORT void gs_enum_adapters(bool (*callback)(void *param, const char *name, uint32_t id), void *param);
 
-		//EXPORT int gs_create(graphics_t **graphics, const char *module, const struct gs_init_data *data);
+		//EXPORT int gs_create(graphics_t **graphics, const char *module, uint32_t adapter);
 		//EXPORT void gs_destroy(graphics_t *graphics);
 
 		//EXPORT void gs_enter_context(graphics_t *graphics);

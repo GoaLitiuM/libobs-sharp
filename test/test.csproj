@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>test</RootNamespace>
     <AssemblyName>test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -71,6 +71,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DisplayPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DisplayPanel.Designer.cs">
+      <DependentUpon>DisplayPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PropertiesView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -86,9 +92,6 @@
     <Compile Include="Objects\Scene.cs" />
     <Compile Include="Objects\Source.cs" />
     <Compile Include="Objects\Transition.cs" />
-    <Compile Include="TestFilter_Rendering.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="TestForm_Rendering.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,9 +132,6 @@
     </Compile>
     <Compile Include="TestProperties.Designer.cs">
       <DependentUpon>TestProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TestProperties_Rendering.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="TestTransform.cs">
       <SubType>Form</SubType>

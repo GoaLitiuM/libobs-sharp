@@ -17,10 +17,12 @@
 
 using System;
 using System.ComponentModel;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
 using OBS;
+using OBS.Graphics;
 
 using test.Controls;
 using test.Utility;
@@ -31,6 +33,7 @@ namespace test
 	{
 		private Filter SelectedFilter { get; set; }
 
+		private DisplayPanel previewPanel;
 		private PropertiesView view;
 		private Source source { get; set; }
 		private readonly ObsData sourceSettings;
@@ -64,21 +67,6 @@ namespace test
 				undoButton.Enabled = true;
 				defaultButton.Enabled = true;
 			}
-
-			Load += (sender, args) =>
-			{
-				InitPreview((uint)previewPanel.Width, (uint)previewPanel.Height, previewPanel.Handle);
-			};
-
-			previewPanel.SizeChanged += (sender, args) =>
-			{
-				ResizePreview((uint)previewPanel.Width, (uint)previewPanel.Height);
-			};
-
-			FormClosed += (sender, args) =>
-			{
-				ClosePreview();
-			};
 
 			defaultButton.Click += (sender, args) =>
 			{
@@ -127,6 +115,25 @@ namespace test
 					view = null;
 				}
 			};
+		}
+
+		private void TestFilter_Load(object sender, System.EventArgs e)
+		{
+			previewPanel = new DisplayPanel();
+			previewPanel.displayCreated += () =>
+			{
+				previewPanel.Display.AddDrawCallback(RenderPreview, Handle);
+			};
+
+			topPanel.Controls.Add(previewPanel);
+			previewPanel.Dock = DockStyle.Fill;
+			previewPanel.Show();
+		}
+
+		private void TestFilter_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			previewPanel.Display.RemoveDrawCallback(RenderPreview, Handle);
+			previewPanel.Dispose();
 		}
 
 		private void PopulateControls(Filter filter)
@@ -277,6 +284,44 @@ namespace test
 				undoButton.Enabled = true;
 				defaultButton.Enabled = true;
 			}
+		}
+
+		private static void RenderPreview(IntPtr data, UInt32 cx, UInt32 cy)
+		{
+			TestFilter window = FromHandle(data) as TestFilter;
+
+			if (window == null) return;
+
+			int newW = (int)cx;
+			int newH = (int)cy;
+			int sourceWidth = (int)window.source.Width;
+			int sourceHeight = (int)window.source.Height;
+			float previewAspect = (float)cx / cy;
+			float sourceAspect = (float)sourceWidth / sourceHeight;
+
+			//calculate new width and height for source to make it fit inside the preview area
+			if (previewAspect > sourceAspect)
+				newW = (int)(cy * sourceAspect);
+			else
+				newH = (int)(cx / sourceAspect);
+
+			int centerX = ((int)cx - newW) / 2;
+			int centerY = ((int)cy - newH) / 2;
+
+			GS.ViewportPush();
+			GS.ProjectionPush();
+
+			//setup orthographic projection of the source
+			GS.Ortho(0.0f, sourceWidth, 0.0f, sourceHeight, -100.0f, 100.0f);
+			GS.SetViewport(centerX, centerY, newW, newH);
+
+			//render source content
+			window.source.Render();
+
+			GS.ProjectionPop();
+			GS.ViewportPop();
+
+			GS.LoadVertexBuffer(null);
 		}
 	}
 }

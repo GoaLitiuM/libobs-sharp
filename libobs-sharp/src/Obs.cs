@@ -26,7 +26,7 @@ namespace OBS
 	{
 		public static bool Startup(string locale)
 		{
-			return libobs.obs_startup(locale);
+			return libobs.obs_startup(locale, IntPtr.Zero);
 		}
 
 		public static void Shutdown()
@@ -82,16 +82,6 @@ namespace OBS
 			return new Obs.Version { Full = libobs.obs_get_version() };
 		}
 
-		public static void AddDrawCallback(libobs.draw_callback callback, IntPtr param)
-		{
-			libobs.obs_add_draw_callback(callback, param);
-		}
-
-		public static void RemoveDrawCallback(libobs.draw_callback callback, IntPtr param)
-		{
-			libobs.obs_remove_draw_callback(callback, param);
-		}
-
 		/// <summary> Sets primary output to source for a channel. </summary>
 		public static unsafe void SetOutputSource(UInt32 channel, ObsSource source)
 		{
@@ -129,11 +119,6 @@ namespace OBS
 		public static void RenderMainView()
 		{
 			libobs.obs_render_main_view();
-		}
-
-		public static void ResizeMainView(int width, int height)
-		{
-			libobs.obs_resize((UInt32)width, (UInt32)height);
 		}
 
 		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)

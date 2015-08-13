@@ -45,7 +45,6 @@ namespace test
         /// </summary>
         private void InitializeComponent()
         {
-			this.MainViewPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel = new System.Windows.Forms.Panel();
 			this.AddSourceToSceneButton = new System.Windows.Forms.Button();
 			this.DelSourceButton = new System.Windows.Forms.Button();
@@ -60,19 +59,9 @@ namespace test
 			this.AddItemButton = new System.Windows.Forms.Button();
 			this.ItemListBox = new System.Windows.Forms.ListBox();
 			this.SceneListBox = new System.Windows.Forms.ListBox();
+			this.topPanel = new System.Windows.Forms.Panel();
 			this.bottomPanel.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// MainViewPanel
-			// 
-			this.MainViewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.MainViewPanel.Location = new System.Drawing.Point(12, 9);
-			this.MainViewPanel.Name = "MainViewPanel";
-			this.MainViewPanel.Size = new System.Drawing.Size(694, 331);
-			this.MainViewPanel.TabIndex = 0;
-			this.MainViewPanel.SizeChanged += new System.EventHandler(this.MainViewPanel_SizeChanged);
 			// 
 			// bottomPanel
 			// 
@@ -225,13 +214,23 @@ namespace test
 			this.SceneListBox.TabIndex = 0;
 			this.SceneListBox.SelectedIndexChanged += new System.EventHandler(this.SceneListBox_SelectedIndexChanged);
 			// 
+			// topPanel
+			// 
+			this.topPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.topPanel.Location = new System.Drawing.Point(15, 12);
+			this.topPanel.Name = "topPanel";
+			this.topPanel.Size = new System.Drawing.Size(691, 328);
+			this.topPanel.TabIndex = 2;
+			// 
 			// TestForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(718, 479);
+			this.Controls.Add(this.topPanel);
 			this.Controls.Add(this.bottomPanel);
-			this.Controls.Add(this.MainViewPanel);
 			this.Name = "TestForm";
 			this.Text = "libobs-sharp-test";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestForm_FormClosed);
@@ -243,8 +242,6 @@ namespace test
         }
 
         #endregion
-
-		public System.Windows.Forms.Panel MainViewPanel;
 		private System.Windows.Forms.Panel bottomPanel;
 		private System.Windows.Forms.Button DelSceneButton;
 		private System.Windows.Forms.Button AddSceneButton;
@@ -259,6 +256,7 @@ namespace test
 		private System.Windows.Forms.Button AddSourceButton;
 		private System.Windows.Forms.ListBox SourceListBox;
 		private System.Windows.Forms.Button AddSourceToSceneButton;
-    }
+		private System.Windows.Forms.Panel topPanel;
+	}
 }
 

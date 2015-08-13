@@ -36,6 +36,7 @@ namespace OBS
 		//EXPORT void obs_encoder_set_scaled_size(obs_encoder_t *encoder, uint32_t width, uint32_t height);
 		//EXPORT uint32_t obs_encoder_get_width(const obs_encoder_t *encoder);
 		//EXPORT uint32_t obs_encoder_get_height(const obs_encoder_t *encoder);
+		//EXPORT uint32_t obs_encoder_get_sample_rate(const obs_encoder_t *encoder);
 		//EXPORT obs_data_t *obs_encoder_defaults(const char *id);
 		//EXPORT obs_properties_t *obs_get_encoder_properties(const char *id);
 		//EXPORT obs_properties_t *obs_encoder_properties(const obs_encoder_t *encoder);

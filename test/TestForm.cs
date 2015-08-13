@@ -28,9 +28,7 @@ namespace test
 {
 	public partial class TestForm
 	{
-		public readonly int MainWidth = 1280;
-		public readonly int MainHeight = 720;
-
+		private Controls.DisplayPanel previewPanel;
 		private Presentation _presentation;
 
 		public TestForm()
@@ -42,113 +40,67 @@ namespace test
 		{
 			if (Environment.Is64BitProcess)
 				Text += " (64-bit)";
+			else
+				Text += " (32-bit)";
 
-			try
+			InitPrimitives();
+
+			_presentation = new Presentation();
+
+			// Bindings
+			// Scene
+			SceneListBox.DisplayMember = "Name";
+			SceneListBox.ValueMember = "Items";
+			SceneListBox.DataSource = _presentation.Scenes;
+
+			// Item
+			ItemListBox.DisplayMember = "Name";
+
+			// Source
+			SourceListBox.DisplayMember = "Name";
+			SourceListBox.DataSource = _presentation.Sources;
+
+
+			_presentation.AddScene();
+
+			ItemListBox.DataSource = SceneListBox.SelectedValue;
+
+			var source = _presentation.CreateSource("random", "some random source");
+			_presentation.AddSource(source);
+			var item = _presentation.CreateItem(source);
+			_presentation.AddItem(item);
+
+			_presentation.SetScene(SceneListBox.SelectedIndex);
+			_presentation.SetItem(ItemListBox.SelectedIndex);
+			_presentation.SetSource(SourceListBox.SelectedIndex);
+
+			HideItemCheckBox.DataBindings.Add(
+				new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			EnableSourceCheckBox.DataBindings.Add(
+				new Binding("Checked", _presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
+
+			MuteSourceCheckBox.DataBindings.Add(
+				new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
+
+
+			// setup scene preview panel
+			previewPanel = new Controls.DisplayPanel();
+			previewPanel.displayCreated += () =>
 			{
-				Debug.WriteLine("libobs version: " + Obs.GetVersion());
+				previewPanel.Display.AddDrawCallback(RenderMain, Handle);
+			};
 
-				Obs.SetLogHandler((lvl, msg, p) =>
-				{
-					Debug.WriteLine(msg);
-				});
-
-				Rectangle rc = new Rectangle(0, 0, MainWidth, MainHeight);
-				libobs.obs_video_info ovi = new libobs.obs_video_info
-											{
-												adapter = 0,
-												base_width = (uint)rc.Right,
-												base_height = (uint)rc.Bottom,
-												fps_num = 30000,
-												fps_den = 1001,
-												graphics_module = "libobs-d3d11",
-												window_width = (uint)rc.Right,
-												window_height = (uint)rc.Bottom,
-												output_format = libobs.video_format.VIDEO_FORMAT_RGBA,
-												output_width = (uint)rc.Right,
-												output_height = (uint)rc.Bottom,
-												window = new libobs.gs_window
-														 {
-															 hwnd = MainViewPanel.Handle
-														 },
-											};
-
-				libobs.obs_audio_info avi = new libobs.obs_audio_info
-											{
-												samples_per_sec = 44100,
-												speakers = libobs.speaker_layout.SPEAKERS_STEREO,
-												buffer_ms = 1000
-											};
-
-				if (!Obs.Startup("en-US"))
-					throw new ApplicationException("Startup failed.");
-
-				if (!Obs.ResetVideo(ovi))
-					throw new ApplicationException("ResetVideo failed.");
-
-				if (!Obs.ResetAudio(avi))
-					throw new ApplicationException("ResetAudio failed.");
-
-				Obs.LoadAllModules();
-
-				InitPrimitives();
-
-				_presentation = new Presentation();
-
-				// Bindings
-				// Scene
-				SceneListBox.DisplayMember = "Name";
-				SceneListBox.ValueMember = "Items";
-				SceneListBox.DataSource = _presentation.Scenes;
-
-				// Item
-				ItemListBox.DisplayMember = "Name";
-
-				// Source
-				SourceListBox.DisplayMember = "Name";
-				SourceListBox.DataSource = _presentation.Sources;
-
-
-				_presentation.AddScene();
-
-				ItemListBox.DataSource = SceneListBox.SelectedValue;
-
-				var source = _presentation.CreateSource("random", "some random source");
-				_presentation.AddSource(source);
-				var item = _presentation.CreateItem(source);
-				_presentation.AddItem(item);
-
-				_presentation.SetScene(SceneListBox.SelectedIndex);
-				_presentation.SetItem(ItemListBox.SelectedIndex);
-				_presentation.SetSource(SourceListBox.SelectedIndex);
-
-				HideItemCheckBox.DataBindings.Add(
-					new Binding("Checked", _presentation.SelectedItem, "Visible", false, DataSourceUpdateMode.OnPropertyChanged));
-
-				EnableSourceCheckBox.DataBindings.Add(
-					new Binding("Checked", _presentation.SelectedSource, "Enabled", false, DataSourceUpdateMode.OnPropertyChanged));
-
-				MuteSourceCheckBox.DataBindings.Add(
-					new Binding("Checked", _presentation.SelectedSource, "Muted", false, DataSourceUpdateMode.OnPropertyChanged));
-
-				Obs.AddDrawCallback(RenderMain, Handle);
-
-				Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
-			}
-			catch (BadImageFormatException exp)
-			{
-				MessageBox.Show("Platform target mismatch: "
-								+ (Environment.Is64BitProcess
-									? "Loading 32-bit OBS with 64-bit executable is not supported."
-									: "Loading 64-bit OBS with 32-bit executable is not supported.")
-								+ "\n\n" + exp.Message,
-					"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Environment.Exit(1);
-			}
+			topPanel.Controls.Add(previewPanel);
+			previewPanel.Dock = DockStyle.Fill;
+			previewPanel.Show();
 		}
 
 		private void TestForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			Obs.RemoveDrawCallback(RenderMain, Handle);
+			previewPanel.Display.RemoveDrawCallback(RenderMain, Handle);
+			previewPanel.Dispose();
+
 			_presentation.Dispose();
 
 			if (_boxPrimitive != null)
@@ -157,11 +109,6 @@ namespace test
 				_circlePrimitive.Dispose();
 
 			Obs.Shutdown();
-		}
-
-		private void MainViewPanel_SizeChanged(object sender, EventArgs e)
-		{
-			Obs.ResizeMainView(MainViewPanel.Width, MainViewPanel.Height);
 		}
 
 		#region SceneControls

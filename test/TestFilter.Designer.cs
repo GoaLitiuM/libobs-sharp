@@ -59,7 +59,7 @@ namespace test
 			this.RemoveFilterButton = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.propertyPanel = new System.Windows.Forms.Panel();
-			this.previewPanel = new System.Windows.Forms.Panel();
+			this.topPanel = new System.Windows.Forms.Panel();
 			this.propertiesPanel.SuspendLayout();
 			this.bottomPanel.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -181,7 +181,7 @@ namespace test
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel1.Controls.Add(this.propertyPanel, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.previewPanel, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.topPanel, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(203, 3);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -200,14 +200,14 @@ namespace test
 			this.propertyPanel.Size = new System.Drawing.Size(585, 283);
 			this.propertyPanel.TabIndex = 1;
 			// 
-			// previewPanel
+			// topPanel
 			// 
-			this.previewPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.previewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.previewPanel.Location = new System.Drawing.Point(3, 3);
-			this.previewPanel.Name = "previewPanel";
-			this.previewPanel.Size = new System.Drawing.Size(585, 283);
-			this.previewPanel.TabIndex = 2;
+			this.topPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.topPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.topPanel.Location = new System.Drawing.Point(3, 3);
+			this.topPanel.Name = "topPanel";
+			this.topPanel.Size = new System.Drawing.Size(585, 283);
+			this.topPanel.TabIndex = 2;
 			// 
 			// TestFilter
 			// 
@@ -223,6 +223,8 @@ namespace test
 			this.Name = "TestFilter";
 			this.ShowIcon = false;
 			this.Text = "TestFilter";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestFilter_FormClosed);
+			this.Load += new System.EventHandler(this.TestFilter_Load);
 			this.propertiesPanel.ResumeLayout(false);
 			this.propertiesPanel.PerformLayout();
 			this.bottomPanel.ResumeLayout(false);
@@ -247,6 +249,6 @@ namespace test
 		private Button undoButton;
 		private TableLayoutPanel tableLayoutPanel1;
 		private Panel propertyPanel;
-		private Panel previewPanel;
+		private Panel topPanel;
 	}
 }

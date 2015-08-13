@@ -50,6 +50,7 @@ namespace OBS
 		//EXPORT uint64_t config_get_uint(const config_t *config, const char *section, const char *name);
 		//EXPORT bool config_get_bool(const config_t *config, const char *section, const char *name);
 		//EXPORT double config_get_double(const config_t *config, const char *section, const char *name);
+		//EXPORT bool config_remove_value(config_t* config, const char* section, const char* name);
 
 		/*
 		 * DEFAULT VALUES
