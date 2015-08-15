@@ -176,6 +176,11 @@ namespace OBS
 			return libobs.obs_property_button_clicked(instance, obj);
 		}
 
+		public unsafe bool ButtonClicked(libobs.obs_property_clicked_t clicked, ObsProperties properties, IntPtr obj)
+		{
+			return clicked(properties.GetPointer(), instance, obj);
+		}
+
 		public unsafe string[] GetListItemNames()
 		{
 			int count = ListItemCount;
