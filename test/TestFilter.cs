@@ -36,7 +36,7 @@ namespace test
 		private readonly ObsData sourceSettings;
 		private readonly BindingList<Filter> oldfilters;
 
-		private DisplayPanel previewPanel;
+		private SourcePreviewPanel previewPanel;
 		private PropertiesView view;
 
 		private TestFilter()
@@ -120,20 +120,15 @@ namespace test
 
 		private void TestFilter_Load(object sender, System.EventArgs e)
 		{
-			previewPanel = new DisplayPanel();
-			previewPanel.displayCreated += () =>
-			{
-				previewPanel.Display.AddDrawCallback(RenderPreview);
-			};
-
-			topPanel.Controls.Add(previewPanel);
+			previewPanel = new SourcePreviewPanel(FilterSource);
 			previewPanel.Dock = DockStyle.Fill;
+
+			topPanel.Controls.Add(previewPanel);		
 			previewPanel.Show();
 		}
 
 		private void TestFilter_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderPreview);
 			previewPanel.Dispose();
 		}
 
@@ -285,40 +280,6 @@ namespace test
 				undoButton.Enabled = true;
 				defaultButton.Enabled = true;
 			}
-		}
-
-		private void RenderPreview(IntPtr data, uint cx, uint cy)
-		{
-			int newW = (int)cx;
-			int newH = (int)cy;
-			int sourceWidth = (int)FilterSource.Width;
-			int sourceHeight = (int)FilterSource.Height;
-			float previewAspect = (float)cx / cy;
-			float sourceAspect = (float)sourceWidth / sourceHeight;
-
-			//calculate new width and height for source to make it fit inside the preview area
-			if (previewAspect > sourceAspect)
-				newW = (int)(cy * sourceAspect);
-			else
-				newH = (int)(cx / sourceAspect);
-
-			int centerX = ((int)cx - newW) / 2;
-			int centerY = ((int)cy - newH) / 2;
-
-			GS.ViewportPush();
-			GS.ProjectionPush();
-
-			//setup orthographic projection of the source
-			GS.Ortho(0.0f, sourceWidth, 0.0f, sourceHeight, -100.0f, 100.0f);
-			GS.SetViewport(centerX, centerY, newW, newH);
-
-			//render source content
-			FilterSource.Render();
-
-			GS.ProjectionPop();
-			GS.ViewportPop();
-
-			GS.LoadVertexBuffer(null);
 		}
 	}
 }

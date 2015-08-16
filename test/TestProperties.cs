@@ -28,7 +28,7 @@ namespace test
 		private readonly PropertiesView view;
 		private readonly ObsSource source;
 
-		private DisplayPanel previewPanel;
+		private SourcePreviewPanel previewPanel;
 
 		private TestProperties()
 		{
@@ -75,55 +75,16 @@ namespace test
 
 		private void TestProperties_Load(object sender, System.EventArgs e)
 		{
-			previewPanel = new DisplayPanel();
-			previewPanel.displayCreated += () =>
-			{
-				previewPanel.Display.AddDrawCallback(RenderPreview);
-			};
-
-			topPanel.Controls.Add(previewPanel);
+			previewPanel = new SourcePreviewPanel(source);
 			previewPanel.Dock = DockStyle.Fill;
+
+			topPanel.Controls.Add(previewPanel);	
 			previewPanel.Show();
 		}
 
 		private void TestProperties_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			previewPanel.Display.RemoveDrawCallback(RenderPreview);
 			previewPanel.Dispose();
-		}
-
-		private void RenderPreview(IntPtr data, uint cx, uint cy)
-		{
-			int newW = (int)cx;
-			int newH = (int)cy;
-			int sourceWidth = (int)source.Width;
-			int sourceHeight = (int)source.Height;
-			float previewAspect = (float)cx / cy;
-			float sourceAspect = (float)sourceWidth / sourceHeight;
-
-			//calculate new width and height for source to make it fit inside the preview area
-			if (previewAspect > sourceAspect)
-				newW = (int)(cy * sourceAspect);
-			else
-				newH = (int)(cx / sourceAspect);
-
-			int centerX = ((int)cx - newW) / 2;
-			int centerY = ((int)cy - newH) / 2;
-
-			GS.ViewportPush();
-			GS.ProjectionPush();
-
-			//setup orthographic projection of the source
-			GS.Ortho(0.0f, sourceWidth, 0.0f, sourceHeight, -100.0f, 100.0f);
-			GS.SetViewport(centerX, centerY, newW, newH);
-
-			//render source content
-			source.Render();
-
-			GS.ProjectionPop();
-			GS.ViewportPop();
-
-			GS.LoadVertexBuffer(null);
 		}
 	}
 }

@@ -16,13 +16,6 @@
 ***************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OBS;
 
@@ -33,10 +26,12 @@ namespace test.Controls
 		private ObsDisplay display;
 
 		public DisplayCreatedDelegate displayCreated;
+		public DisplayDestroyedDelegate displayDestroyed;
 		public DisplayResizedDelegate displayResized;
 
 		public delegate void DisplayCreatedDelegate();
 		public delegate void DisplayResizedDelegate();
+		public delegate void DisplayDestroyedDelegate();
 
 		public ObsDisplay Display
 		{
@@ -45,8 +40,6 @@ namespace test.Controls
 
 		public DisplayPanel()
 		{
-			InitializeComponent();
-
 			Layout += DisplayPanel_Layout;
 			VisibleChanged += DisplayPanel_VisibleChanged;
 		}
@@ -54,12 +47,13 @@ namespace test.Controls
 		protected override void Dispose(bool disposing)
 		{
 			if (display != null)
-				display.Dispose();
-			
-			if (disposing && (components != null))
 			{
-				components.Dispose();
+				if (displayDestroyed != null)
+					displayDestroyed();
+
+				display.Dispose();
 			}
+
 			base.Dispose(disposing);
 		}
 
