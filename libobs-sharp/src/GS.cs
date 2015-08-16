@@ -268,6 +268,81 @@ namespace OBS.Graphics
 		{
 			libobs.gs_draw((libobs.gs_draw_mode)drawMode, startVert, numVerts);
 		}
+
+		/// <summary>
+		/// Handles entering and leaving OBS graphics context, used with using pattern (RAII).
+		/// Calls EnterGraphics, and LeaveGraphics at the end of the using block.
+		/// </summary>
+		///	<example>
+		/// using (GS.GraphicsContext())
+		/// {
+		///		...
+		/// }
+		/// </example>
+		public static GraphicsContextHelper GraphicsContext()
+		{
+			return new GraphicsContextHelper();
+		}
+
+		// helper class for entering OBS graphics context with using pattern
+		public class GraphicsContextHelper : IDisposable
+		{
+			public GraphicsContextHelper()
+			{
+				GS.EnterGraphics();
+			}
+
+			public void Dispose()
+			{
+				GS.LeaveGraphics();
+			}
+		}
+
+		/// <summary>
+		/// Render data to vertex buffer, used with using pattern (RAII).
+		/// Calls RenderStart, and RenderSave at the end of the using block.
+		/// </summary>
+		///	<example>
+		/// GSVertexBuffer vb = new GSVertexBuffer();
+		/// using (GS.RenderVertexBuffer(vb))
+		/// {
+		///		...
+		/// }
+		/// </example>
+		public static RenderVertexBufferHelper RenderVertexBuffer(GSVertexBuffer vb)
+		{
+			return new RenderVertexBufferHelper(vb);
+		}
+
+		// helper class for rendering into VB with using pattern
+		public class RenderVertexBufferHelper : IDisposable
+		{
+			GSVertexBuffer vb;
+
+			public RenderVertexBufferHelper(GSVertexBuffer vb)
+			{
+				this.vb = vb;
+				if (vb == null)
+					return;
+
+				GS.RenderStart(true);
+			}
+
+			public void Dispose()
+			{
+				if (vb == null)
+					return;
+
+				GSVertexBuffer newvb = GS.RenderSave();
+				
+				// transfer the internal pointer to old object
+				vb.Dispose();
+				vb.instance = newvb.instance;
+
+				newvb.instance = IntPtr.Zero;
+				newvb.Dispose();
+			}
+		}
 	}
 
 	public enum GSClearFlags : uint

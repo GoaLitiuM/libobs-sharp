@@ -31,6 +31,10 @@ namespace OBS.Graphics
 				throw new ApplicationException("gs_vertexbuffer_create failed");
 		}
 
+		public GSVertexBuffer()
+		{
+		}
+
 		public GSVertexBuffer(IntPtr instance)
 		{
 			this.instance = instance;
