@@ -32,7 +32,6 @@ namespace OBS
 		public static void Shutdown()
 		{
 			libobs.obs_shutdown();
-			ObsDisplay.delegateRefs.Clear();
 		}
 
 		public static void LoadAllModules()

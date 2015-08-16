@@ -27,7 +27,7 @@ namespace OBS
 		internal IntPtr instance;   //pointer to unmanaged object
 
 		// stored references to all draw delegates
-		public static List<delegateTuple> delegateRefs = new List<delegateTuple>();
+		private List<delegateTuple> delegateRefs = new List<delegateTuple>();
 
 		public ObsDisplay(libobs.gs_init_data graphicsData)
 		{
@@ -48,6 +48,7 @@ namespace OBS
 				return;
 
 			libobs.obs_display_destroy(instance);
+			delegateRefs.Clear();
 
 			instance = IntPtr.Zero;
 		}
