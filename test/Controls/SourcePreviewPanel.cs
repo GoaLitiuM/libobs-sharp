@@ -28,12 +28,22 @@ namespace test.Controls
 		public SourcePreviewPanel(ObsSource source)
 		{
 			this.source = source;
+		}
+
+		protected override void DisplayCreated() 
+		{
+			base.DisplayCreated();
 
 			if (source != null)
-			{
-				displayCreated += () => Display.AddDrawCallback(RenderSource);
-				displayDestroyed += () => Display.RemoveDrawCallback(RenderSource);
-			}
+				Display.AddDrawCallback(RenderSource);
+		}
+
+		protected override void DisplayDestroyed() 
+		{
+			base.DisplayCreated();
+
+			if (source != null)
+				Display.RemoveDrawCallback(RenderSource);
 		}
 
 		private void RenderSource(IntPtr data, uint cx, uint cy)

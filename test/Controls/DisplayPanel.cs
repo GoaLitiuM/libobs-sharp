@@ -48,9 +48,7 @@ namespace test.Controls
 		{
 			if (display != null)
 			{
-				if (displayDestroyed != null)
-					displayDestroyed();
-
+				DisplayDestroyed();
 				display.Dispose();
 			}
 
@@ -75,8 +73,7 @@ namespace test.Controls
 
 			display = new ObsDisplay(initData);
 
-			if (displayCreated != null)
-				displayCreated();
+			DisplayCreated();
 		}
 
 		private void DisplayPanel_Layout(object sender, LayoutEventArgs e)
@@ -89,8 +86,7 @@ namespace test.Controls
 
 			display.Resize(width, height);
 
-			if (displayResized != null)
-				displayResized();
+			DisplayResized();
 		}
 
 		private void DisplayPanel_VisibleChanged(object sender, EventArgs e)
@@ -107,6 +103,24 @@ namespace test.Controls
 			}
 			else
 				InitDisplay();
+		}
+
+		protected virtual void DisplayCreated()
+		{
+			if (displayCreated != null)
+				displayCreated();
+		}
+
+		protected virtual void DisplayDestroyed()
+		{
+			if (displayDestroyed != null)
+				displayDestroyed();
+		}
+
+		protected virtual void DisplayResized()
+		{
+			if (displayResized != null)
+				displayResized();
 		}
 	}
 }
