@@ -119,27 +119,30 @@ namespace test.Controls
 
 		private void InitPrimitives()
 		{
-			GS.EnterGraphics();
-
-			//box from vertices
-			GS.RenderStart(true);
-			GS.Vertex2f(0.0f, 0.0f);
-			GS.Vertex2f(0.0f, 1.0f);
-			GS.Vertex2f(1.0f, 1.0f);
-			GS.Vertex2f(1.0f, 0.0f);
-			GS.Vertex2f(0.0f, 0.0f);
-			boxPrimitive = GS.RenderSave();
-
-			//circle from vertices
-			GS.RenderStart(true);
-			for (int i = 0; i <= 360; i += 360 / 20)
+			using (GS.GraphicsContext())
 			{
-				double pos = Math.PI * (double)i / 180.0;
-				GS.Vertex2f((float)Math.Cos(pos), (float)Math.Sin(pos));
-			}
-			circlePrimitive = GS.RenderSave();
+				// box from vertices
+				boxPrimitive = new GSVertexBuffer();
+				using (GS.RenderVertexBuffer(boxPrimitive))
+				{
+					GS.Vertex2f(0.0f, 0.0f);
+					GS.Vertex2f(0.0f, 1.0f);
+					GS.Vertex2f(1.0f, 1.0f);
+					GS.Vertex2f(1.0f, 0.0f);
+					GS.Vertex2f(0.0f, 0.0f);
+				}
 
-			GS.LeaveGraphics();
+				// circle from vertices
+				circlePrimitive = new GSVertexBuffer();
+				using (GS.RenderVertexBuffer(circlePrimitive))
+				{
+					for (int i = 0; i <= 360; i += 360 / 20)
+					{
+						double pos = Math.PI * (double)i / 180.0;
+						GS.Vertex2f((float)Math.Cos(pos), (float)Math.Sin(pos));
+					}
+				}
+			}
 		}
 
 		private void RenderPreview(IntPtr data, uint cx, uint cy)
