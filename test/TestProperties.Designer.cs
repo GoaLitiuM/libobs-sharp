@@ -66,15 +66,15 @@ namespace test
 			this.bottomPanel.Controls.Add(this.undoButton);
 			this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.bottomPanel.Location = new System.Drawing.Point(0, 486);
+			this.bottomPanel.Location = new System.Drawing.Point(0, 457);
 			this.bottomPanel.Name = "bottomPanel";
-			this.bottomPanel.Size = new System.Drawing.Size(778, 29);
+			this.bottomPanel.Size = new System.Drawing.Size(659, 29);
 			this.bottomPanel.TabIndex = 7;
 			// 
 			// cancelButton
 			// 
 			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.cancelButton.Location = new System.Drawing.Point(700, 3);
+			this.cancelButton.Location = new System.Drawing.Point(581, 3);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 4;
@@ -84,7 +84,7 @@ namespace test
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.Location = new System.Drawing.Point(619, 3);
+			this.okButton.Location = new System.Drawing.Point(500, 3);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 3;
@@ -93,7 +93,7 @@ namespace test
 			// 
 			// defaultButton
 			// 
-			this.defaultButton.Location = new System.Drawing.Point(538, 3);
+			this.defaultButton.Location = new System.Drawing.Point(419, 3);
 			this.defaultButton.Name = "defaultButton";
 			this.defaultButton.Size = new System.Drawing.Size(75, 23);
 			this.defaultButton.TabIndex = 6;
@@ -102,7 +102,7 @@ namespace test
 			// 
 			// undoButton
 			// 
-			this.undoButton.Location = new System.Drawing.Point(457, 3);
+			this.undoButton.Location = new System.Drawing.Point(338, 3);
 			this.undoButton.Name = "undoButton";
 			this.undoButton.Size = new System.Drawing.Size(75, 23);
 			this.undoButton.TabIndex = 5;
@@ -123,7 +123,7 @@ namespace test
 			this.propertiesPanel.Name = "propertiesPanel";
 			this.propertiesPanel.RowCount = 1;
 			this.propertiesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.propertiesPanel.Size = new System.Drawing.Size(778, 208);
+			this.propertiesPanel.Size = new System.Drawing.Size(659, 179);
 			this.propertiesPanel.TabIndex = 8;
 			// 
 			// propertyPanel
@@ -131,9 +131,9 @@ namespace test
 			this.propertyPanel.AutoSize = true;
 			this.propertyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertyPanel.Location = new System.Drawing.Point(92, 3);
+			this.propertyPanel.Location = new System.Drawing.Point(32, 3);
 			this.propertyPanel.Name = "propertyPanel";
-			this.propertyPanel.Size = new System.Drawing.Size(594, 202);
+			this.propertyPanel.Size = new System.Drawing.Size(594, 173);
 			this.propertyPanel.TabIndex = 0;
 			// 
 			// topPanel
@@ -141,7 +141,7 @@ namespace test
 			this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.topPanel.Location = new System.Drawing.Point(0, 0);
 			this.topPanel.Name = "topPanel";
-			this.topPanel.Size = new System.Drawing.Size(778, 278);
+			this.topPanel.Size = new System.Drawing.Size(659, 278);
 			this.topPanel.TabIndex = 3;
 			// 
 			// TestProperties
@@ -149,8 +149,7 @@ namespace test
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.ClientSize = new System.Drawing.Size(778, 515);
+			this.ClientSize = new System.Drawing.Size(659, 486);
 			this.ControlBox = false;
 			this.Controls.Add(this.propertiesPanel);
 			this.Controls.Add(this.bottomPanel);

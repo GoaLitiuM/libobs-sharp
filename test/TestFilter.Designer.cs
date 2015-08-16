@@ -213,13 +213,12 @@ namespace test
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoSize = true;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.ClientSize = new System.Drawing.Size(797, 616);
 			this.ControlBox = false;
 			this.Controls.Add(this.propertiesPanel);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(813, 655);
 			this.Name = "TestFilter";
 			this.ShowIcon = false;
 			this.Text = "TestFilter";
