@@ -203,7 +203,7 @@ namespace test.Controls
 				};
 			}
 
-			if (property.IntType == ObsNumberType.Slider)
+			if (property.IntType == ObsNumberType.Slider || property.FloatType == ObsNumberType.Slider)
 			{
 				numeric.Width = 75;
 				numeric.Height = 23;
