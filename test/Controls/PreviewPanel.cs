@@ -19,6 +19,7 @@ using System;
 using System.Windows.Forms;
 using OBS;
 using OBS.Graphics;
+using System.Drawing;
 
 namespace test.Controls
 {
@@ -33,7 +34,10 @@ namespace test.Controls
 		private const float HANDLE_RADIUS = 5.0f;
 		private const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
 		private const float CLAMP_DISTANCE = 10.0f;
-		
+
+		private bool dragging = false;
+		Point dragLastPosition;
+
 		public PreviewPanel()
 		{
 		}
@@ -77,6 +81,27 @@ namespace test.Controls
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
+			if (!dragging)
+				return;
+
+			Point mousePosition = GetMousePositionInScene(e.Location);
+			Point dragOffset = new Point(mousePosition.X - dragLastPosition.X, mousePosition.Y - dragLastPosition.Y);
+
+			// move all the selected items
+			scene.EnumItems((scene, item, data) =>
+			{
+				if (!item.Selected)
+					return true;
+
+				Vector2 newPosition = item.Position;
+				newPosition.x += dragOffset.X;
+				newPosition.y += dragOffset.Y;
+				item.Position = newPosition;
+				
+				return true;
+			});
+
+			dragLastPosition = mousePosition;
 		}
 
 		protected override void OnMouseHover(EventArgs e)
@@ -92,6 +117,58 @@ namespace test.Controls
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);
+
+			Point mousePosition = GetMousePositionInScene(e.Location);
+
+			if (e.Button == MouseButtons.Left)
+			{
+				ObsSceneItem topItem = null;
+
+				scene.EnumItems((scene, item, data) =>
+				{
+					// unselect all items
+					item.Selected = false;
+
+					Vector2 itemPosition = item.Position;
+					Vector2 itemBounds = item.Bounds;
+
+					bool isInside = mousePosition.X >= itemPosition.x &&
+						mousePosition.X < itemPosition.x + itemBounds.x &&
+						mousePosition.Y >= itemPosition.y &&
+						mousePosition.Y < itemPosition.y + itemBounds.y;
+
+					if (isInside)
+					{
+						// test if dragging near edges
+
+						dragging = true;
+
+						if (topItem != null)
+							topItem.Dispose();
+
+						topItem = new ObsSceneItem(item);
+					}
+
+					return true;
+				});
+
+				if (dragging)
+					dragLastPosition = mousePosition;
+				if (topItem != null)
+				{
+					// select the topmost item only
+					topItem.Selected = true;
+					topItem.Dispose();
+				}
+			}
+		}
+
+		protected override void OnMouseUp(MouseEventArgs e)
+		{
+			base.OnMouseUp(e);
+
+			if (e.Button == MouseButtons.Left)
+				dragging = false;
 		}
 
 		protected override void OnMouseClick(MouseEventArgs e)
@@ -104,17 +181,26 @@ namespace test.Controls
 			base.OnMouseDoubleClick(e);
 		}
 
-		protected override void OnMouseUp(MouseEventArgs e)
-		{
-			base.OnMouseUp(e);
-		}
-
 		protected override void OnMouseCaptureChanged(EventArgs e)
 		{
 			// Event is triggered when input gets suddenly cancelled by other
 			// actions or events, basically when program focus changes.
 
 			base.OnMouseCaptureChanged(e);
+		}
+
+		private Point GetMousePositionInScene(System.Drawing.Point mousePosition)
+		{
+			libobs.obs_video_info ovi = Obs.GetVideoInfo();
+			int baseWidth = (int)ovi.base_width;
+			int baseHeight = (int)ovi.base_height;
+			int scaledWidth = (int)(Width / previewScale);
+			int scaledHeight = (int)(Height / previewScale);
+
+			int left = (scaledWidth - baseWidth) / 2;
+			int top = (scaledHeight - baseHeight) / 2;
+
+			return new Point((int)((mousePosition.X / previewScale) - left), (int)((mousePosition.Y / previewScale) - top));
 		}
 
 		private void InitPrimitives()
