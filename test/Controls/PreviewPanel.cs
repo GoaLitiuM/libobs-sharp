@@ -88,18 +88,17 @@ namespace test.Controls
 			Point dragOffset = new Point(mousePosition.X - dragLastPosition.X, mousePosition.Y - dragLastPosition.Y);
 
 			// move all the selected items
-			scene.EnumItems((scene, item, data) =>
+
+			foreach (ObsSceneItem item in scene.Items)
 			{
 				if (!item.Selected)
-					return true;
+					continue;
 
 				Vector2 newPosition = item.Position;
 				newPosition.x += dragOffset.X;
 				newPosition.y += dragOffset.Y;
 				item.Position = newPosition;
-				
-				return true;
-			});
+			}
 
 			dragLastPosition = mousePosition;
 		}
@@ -122,9 +121,7 @@ namespace test.Controls
 
 			if (e.Button == MouseButtons.Left)
 			{
-				ObsSceneItem topItem = null;
-
-				scene.EnumItems((scene, item, data) =>
+				foreach (ObsSceneItem item in scene.Items)
 				{
 					// unselect all items
 					item.Selected = false;
@@ -137,28 +134,14 @@ namespace test.Controls
 						mousePosition.Y >= itemPosition.y &&
 						mousePosition.Y < itemPosition.y + itemBounds.y;
 
-					if (isInside)
+					if (isInside && !dragging)
 					{
 						// test if dragging near edges
 
 						dragging = true;
-
-						if (topItem != null)
-							topItem.Dispose();
-
-						topItem = new ObsSceneItem(item);
+						dragLastPosition = mousePosition;
+						item.Selected = true;
 					}
-
-					return true;
-				});
-
-				if (dragging)
-					dragLastPosition = mousePosition;
-				if (topItem != null)
-				{
-					// select the topmost item only
-					topItem.Selected = true;
-					topItem.Dispose();
 				}
 			}
 		}
