@@ -244,15 +244,15 @@ namespace test.Controls
 			GS.LoadVertexBuffer(null);
 		}
 
-		private bool DrawSelectedItem(IntPtr scene, IntPtr item, IntPtr data)
+		private bool DrawSelectedItem(ObsScene scene, ObsSceneItem item, IntPtr data)
 		{
-			if (!libobs.obs_sceneitem_selected(item))
+			if (!item.Selected)
 				return true;
 
 			GS.LoadVertexBuffer(circlePrimitive);
 
 			libobs.matrix4 boxTransform;
-			libobs.obs_sceneitem_get_box_transform(item, out boxTransform);
+			libobs.obs_sceneitem_get_box_transform(item.GetPointer(), out boxTransform);
 
 			//render the tiny circles on corners
 			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);

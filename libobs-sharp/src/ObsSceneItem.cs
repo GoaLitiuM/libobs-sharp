@@ -16,6 +16,7 @@
 ***************************************************************************/
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace OBS
 {
@@ -30,9 +31,15 @@ namespace OBS
 			libobs.obs_sceneitem_addref(instance);
 		}
 
+		public unsafe ObsSceneItem(ObsSceneItem sceneItem)
+			: this(sceneItem.instance)
+		{
+		}
+
 		public unsafe void Dispose()
 		{
-			if (instance == IntPtr.Zero) return;
+			if (instance == IntPtr.Zero)
+				return;
 
 			libobs.obs_sceneitem_release(instance);
 

@@ -17,9 +17,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace OBS
 {
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate bool EnumItemDelegate(ObsScene scene, ObsSceneItem item, IntPtr param);
+
 	public class ObsScene : IDisposable, IEnumerable<ObsSceneItem>
 	{
 		private IntPtr instance;    //pointer to unmanaged object
@@ -87,15 +91,28 @@ namespace OBS
 			return new ObsSceneItem(ptr);
 		}
 
-		public unsafe void EnumItems(libobs.sceneitem_enum_callback callback, IntPtr param)
+		public void EnumItems(EnumItemDelegate enumDelegate)
 		{
-			libobs.obs_scene_enum_items(instance, callback, param);
+			EnumItems(enumDelegate, IntPtr.Zero);
+		}
+
+		public void EnumItems(EnumItemDelegate enumDelegate, IntPtr param)
+		{
+			//TODO: pass variable number of parameters as extra params (params object[])?
+
+			// instantiate scene and scene items for d
+			libobs.sceneitem_enum_callback wrappedDelegate = (s, i, data) =>
+			{
+				using (ObsSceneItem item = new ObsSceneItem(i))
+					return enumDelegate(this, item, data);
+			};
+			libobs.obs_scene_enum_items(instance, wrappedDelegate, param);
 		}
 
 		public unsafe ObsSceneItem[] GetItems()
 		{
 			List<ObsSceneItem> items = new List<ObsSceneItem>();
-			EnumItems((scene, item, data) =>
+			libobs.obs_scene_enum_items(instance, (scene, item, data) =>
 			{
 				items.Add(new ObsSceneItem(item));
 				return true;
@@ -112,7 +129,7 @@ namespace OBS
 
 			foreach (ObsSceneItem item in items)
 				item.Dispose();
-        }
+		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
