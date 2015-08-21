@@ -24,9 +24,9 @@ namespace OBS
 {
 	public static partial class Obs
 	{
-		public static bool Startup(string locale)
+		public static bool Startup(string locale, string moduleConfigPath = null)
 		{
-			return libobs.obs_startup(locale, IntPtr.Zero);
+			return libobs.obs_startup(locale, moduleConfigPath, IntPtr.Zero);
 		}
 
 		public static void Shutdown()

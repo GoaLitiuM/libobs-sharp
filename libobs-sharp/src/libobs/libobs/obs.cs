@@ -37,7 +37,9 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool obs_startup(
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string locale, profiler_name_store_t store);
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string locale,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string module_config_path,
+			profiler_name_store_t store);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_shutdown();
@@ -85,6 +87,7 @@ namespace OBS
 		//EXPORT void obs_enum_modules(obs_enum_module_callback_t callback, void *param);
 		//EXPORT lookup_t *obs_module_load_locale(obs_module_t *module, const char *default_locale, const char *locale);
 		//EXPORT char *obs_find_module_file(obs_module_t *module, const char *file);
+		//EXPORT char *obs_module_get_config_path(obs_module_t *module, const char *file);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]

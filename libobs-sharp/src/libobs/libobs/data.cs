@@ -39,6 +39,15 @@ namespace OBS
 		public static extern obs_data_t obs_data_create_from_json(
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string json_string);
 
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_data_t obs_data_create_from_json_file(
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string json_file);
+			
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_data_t obs_data_create_from_json_file_safe(
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string json_file,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string backup_ext);
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_data_addref(obs_data_t data);
 
@@ -48,6 +57,18 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_data_get_json(obs_data_t data);
+		
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_data_save_json(obs_data_t data,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string file);
+			
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_data_save_json_safe(obs_data_t data,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string file,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string temp_ext,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string backup_ext);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_data_apply(obs_data_t target, obs_data_t apply_data);
