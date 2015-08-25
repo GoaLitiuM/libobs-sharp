@@ -36,7 +36,7 @@ namespace test.Controls
 		private const float CLAMP_DISTANCE = 10.0f;
 
 		private bool dragging = false;
-		Point dragLastPosition;
+		Vector2 dragLastPosition;
 
 		public PreviewPanel()
 		{
@@ -84,8 +84,8 @@ namespace test.Controls
 			if (!dragging)
 				return;
 
-			Point mousePosition = GetMousePositionInScene(e.Location);
-			Point dragOffset = new Point(mousePosition.X - dragLastPosition.X, mousePosition.Y - dragLastPosition.Y);
+			Vector2 mousePosition = GetMousePositionInScene(e.Location);
+			Vector2 dragOffset = mousePosition - dragLastPosition;
 
 			// move all the selected items
 
@@ -94,10 +94,7 @@ namespace test.Controls
 				if (!item.Selected)
 					continue;
 
-				Vector2 newPosition = item.Position;
-				newPosition.x += dragOffset.X;
-				newPosition.y += dragOffset.Y;
-				item.Position = newPosition;
+				item.Position += dragOffset;
 			}
 
 			dragLastPosition = mousePosition;
@@ -117,7 +114,7 @@ namespace test.Controls
 		{
 			base.OnMouseDown(e);
 
-			Point mousePosition = GetMousePositionInScene(e.Location);
+			Vector2 mousePosition = GetMousePositionInScene(e.Location);
 
 			if (e.Button == MouseButtons.Left)
 			{
@@ -126,17 +123,18 @@ namespace test.Controls
 					// unselect all items
 					item.Selected = false;
 
-					Vector2 itemPosition = item.Position;
-					Vector2 itemBounds = item.Bounds;
+					// test if the mouse cursor is inside the rectangle
+					Vector3 transformedPos = Vector3.GetTransform(
+						new Vector3(mousePosition), item.BoxTransform.GetInverse());
 
-					bool isInside = mousePosition.X >= itemPosition.x &&
-						mousePosition.X < itemPosition.x + itemBounds.x &&
-						mousePosition.Y >= itemPosition.y &&
-						mousePosition.Y < itemPosition.y + itemBounds.y;
+					bool isInside = transformedPos.x >= 0.0f &&
+						transformedPos.x < 1.0f &&
+						transformedPos.y >= 0.0f &&
+						transformedPos.y < 1.0f;
 
 					if (isInside && !dragging)
 					{
-						// test if dragging near edges
+						//TODO: test dragging near edges
 
 						dragging = true;
 						dragLastPosition = mousePosition;
@@ -172,7 +170,7 @@ namespace test.Controls
 			base.OnMouseCaptureChanged(e);
 		}
 
-		private Point GetMousePositionInScene(Point mousePosition)
+		private Vector2 GetMousePositionInScene(Point mousePosition)
 		{
 			libobs.obs_video_info ovi = Obs.GetVideoInfo();
 			int baseWidth = (int)ovi.base_width;
@@ -183,7 +181,7 @@ namespace test.Controls
 			int left = (scaledWidth - baseWidth) / 2;
 			int top = (scaledHeight - baseHeight) / 2;
 
-			return new Point((int)((mousePosition.X / previewScale) - left), (int)((mousePosition.Y / previewScale) - top));
+			return new Vector2((int)((mousePosition.X / previewScale) - left), (int)((mousePosition.Y / previewScale) - top));
 		}
 
 		private void InitPrimitives()
@@ -320,8 +318,7 @@ namespace test.Controls
 
 			GS.LoadVertexBuffer(circlePrimitive);
 
-			libobs.matrix4 boxTransform;
-			libobs.obs_sceneitem_get_box_transform(item.GetPointer(), out boxTransform);
+			libobs.matrix4 boxTransform = item.BoxTransform;
 
 			//render the tiny circles on corners
 			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);

@@ -125,7 +125,7 @@ namespace OBS
 		}
 
 		/// <summary>
-		/// Sets scale of layer
+		/// Scale of scene item
 		/// </summary>
 		public Vector2 Scale
 		{
@@ -153,6 +153,32 @@ namespace OBS
 				return bounds;
 			}
 			set { libobs.obs_sceneitem_set_bounds(instance, out value); }
+		}
+
+		/// <summary>
+		/// Matrix representing the content of scene item
+		/// </summary>
+		public libobs.matrix4 DrawTransform
+		{
+			get
+			{
+				libobs.matrix4 transform;
+				libobs.obs_sceneitem_get_draw_transform(instance, out transform);
+				return transform;
+			}
+		}
+
+		/// <summary>
+		/// Matrix representing the bounds of scene item
+		/// </summary>
+		public libobs.matrix4 BoxTransform
+		{
+			get
+			{
+				libobs.matrix4 transform;
+				libobs.obs_sceneitem_get_box_transform(instance, out transform);
+				return transform;
+			}
 		}
 
 		public unsafe ObsBoundsType BoundsType
