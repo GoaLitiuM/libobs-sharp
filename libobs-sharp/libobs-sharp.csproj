@@ -74,8 +74,11 @@
     <Compile Include="src\libobs\graphics\graphics.cs" />
     <Compile Include="src\libobs\graphics\matrix3.cs" />
     <Compile Include="src\libobs\graphics\matrix4.cs" />
+    <Compile Include="src\libobs\graphics\vec2.cs" />
     <Compile Include="src\libobs\graphics\vec3.cs" />
     <Compile Include="src\libobs\graphics\vec4.cs" />
+    <Compile Include="src\Graphics\Vector3.cs" />
+    <Compile Include="src\Graphics\Vector4.cs" />
     <Compile Include="src\libobs\libobs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,7 +96,7 @@
     <Compile Include="src\libobs\libobs\source.cs" />
     <Compile Include="src\libobs\libobs\view.cs" />
     <Compile Include="src\libobs\medio-io\medio-io.cs" />
-    <Compile Include="src\libobs\graphics\Vector2.cs" />
+    <Compile Include="src\Graphics\Vector2.cs" />
     <Compile Include="src\libobs\util\base.cs" />
     <Compile Include="src\libobs\util\config-file.cs" />
     <Compile Include="src\LogHandler.cs" />

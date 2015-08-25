@@ -51,7 +51,7 @@ namespace OBS.Graphics
 			return effect;
 		}
 
-		public unsafe void SetParameterValue(string parameter, libobs.vec4 value)
+		public unsafe void SetParameterValue(string parameter, Vector4 value)
 		{
 			IntPtr ptr = libobs.gs_effect_get_param_by_name(instance, parameter);
 			libobs.gs_effect_set_vec4(ptr, out value);

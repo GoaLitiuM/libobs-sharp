@@ -21,34 +21,10 @@ namespace OBS
 {
 	public static partial class libobs
 	{
-		//EXPORT void vec4_from_vec3(struct vec4 *dst, const struct vec3 *v);
-		//EXPORT void vec4_transform(struct vec4 *dst, const struct vec4 *v, const struct matrix4 *m);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec4_from_vec3(out Vector4 dst, out Vector3 v);
 
-		[StructLayout(LayoutKind.Explicit, Size = 16)]
-		public struct vec4
-		{
-			public vec4(float x, float y, float z, float w)
-			{
-				this.x = x;
-				this.y = y;
-				this.z = z;
-				this.w = w;
-			}
-
-			[FieldOffset(0)]
-			public float x;
-
-			[FieldOffset(4)]
-			public float y;
-
-			[FieldOffset(8)]
-			public float z;
-
-			[FieldOffset(12)]
-			public float w;
-
-			[FieldOffset(0)]
-			public unsafe fixed float ptr[4];
-		};
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec4_transform(out Vector4 dst, out Vector4 v, out matrix4 m);
 	}
 }

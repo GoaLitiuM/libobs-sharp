@@ -20,7 +20,6 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	using axisang = libobs.vec4;
 	using gs_effect_t = IntPtr;
 	using gs_eparam_t = IntPtr;
 	using gs_indexbuffer_t = IntPtr;
@@ -29,7 +28,9 @@ namespace OBS
 	using gs_technique_t = IntPtr;
 	using gs_texture_t = IntPtr;
 	using gs_vertbuffer_t = IntPtr;
-	using quat = libobs.vec4;
+
+	using axisang = Vector4;
+	using quat = Vector4;
 
 	using size_t = UIntPtr;
 	using uint32_t = UInt32;
@@ -122,10 +123,10 @@ namespace OBS
 		public static extern void gs_effect_set_vec2(gs_eparam_t param, out Vector2 val);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_effect_set_vec3(gs_eparam_t param, out vec3 val);
+		public static extern void gs_effect_set_vec3(gs_eparam_t param, out Vector3 val);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_effect_set_vec4(gs_eparam_t param, out vec4 val);
+		public static extern void gs_effect_set_vec4(gs_eparam_t param, out Vector4 val);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_effect_set_texture(gs_eparam_t param, gs_texture_t val);
@@ -190,10 +191,10 @@ namespace OBS
 		public static extern void gs_matrix_rotaa(out axisang rot);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_matrix_translate(out vec3 pos);
+		public static extern void gs_matrix_translate(out Vector3 pos);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_matrix_scale(out vec3 scale);
+		public static extern void gs_matrix_scale(out Vector3 scale);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_matrix_rotaa4f(float x, float y, float z, float angle);
@@ -232,13 +233,13 @@ namespace OBS
 		public static extern void gs_vertex2v(out Vector2 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_vertex3v(out vec3 v);
+		public static extern void gs_vertex3v(out Vector3 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_normal3v(out vec3 v);
+		public static extern void gs_normal3v(out Vector3 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_color4v(out vec4 v);
+		public static extern void gs_color4v(out Vector4 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void gs_texcoord2v(out Vector2 v, int unit);
@@ -350,7 +351,7 @@ namespace OBS
 		//EXPORT void gs_load_swapchain(gs_swapchain_t *swapchain);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void gs_clear(uint32_t clear_flags, out vec4 color, float depth, uint8_t stencil);
+		public static extern void gs_clear(uint32_t clear_flags, out Vector4 color, float depth, uint8_t stencil);
 
 		//EXPORT void gs_present(void);
 		//EXPORT void gs_flush(void);
@@ -618,9 +619,9 @@ namespace OBS
 		public unsafe struct gs_vb_data
 		{
 			public size_t num;
-			public vec3* points;
-			public vec3* normals;
-			public vec3* tangents;
+			public Vector3* points;
+			public Vector3* normals;
+			public Vector3* tangents;
 			public uint32_t* colors;
 
 			public size_t num_tex;
@@ -656,7 +657,7 @@ namespace OBS
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct plane
 		{
-			public vec3 dir;
+			public Vector3 dir;
 			public float dist;
 		};
 

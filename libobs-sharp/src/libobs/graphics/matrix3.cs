@@ -19,9 +19,8 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	using axisang = libobs.vec4;
-
-	using quat = libobs.vec4;
+	using axisang = Vector4;
+	using quat = Vector4;
 
 	public static partial class libobs
 	{
@@ -44,7 +43,7 @@ namespace OBS
 		public static extern void matrix3_rotate_aa(out matrix3 dst, out matrix3 m, out axisang aa);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void matrix3_scale(out matrix3 dst, out matrix3 m, out vec3 v);
+		public static extern void matrix3_scale(out matrix3 dst, out matrix3 m, out Vector3 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void matrix3_transpose(out matrix3 dst, out matrix3 m);
@@ -56,15 +55,15 @@ namespace OBS
 		public static extern void matrix3_mirror(out matrix3 dst, out matrix3 m, out plane p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void matrix3_mirrorv(out matrix3 dst, out matrix3 m, out vec3 v);
+		public static extern void matrix3_mirrorv(out matrix3 dst, out matrix3 m, out Vector3 v);
 
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct matrix3
 		{
-			public vec3 x;
-			public vec3 y;
-			public vec3 z;
-			public vec3 t;
+			public Vector3 x;
+			public Vector3 y;
+			public Vector3 z;
+			public Vector3 t;
 		};
 	}
 }

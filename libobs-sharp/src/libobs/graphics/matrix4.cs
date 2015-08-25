@@ -19,9 +19,9 @@ using System.Runtime.InteropServices;
 
 namespace OBS
 {
-	using axisang = libobs.vec4;
-
-	using quat = libobs.vec4;
+	using System;
+	using axisang = Vector4;
+	using quat = Vector4;
 
 	public static partial class libobs
 	{
@@ -34,10 +34,10 @@ namespace OBS
 		public static extern float matrix4_determinant(out matrix4 m);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void matrix4_translate3v(out matrix4 dst, out matrix4 m, out vec3 v);
+		public static extern void matrix4_translate3v(out matrix4 dst, out matrix4 m, out Vector3 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void matrix4_translate4v(out matrix4 dst, out matrix4 m, out vec4 v);
+		public static extern void matrix4_translate4v(out matrix4 dst, out matrix4 m, out Vector4 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void matrix4_rotate(out matrix4 dst, out matrix4 m, out quat q);
@@ -46,7 +46,7 @@ namespace OBS
 		public static extern void matrix4_rotate_aa(out matrix4 dst, out matrix4 m, out axisang aa);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void matrix4_scale(out matrix4 dst, out matrix4 m, out vec3 v);
+		public static extern void matrix4_scale(out matrix4 dst, out matrix4 m, out Vector3 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern bool matrix4_inv(out matrix4 dst, out matrix4 m);
@@ -63,7 +63,19 @@ namespace OBS
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct matrix4
 		{
-			public vec4 x, y, z, t;
+			public Vector4 x, y, z, t;
+
+			public void Inverse()
+			{
+				libobs.matrix4_inv(out this, out this);
+			}
+
+			public matrix4 GetInverse()
+			{
+				matrix4 mat;
+				libobs.matrix4_inv(out mat, out this);
+				return mat;
+			}
 		};
 	}
 }

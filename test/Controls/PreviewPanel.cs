@@ -172,7 +172,7 @@ namespace test.Controls
 			base.OnMouseCaptureChanged(e);
 		}
 
-		private Point GetMousePositionInScene(System.Drawing.Point mousePosition)
+		private Point GetMousePositionInScene(Point mousePosition)
 		{
 			libobs.obs_video_info ovi = Obs.GetVideoInfo();
 			int baseWidth = (int)ovi.base_width;
@@ -269,7 +269,7 @@ namespace test.Controls
 		private void ClearBackground(uint cx, uint cy)
 		{
 			GSEffect solid = Obs.GetSolidEffect();
-			solid.SetParameterValue("color", new libobs.vec4(0.0f, 0.0f, 0.0f, 1.0f));
+			solid.SetParameterValue("color", new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 			GSEffectTechnique tech = solid.GetTechnique("Solid");
 
@@ -296,7 +296,7 @@ namespace test.Controls
 		private void RenderSceneEditing(IntPtr data)
 		{
 			GSEffect solid = Obs.GetSolidEffect();
-			solid.SetParameterValue("color", new libobs.vec4(1.0f, 1.0f, 1.0f, 0.75f));
+			solid.SetParameterValue("color", new Vector4(1.0f, 1.0f, 1.0f, 0.75f));
 
 			GSEffectTechnique tech = solid.GetTechnique("Solid");
 
@@ -344,8 +344,8 @@ namespace test.Controls
 
 		private static void DrawPrimitive(float x, float y, libobs.matrix4 matrix, float previewScale)
 		{
-			libobs.vec3 pos = new libobs.vec3(x, y, 0.0f);
-			libobs.vec3_transform(out pos, out pos, out matrix);
+			Vector3 pos = new Vector3(x, y, 0.0f);
+			pos.Transform(matrix);
 
 			pos.x *= previewScale;
 			pos.y *= previewScale;

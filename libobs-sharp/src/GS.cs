@@ -58,20 +58,14 @@ namespace OBS.Graphics
 			libobs.gs_vertex2f(x, y);
 		}
 
-		public static unsafe void Clear(GSClearFlags clear_flags, libobs.vec4 color, float depth, Byte stencil)
+		public static unsafe void Clear(GSClearFlags clear_flags, Vector4 color, float depth, Byte stencil)
 		{
 			libobs.gs_clear((UInt32)clear_flags, out color, depth, stencil);
 		}
 
 		public static unsafe void Clear(GSClearFlags clear_flags, Color color, float depth, Byte stencil)
 		{
-			libobs.vec4 vec = new libobs.vec4();
-			vec.x = (float)color.R / 255;
-			vec.y = (float)color.G / 255;
-			vec.z = (float)color.B / 255;
-			vec.w = (float)color.A / 255;
-
-			libobs.gs_clear((UInt32)clear_flags, out vec, depth, stencil);
+			Clear(clear_flags, new Vector4(color), depth, stencil);
 		}
 
 		public static unsafe void ViewportPush()
@@ -229,7 +223,7 @@ namespace OBS.Graphics
 			libobs.gs_matrix_identity();
 		}
 
-		public static unsafe void MatrixTranslate(libobs.vec3 vec)
+		public static unsafe void MatrixTranslate(Vector3 vec)
 		{
 			libobs.gs_matrix_translate(out vec);
 		}
@@ -239,7 +233,7 @@ namespace OBS.Graphics
 			libobs.gs_matrix_translate3f(x, y, z);
 		}
 
-		public static unsafe void MatrixScale(libobs.vec3 vec)
+		public static unsafe void MatrixScale(Vector3 vec)
 		{
 			libobs.gs_matrix_scale(out vec);
 		}
@@ -249,7 +243,7 @@ namespace OBS.Graphics
 			libobs.gs_matrix_scale3f(x, y, z);
 		}
 
-		public static unsafe void MatrixRotate(libobs.vec4 vec)
+		public static unsafe void MatrixRotate(Vector4 vec)
 		{
 			libobs.gs_matrix_rotaa(out vec);
 		}

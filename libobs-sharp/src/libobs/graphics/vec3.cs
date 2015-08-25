@@ -21,50 +21,28 @@ namespace OBS
 {
 	public static partial class libobs
 	{
-		//EXPORT void vec3_from_vec4(struct vec3 *dst, const struct vec4 *v);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void vec3_from_vec4(out Vector3 dst, out Vector4 v);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern float vec3_plane_dist(out vec3 v, out plane p);
+		public static extern float vec3_plane_dist(out Vector3 v, out plane p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_transform(out vec3 dst, out vec3 v, out matrix4 m);
+		public static extern void vec3_transform(out Vector3 dst, out Vector3 v, out matrix4 m);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_rotate(out vec3 dst, out vec3 v, out matrix3 m);
+		public static extern void vec3_rotate(out Vector3 dst, out Vector3 v, out matrix3 m);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_transform3x4(out vec3 dst, out vec3 v, out matrix3 m);
+		public static extern void vec3_transform3x4(out Vector3 dst, out Vector3 v, out matrix3 m);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_mirror(out vec3 dst, out vec3 v, out plane p);
+		public static extern void vec3_mirror(out Vector3 dst, out Vector3 v, out plane p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_mirrorv(out vec3 dst, out vec3 v, out vec3 vec);
+		public static extern void vec3_mirrorv(out Vector3 dst, out Vector3 v, out Vector3 vec);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void vec3_rand(out vec3 dst, int positive_only);
-
-		[StructLayout(LayoutKind.Explicit, Size = 12)]
-		public struct vec3
-		{
-			public vec3(float x, float y, float z)
-			{
-				this.x = x;
-				this.y = y;
-				this.z = z;
-			}
-
-			[FieldOffset(0)]
-			public float x;
-
-			[FieldOffset(4)]
-			public float y;
-
-			[FieldOffset(8)]
-			public float z;
-
-			[FieldOffset(0)]
-			public unsafe fixed float ptr[3];
-		};
+		public static extern void vec3_rand(out Vector3 dst, int positive_only);
 	}
 }
