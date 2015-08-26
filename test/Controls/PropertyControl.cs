@@ -222,6 +222,7 @@ namespace test.Controls
 								   Value = (int)(numeric.Value * multiplier)
 							   };
 				trackbar.ValueChanged += (sender, args) => numeric.Value = (decimal)trackbar.Value / multiplier;
+				numeric.ValueChanged += (sender, args) => trackbar.Value = (int) (numeric.Value * multiplier);
 				controls.Add(trackbar);
 			}
 			controls.Add(numeric);
