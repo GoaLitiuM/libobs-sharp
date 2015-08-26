@@ -202,6 +202,7 @@ namespace test
 			{
 				var tag = (Tuple<string, string>)args.ClickedItem.Tag;
 				var source = presentation.CreateSource(tag.Item1, tag.Item2);
+				var item = presentation.CreateItem(source);
 				if (new TestProperties(source).ShowDialog() == DialogResult.OK)
 				{
 					presentation.AddSource(source);
@@ -212,6 +213,8 @@ namespace test
 					source.Remove();
 					source.Dispose();
 				}
+				item.Remove();
+				item.Dispose();
 			};
 			contextmenu.Show(this, PointToClient(Cursor.Position));
 		}
