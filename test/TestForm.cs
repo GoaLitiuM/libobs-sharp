@@ -105,7 +105,7 @@ namespace test
 		private void AddSceneButton_Click(object sender, EventArgs e)
 		{
 			presentation.AddScene();
-			SceneListBox.SelectedIndex = 0;
+			SceneListBox.SelectedIndex = SceneListBox.Items.Count - 1;
 		}
 
 		private void DelSceneButton_Click(object sender, EventArgs e)
