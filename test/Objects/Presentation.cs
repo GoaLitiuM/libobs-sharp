@@ -76,11 +76,25 @@ namespace test.Objects
 		public void SetItem(int index)
 		{
 			SelectedItem = index == -1 ? null : SelectedScene.Items[index];
+			if (SelectedItem != null)
+			{
+				foreach (Item sceneitem in SelectedScene.Items)
+				{
+					sceneitem.Selected = sceneitem == SelectedItem;
+				}
+			}
 		}
 
 		public void SetItem(Item item)
 		{
 			SelectedItem = item;
+			if (SelectedItem != null)
+			{
+				foreach (Item sceneitem in SelectedScene.Items)
+				{
+					sceneitem.Selected = sceneitem == SelectedItem;
+				}
+			}
 		}
 
 		public void SetSource(int index)
