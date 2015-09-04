@@ -36,7 +36,9 @@ namespace test.Controls
 		private const float CLAMP_DISTANCE = 10.0f;
 
 		private bool dragging = false;
-		Vector2 dragLastPosition;
+		private Vector2 dragLastPosition;
+		
+		private ObsSceneItem hoveredItem = null;
 
 		public PreviewPanel()
 		{
@@ -45,6 +47,8 @@ namespace test.Controls
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
+
+			SetHoveredItem(null);
 		}
 
 		protected override void DisplayCreated() 
@@ -73,6 +77,14 @@ namespace test.Controls
 			this.scene = scene;
 		}
 
+		private void SetHoveredItem(ObsSceneItem item)
+		{
+			if (hoveredItem != null)
+				hoveredItem.Dispose();
+
+			hoveredItem = item;
+		}
+
 		protected override void OnMouseEnter(EventArgs e)
 		{
 			base.OnMouseEnter(e);
@@ -81,23 +93,29 @@ namespace test.Controls
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
-			if (!dragging)
-				return;
 
-			Vector2 mousePosition = GetMousePositionInScene(e.Location);
-			Vector2 dragOffset = mousePosition - dragLastPosition;
+			Vector2 mousePosition = GetPositionInScene(new Vector2(e.Location));
 
-			// move all the selected items
-
-			foreach (ObsSceneItem item in scene.Items)
+			if (dragging)
 			{
-				if (!item.Selected)
-					continue;
+				Vector2 dragOffset = mousePosition - dragLastPosition;
 
-				item.Position += dragOffset;
+				// move all the selected items
+				foreach (ObsSceneItem item in scene.Items)
+				{
+					if (!item.Selected)
+						continue;
+
+					item.Position += dragOffset;
+				}
+
+				dragLastPosition = mousePosition;
 			}
 
-			dragLastPosition = mousePosition;
+			// mouse hover over scene items
+			SetHoveredItem(GetItemAtPosition(mousePosition));
+			if (hoveredItem != null && hoveredItem.Selected)
+				SetHoveredItem(null);
 		}
 
 		protected override void OnMouseHover(EventArgs e)
@@ -114,31 +132,32 @@ namespace test.Controls
 		{
 			base.OnMouseDown(e);
 
-			Vector2 mousePosition = GetMousePositionInScene(e.Location);
+			Vector2 mousePosition = GetPositionInScene(new Vector2(e.Location));
 
 			if (e.Button == MouseButtons.Left)
 			{
+				// unselect all items
 				foreach (ObsSceneItem item in scene.Items)
-				{
-					// unselect all items
 					item.Selected = false;
 
-					// test if the mouse cursor is inside the rectangle
-					Vector3 transformedPos = Vector3.GetTransform(
-						new Vector3(mousePosition), item.BoxTransform.GetInverse());
-
-					bool isInside = transformedPos.x >= 0.0f &&
-						transformedPos.x < 1.0f &&
-						transformedPos.y >= 0.0f &&
-						transformedPos.y < 1.0f;
-
-					if (isInside && !dragging)
+				// select item under the mouse cursor
+				using (ObsSceneItem mouseItem = GetItemAtPosition(mousePosition))
+				{
+					if (mouseItem != null && !dragging)
 					{
+						Vector2 pixel = new Vector2(1.0f / mouseItem.Bounds.x, 1.0f / mouseItem.Bounds.y);
+						Vector3 transformedPos = Vector3.GetTransform(
+							new Vector3(mousePosition), mouseItem.BoxTransform.GetInverse());
+
+						Obs.Log(LogErrorLevel.Info, pixel.ToString());
 						//TODO: test dragging near edges
 
 						dragging = true;
 						dragLastPosition = mousePosition;
-						item.Selected = true;
+						mouseItem.Selected = true;
+
+						if (mouseItem == hoveredItem)
+							SetHoveredItem(null);
 					}
 				}
 			}
@@ -170,7 +189,7 @@ namespace test.Controls
 			base.OnMouseCaptureChanged(e);
 		}
 
-		private Vector2 GetMousePositionInScene(Point mousePosition)
+		private Vector2 GetPositionInScene(Vector2 position)
 		{
 			libobs.obs_video_info ovi = Obs.GetVideoInfo();
 			int baseWidth = (int)ovi.base_width;
@@ -181,7 +200,28 @@ namespace test.Controls
 			int left = (scaledWidth - baseWidth) / 2;
 			int top = (scaledHeight - baseHeight) / 2;
 
-			return new Vector2((int)((mousePosition.X / previewScale) - left), (int)((mousePosition.Y / previewScale) - top));
+			return new Vector2((int)((position.x / previewScale) - left), (int)((position.y / previewScale) - top));
+		}
+
+		private ObsSceneItem GetItemAtPosition(Vector2 position)
+		{
+			foreach (ObsSceneItem item in scene.Items)
+			{
+				// test if the position is inside the rectangle
+				Vector3 transformedPos = Vector3.GetTransform(
+					new Vector3(position), item.BoxTransform.GetInverse());
+
+				bool isInside = transformedPos.x >= 0.0f &&
+					transformedPos.x < 1.0f &&
+					transformedPos.y >= 0.0f &&
+					transformedPos.y < 1.0f;
+
+				if (isInside)
+					return new ObsSceneItem(item);
+			}
+
+			return null;
+			
 		}
 
 		private void InitPrimitives()

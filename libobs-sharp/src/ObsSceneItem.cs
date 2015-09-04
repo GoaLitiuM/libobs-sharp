@@ -227,6 +227,32 @@ namespace OBS
 		{
 			libobs.obs_sceneitem_set_order_position(instance, position);
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+				return false;
+
+			if (GetType() != obj.GetType())                
+				return false;
+
+			return this == (ObsSceneItem)obj;
+		}
+
+		public override int GetHashCode()        
+		{            
+			return GetPointer().GetHashCode();
+		}
+
+		static public bool operator ==(ObsSceneItem left, ObsSceneItem right)
+		{
+			return (ReferenceEquals(left, null) ? IntPtr.Zero : left.GetPointer()) == (ReferenceEquals(right, null) ? IntPtr.Zero : right.GetPointer());
+		}
+
+		static public bool operator !=(ObsSceneItem left, ObsSceneItem right)
+		{
+			return !(left == right);
+		}
 	}
 
 	public enum ObsBoundsType : int

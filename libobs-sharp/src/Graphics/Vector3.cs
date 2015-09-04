@@ -146,5 +146,10 @@ namespace OBS
 		{
 			return new System.Drawing.Point((int)x, (int)y);
 		}
+
+		public override string ToString()
+		{
+			return "{ " + x.ToString() + ", " + y.ToString() + ", " + z.ToString() + " }";
+		}
 	};
 }

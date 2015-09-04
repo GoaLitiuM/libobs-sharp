@@ -37,6 +37,12 @@ namespace OBS
 			this.y = y;
 		}
 
+		public Vector2(System.Drawing.Point point)
+		{
+			x = point.X;
+			y = point.Y;
+		}
+
 		public void Abs()
 		{
 			libobs.vec2_abs(out this, out this);
@@ -87,6 +93,11 @@ namespace OBS
 		public System.Drawing.Point ToPoint()
 		{
 			return new System.Drawing.Point((int)x, (int)y);
+		}
+
+		public override string ToString()
+		{
+			return "{ " + x.ToString() + ", " + y.ToString() + " }";
 		}
 	};
 }
