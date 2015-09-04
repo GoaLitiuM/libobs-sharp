@@ -235,6 +235,7 @@ namespace test.Controls
 					GS.Vertex2f(0.0f, 0.0f);
 					GS.Vertex2f(0.0f, 1.0f);
 					GS.Vertex2f(1.0f, 1.0f);
+					GS.Vertex2f(1.0f, 1.0f);
 					GS.Vertex2f(1.0f, 0.0f);
 					GS.Vertex2f(0.0f, 0.0f);
 				}
@@ -333,17 +334,34 @@ namespace test.Controls
 
 		private void RenderSceneEditing(IntPtr data)
 		{
+			if (scene == null)
+				return;
+
+			// draw selection outlines
+
 			GSEffect solid = Obs.GetSolidEffect();
-			solid.SetParameterValue("color", new Vector4(1.0f, 1.0f, 1.0f, 0.75f));
+			solid.SetParameterValue("color", new Vector4(1.0f, 1.0f, 1.0f, 0.6f));
 
 			GSEffectTechnique tech = solid.GetTechnique("Solid");
 
 			GS.TechniqueBegin(tech);
 			GS.TechniqueBeginPass(tech, 0);
 
-			// enumerate every sceneitem in scene
-			if (scene != null)
-				scene.EnumItems(DrawSelectedItem, data);
+			scene.EnumItems(DrawSelectedItem, data);
+
+			GS.TechniqueEndPass(tech);
+			GS.TechniqueEnd(tech);
+
+			// hover outlines
+
+			solid.SetParameterValue("color", new Vector4(1.0f, 1.0f, 1.0f, 0.40f));
+			tech = solid.GetTechnique("Solid");
+
+			GS.TechniqueBegin(tech);
+			GS.TechniqueBeginPass(tech, 0);
+
+			if (hoveredItem != null)
+				DrawHoveredItem(scene, hoveredItem, data);
 
 			GS.TechniqueEndPass(tech);
 			GS.TechniqueEnd(tech);
@@ -356,42 +374,60 @@ namespace test.Controls
 			if (!item.Selected)
 				return true;
 
-			GS.LoadVertexBuffer(circlePrimitive);
-
+			GS.LoadVertexBuffer(boxPrimitive);
 			libobs.matrix4 boxTransform = item.BoxTransform;
 
-			//render the tiny circles on corners
-			DrawPrimitive(0.0f, 0.0f, boxTransform, previewScale);
-			DrawPrimitive(0.0f, 1.0f, boxTransform, previewScale);
-			DrawPrimitive(1.0f, 1.0f, boxTransform, previewScale);
-			DrawPrimitive(1.0f, 0.0f, boxTransform, previewScale);
-
-			//render the main selection rectangle
-
-			GS.LoadVertexBuffer(boxPrimitive);
-
-			GS.MatrixPush();
-			GS.MatrixScale3f(previewScale, previewScale, 1.0f);
-			GS.MatrixMul(boxTransform);
-			GS.Draw(GSDrawMode.LineStrip, 0, 0);
-			GS.MatrixPop();
+			DrawOutline(boxTransform, item.Width, item.Height, 5.0f);
 
 			return true;
 		}
 
-		private static void DrawPrimitive(float x, float y, libobs.matrix4 matrix, float previewScale)
+		private bool DrawHoveredItem(ObsScene scene, ObsSceneItem item, IntPtr data)
 		{
-			Vector3 pos = new Vector3(x, y, 0.0f);
-			pos.Transform(matrix);
+			GS.LoadVertexBuffer(boxPrimitive);
+			libobs.matrix4 boxTransform = item.BoxTransform;
 
-			pos.x *= previewScale;
-			pos.y *= previewScale;
-			pos.z *= previewScale;
+			DrawOutline(boxTransform, item.Width, item.Height, 3.0f);
+
+			return true;
+		}
+
+		private void DrawOutline(libobs.matrix4 matrix, float width, float height, float outlineThickness)
+		{
+			Vector3 scale = new Vector3(previewScale, previewScale, previewScale);
+			libobs.matrix4_scale(out matrix, out matrix, out scale);
 
 			GS.MatrixPush();
-			GS.MatrixTranslate(pos);
-			GS.MatrixScale3f(HANDLE_RADIUS, HANDLE_RADIUS, 1.0f);
-			GS.Draw(GSDrawMode.LineStrip, 0, 0);
+			GS.MatrixIdentity();
+				
+			GS.MatrixMul(matrix);
+
+			float thickW = outlineThickness/width/previewScale;
+			float thickH = outlineThickness/height/previewScale;
+
+			GS.MatrixPush();
+			GS.MatrixScale3f(1.0f-thickW, thickH, 1.0f);
+			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
+			GS.MatrixPop();
+
+			GS.MatrixPush();
+			GS.MatrixTranslate(new Vector3(1.0f, 0.0f, 0.0f));		
+			GS.MatrixScale3f(-thickW, 1.0f-thickH, 1.0f);
+			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
+			GS.MatrixPop();
+
+			GS.MatrixPush();
+			GS.MatrixTranslate(new Vector3(1.0f, 1.0f, 0.0f));
+			GS.MatrixScale3f(-1.0f+thickW, -thickH, 1.0f);
+			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
+			GS.MatrixPop();
+
+			GS.MatrixPush();
+			GS.MatrixTranslate(new Vector3(0.0f, 1.0f, 0.0f));
+			GS.MatrixScale3f(thickW, -1.0f+thickH, 1.0f);
+			GS.Draw(GSDrawMode.TrisStrip, 0, 0);
+			GS.MatrixPop();
+
 			GS.MatrixPop();
 		}
 	}
