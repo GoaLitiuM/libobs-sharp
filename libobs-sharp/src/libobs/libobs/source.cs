@@ -118,8 +118,8 @@ namespace OBS
 		//EXPORT float obs_source_get_present_volume(const obs_source_t *source);
 		//EXPORT void obs_source_set_sync_offset(obs_source_t *source, int64_t offset);
 		//EXPORT int64_t obs_source_get_sync_offset(const obs_source_t *source);
-		//EXPORT void obs_source_enum_sources(obs_source_t *source, obs_source_enum_proc_t enum_callback, void *param);
-		//EXPORT void obs_source_enum_tree(obs_source_t *source, obs_source_enum_proc_t enum_callback, void *param);
+		//EXPORT void obs_source_enum_active_sources(obs_source_t *source, obs_source_enum_proc_t enum_callback, void *param);
+		//EXPORT void obs_source_enum_active_tree(obs_source_t *source, obs_source_enum_proc_t enum_callback, void *param);
 		//EXPORT bool obs_source_active(const obs_source_t *source);
 		//EXPORT bool obs_source_showing(const obs_source_t *source);
 		//EXPORT void obs_source_save(obs_source_t *source);
@@ -161,7 +161,9 @@ namespace OBS
 
 		/* ------------------------------------------------------------------------- */
 		/* Functions used by sources */
-
+		
+		//EXPORT void *obs_source_get_type_data(obs_source_t *source);
+		
 		//EXPORT void obs_source_draw_set_color_matrix(const struct matrix4 *color_matrix, const struct vec3 *color_range_min, const struct vec3 *color_range_max);
 		//EXPORT void obs_source_draw(gs_texture_t *image, int x, int y, const struct matrix4 *color_matrix, const struct vec3 *color_range_min, const struct vec3 *color_range_max);
 		//EXPORT void obs_source_output_video(obs_source_t *source, const struct obs_source_frame *frame);
@@ -174,8 +176,8 @@ namespace OBS
 		//EXPORT void obs_source_process_filter_end(obs_source_t *filter, gs_effect_t *effect, uint32_t width, uint32_t height);
 		//EXPORT void obs_source_skip_video_filter(obs_source_t *filter);
 
-		//EXPORT bool obs_source_add_child(obs_source_t *parent, obs_source_t *child);
-		//EXPORT void obs_source_remove_child(obs_source_t *parent, obs_source_t *child);
+		//EXPORT bool obs_source_add_active_child(obs_source_t *parent, obs_source_t *child);
+		//EXPORT void obs_source_remove_active_child(obs_source_t *parent, obs_source_t *child);
 		//EXPORT void obs_source_send_mouse_click(obs_source_t *source, const struct obs_mouse_event *event, int32_t type, bool mouse_up, uint32_t click_count);
 		//EXPORT void obs_source_send_mouse_move(obs_source_t *source, const struct obs_mouse_event *event, bool mouse_leave);
 		//EXPORT void obs_source_send_mouse_wheel(obs_source_t *source, const struct obs_mouse_event *event, int x_delta, int y_delta);

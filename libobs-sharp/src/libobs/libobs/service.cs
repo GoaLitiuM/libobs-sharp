@@ -37,5 +37,7 @@ namespace OBS
 		//EXPORT const char *obs_service_get_username(const obs_service_t *service);
 		//EXPORT const char *obs_service_get_password(const obs_service_t *service);
 		//EXPORT void obs_service_apply_encoder_settings(obs_service_t *service, obs_data_t *video_encoder_settings, obs_data_t *audio_encoder_settings);
+		//EXPORT void *obs_service_get_type_data(obs_service_t *service);
+		//EXPORT const char *obs_service_get_id(const obs_service_t *service);
 	}
 }

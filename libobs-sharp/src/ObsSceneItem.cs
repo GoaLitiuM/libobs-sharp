@@ -110,7 +110,7 @@ namespace OBS
 		public unsafe bool Visible
 		{
 			get { return libobs.obs_sceneitem_visible(instance); }
-			set { libobs.obs_sceneitem_set_visible(instance, value); }
+			set { bool success = libobs.obs_sceneitem_set_visible(instance, value); }
 		}
 
 		public Vector2 Position

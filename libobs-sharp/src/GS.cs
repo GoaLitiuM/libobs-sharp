@@ -258,6 +258,36 @@ namespace OBS.Graphics
 			libobs.gs_matrix_mul(out matrix);
 		}
 
+		public static unsafe void BlendStatePush()
+		{
+			libobs.gs_blend_state_push();
+		}
+
+		public static unsafe void BlendStatePop()
+		{
+			libobs.gs_blend_state_pop();
+		}
+
+		public static unsafe void BlendStateReset()
+		{
+			libobs.gs_reset_blend_state();
+		}
+
+		public static unsafe void BlendFunction(GSBlendType src, GSBlendType dest)
+		{
+			libobs.gs_blend_function((libobs.gs_blend_type)src, (libobs.gs_blend_type)dest);
+		}
+
+		public static unsafe void BlendFunctionSeparate(GSBlendType srcColor, GSBlendType destColor, GSBlendType srcAlpha, GSBlendType destAlpha)
+		{
+			libobs.gs_blend_function_separate((libobs.gs_blend_type)srcColor, (libobs.gs_blend_type)destColor, (libobs.gs_blend_type)srcAlpha, (libobs.gs_blend_type)destAlpha);
+		}
+
+		public static unsafe void DepthFunction(GSDepthTest test)
+		{
+			libobs.gs_depth_function((libobs.gs_depth_test)test);
+		}
+
 		public static unsafe void Draw(GSDrawMode drawMode, uint startVert, uint numVerts)
 		{
 			libobs.gs_draw((libobs.gs_draw_mode)drawMode, startVert, numVerts);
@@ -338,6 +368,33 @@ namespace OBS.Graphics
 			}
 		}
 	}
+
+	public enum GSBlendType : int
+	{
+		Zero,
+		One,
+		SrcColor,
+		InvSrcColor,
+		SrcAlpha,
+		InvSrcAlpha,
+		DstColor,
+		InvDstColor,
+		DstAlpha,
+		InvDstAlpha,
+		SrcAlphaSat
+	};
+
+	public enum GSDepthTest : int
+	{
+		Never,
+		Less,
+		LEqual,
+		Equal,
+		GEqual,
+		Greater,
+		NotEqual,
+		Always
+	};
 
 	public enum GSClearFlags : uint
 	{

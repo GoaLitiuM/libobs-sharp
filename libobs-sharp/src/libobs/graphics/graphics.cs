@@ -52,7 +52,7 @@ namespace OBS
 		//EXPORT void gs_shader_set_bool(gs_sparam_t *param, bool val);
 		//EXPORT void gs_shader_set_float(gs_sparam_t *param, float val);
 		//EXPORT void gs_shader_set_int(gs_sparam_t *param, int val);
-		//EXPORT void gs_shader_setmatrix3(gs_sparam_t *param, const struct matrix3 *val);
+		//EXPORT void gs_shader_set_matrix3(gs_sparam_t *param, const struct matrix3 *val);
 		//EXPORT void gs_shader_set_matrix4(gs_sparam_t *param, const struct matrix4 *val);
 		//EXPORT void gs_shader_set_vec2(gs_sparam_t *param, const struct vec2 *val);
 		//EXPORT void gs_shader_set_vec3(gs_sparam_t *param, const struct vec3 *val);
@@ -278,9 +278,14 @@ namespace OBS
 
 		//EXPORT void gs_perspective(float fovy, float aspect, float znear, float zfar);
 
-		//EXPORT void gs_blend_state_push(void);
-		//EXPORT void gs_blend_state_pop(void);
-		//EXPORT void gs_reset_blend_state(void);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_blend_state_push();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_blend_state_pop();
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_reset_blend_state();
 
 		//EXPORT gs_swapchain_t *gs_swapchain_create(const struct gs_init_data *data);
 		//EXPORT void gs_resize(uint32_t x, uint32_t y);
@@ -365,9 +370,14 @@ namespace OBS
 		//EXPORT void gs_enable_stencil_write(bool enable);
 		//EXPORT void gs_enable_color(bool red, bool green, bool blue, bool alpha);
 
-		//EXPORT void gs_blend_function(enum gs_blend_type src, enum gs_blend_type dest);
-		//EXPORT void gs_blend_function_separate(enum gs_blend_type src_c, enum gs_blend_type dest_c, enum gs_blend_type src_a, enum gs_blend_type dest_a);
-		//EXPORT void gs_depth_function(enum gs_depth_test test);
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_blend_function(gs_blend_type src, gs_blend_type dest);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_blend_function_separate(gs_blend_type src_c, gs_blend_type dest_c, gs_blend_type src_a, gs_blend_type dest_a);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void gs_depth_function(gs_depth_test test);
 
 		//EXPORT void gs_stencil_function(enum gs_stencil_side side, enum gs_depth_test test);
 		//EXPORT void gs_stencil_op(enum gs_stencil_side side, enum gs_stencil_op_type fail, enum gs_stencil_op_type zfail, enum gs_stencil_op_type zpass);
@@ -410,7 +420,7 @@ namespace OBS
 		//EXPORT void     gs_voltexture_destroy(gs_texture_t *voltex);
 		//EXPORT uint32_t gs_voltexture_get_width(const gs_texture_t *voltex);
 		//EXPORT uint32_t gs_voltexture_get_height(const gs_texture_t *voltex);
-		//EXPORT uint32_t gs_voltexture_getdepth(const gs_texture_t *voltex);
+		//EXPORT uint32_t gs_voltexture_get_depth(const gs_texture_t *voltex);
 		//EXPORT enum gs_color_format gs_voltexture_get_color_format( const gs_texture_t *voltex);
 
 		//EXPORT void     gs_stagesurface_destroy(gs_stagesurf_t *stagesurf);

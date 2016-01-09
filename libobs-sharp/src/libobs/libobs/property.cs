@@ -167,6 +167,24 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_property_editable_list_default_path(obs_property_t p);
+		
+		//EXPORT void obs_property_frame_rate_clear(obs_property_t *p);
+		//EXPORT void obs_property_frame_rate_options_clear(obs_property_t *p);
+		//EXPORT void obs_property_frame_rate_fps_ranges_clear(obs_property_t *p);
+
+		//EXPORT size_t obs_property_frame_rate_option_add(obs_property_t *p, const char *name, const char *description);
+		//EXPORT size_t obs_property_frame_rate_fps_range_add(obs_property_t *p, struct media_frames_per_second min, struct media_frames_per_second max);
+
+		//EXPORT void obs_property_frame_rate_option_insert(obs_property_t *p, size_t idx, const char *name, const char *description);
+		//EXPORT void obs_property_frame_rate_fps_range_insert(obs_property_t *p, size_t idx, struct media_frames_per_second min, struct media_frames_per_second max);
+
+		//EXPORT size_t obs_property_frame_rate_options_count(obs_property_t *p);
+		//EXPORT const char *obs_property_frame_rate_option_name(obs_property_t *p, size_t idx);
+		//EXPORT const char *obs_property_frame_rate_option_description(obs_property_t *p, size_t idx);
+
+		//EXPORT size_t obs_property_frame_rate_fps_ranges_count(obs_property_t *p);
+		//EXPORT struct media_frames_per_second obs_property_frame_rate_fps_range_min(obs_property_t *p, size_t idx);
+		//EXPORT struct media_frames_per_second obs_property_frame_rate_fps_range_max(obs_property_t *p, size_t idx);
 
 		public enum obs_property_type : int
 		{
@@ -181,6 +199,7 @@ namespace OBS
 			OBS_PROPERTY_BUTTON,
 			OBS_PROPERTY_FONT,
 			OBS_PROPERTY_EDITABLE_LIST,
+			OBS_PROPERTY_FRAME_RATE,
 		};
 
 		public enum obs_combo_format : int

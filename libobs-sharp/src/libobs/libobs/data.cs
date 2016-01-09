@@ -251,6 +251,24 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_data_array_erase(obs_data_array_t array, size_t idx);
+		
+		/* ------------------------------------------------------------------------- */
+		/* Helper functions for media_frames_per_second/OBS_PROPERTY_FRAME_RATE */
+		//EXPORT void obs_data_set_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second fps, const char *option);
+		//EXPORT void obs_data_set_default_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second fps, const char *option);
+		//EXPORT void obs_data_set_autoselect_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second fps, const char *option);
+
+		//EXPORT bool obs_data_get_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second *fps, const char **option);
+		//EXPORT bool obs_data_get_default_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second *fps, const char **option);
+		//EXPORT bool obs_data_get_autoselect_frames_per_second(obs_data_t *data, const char *name, struct media_frames_per_second *fps, const char **option);
+
+		//EXPORT void obs_data_item_set_frames_per_second(obs_data_item_t **item, struct media_frames_per_second fps, const char *option);
+		//EXPORT void obs_data_item_set_default_frames_per_second(obs_data_item_t **item, struct media_frames_per_second fps, const char *option);
+		//EXPORT void obs_data_item_set_autoselect_frames_per_second(obs_data_item_t **item, struct media_frames_per_second fps, const char *option);
+
+		//EXPORT bool obs_data_item_get_frames_per_second(obs_data_item_t *item, struct media_frames_per_second *fps, const char **option);
+		//EXPORT bool obs_data_item_get_default_frames_per_second(obs_data_item_t *item, struct media_frames_per_second *fps, const char **option);
+		//EXPORT bool obs_data_item_get_autoselect_frames_per_second(obs_data_item_t *item, struct media_frames_per_second *fps, const char **option);
 
 		/* ------------------------------------------------------------------------- */
 		/* Item status inspection */

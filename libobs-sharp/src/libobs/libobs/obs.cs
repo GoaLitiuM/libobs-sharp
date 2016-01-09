@@ -118,10 +118,6 @@ namespace OBS
 		//EXPORT video_t *obs_get_video(void);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool obs_add_source(obs_source_t source);
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_set_output_source(uint32_t channel, obs_source_t source);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
@@ -140,27 +136,13 @@ namespace OBS
 		//EXPORT obs_encoder_t *obs_get_encoder_by_name(const char *name);
 		//EXPORT obs_service_t *obs_get_service_by_name(const char *name);
 
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_default_effect();
-
+		[Obsolete("Deprecated")]
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern gs_effect_t obs_get_default_rect_effect();
-
+		
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_opaque_effect();
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_solid_effect();
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_bicubic_effect();
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_lanczos_effect();
-
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern gs_effect_t obs_get_bilinear_lowres_effect();
-
+		public static extern gs_effect_t obs_get_base_effect(obs_base_effect effect);
+		
 		//EXPORT signal_handler_t *obs_get_signal_handler(void);
 		//EXPORT proc_handler_t *obs_get_proc_handler(void);
 
@@ -186,6 +168,13 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_array_t obs_save_sources();
+
+		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public delegate bool obs_save_source_filter_cb(IntPtr data, obs_source_t source);
+
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_data_array_t obs_save_sources_filtered(obs_save_source_filter_cb cb, IntPtr data);
 
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public struct obs_video_info
@@ -221,6 +210,17 @@ namespace OBS
 			OBS_SCALE_BICUBIC,
 			OBS_SCALE_BILINEAR,
 			OBS_SCALE_LANCZOS,
+		};
+		
+		public enum obs_base_effect : int
+		{
+			OBS_EFFECT_DEFAULT,            /**< RGB/YUV */
+			OBS_EFFECT_DEFAULT_RECT,       /**< RGB/YUV (using texture_rect) */
+			OBS_EFFECT_OPAQUE,             /**< RGB/YUV (alpha set to 1.0) */
+			OBS_EFFECT_SOLID,              /**< RGB/YUV (solid color only) */
+			OBS_EFFECT_BICUBIC,            /**< Bicubic downscale */
+			OBS_EFFECT_LANCZOS,            /**< Lanczos downscale */
+			OBS_EFFECT_BILINEAR_LOWRES,    /**< Bilinear low resolution downscale */
 		};
 	}
 }

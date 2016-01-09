@@ -112,7 +112,8 @@ namespace OBS
 		public static extern bool obs_sceneitem_visible(obs_sceneitem_t item);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_sceneitem_set_visible(obs_sceneitem_t item, bool visible);
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_sceneitem_set_visible(obs_sceneitem_t item, bool visible);
 
 		public enum obs_bounds_type : int
 		{

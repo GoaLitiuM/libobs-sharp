@@ -62,5 +62,6 @@ namespace OBS
 		//EXPORT obs_property_t *obs_properties_add_button(obs_properties_t *propsconst char *name, const char *textobs_property_clicked_t callback);
 		//EXPORT obs_property_t *obs_properties_add_font(obs_properties_t *propsconst char *name, const char *description);
 		//EXPORT obs_property_t *obs_properties_add_editable_list(obs_properties_t *props, const char *name, const char *description, bool allow_files, const char *filter, const char *default_path);
+		//EXPORT obs_property_t *obs_properties_add_frame_rate(obs_properties_t *props, const char *name, const char *description);
 	}
 }

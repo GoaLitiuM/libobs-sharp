@@ -28,12 +28,16 @@ namespace OBS
 		//EXPORT const char *obs_output_get_name(const obs_output_t *output);
 		//EXPORT bool obs_output_start(obs_output_t *output);
 		//EXPORT void obs_output_stop(obs_output_t *output);
+		//EXPORT void obs_output_set_delay(obs_output_t *output, uint32_t delay_sec, uint32_t flags);
+		//EXPORT uint32_t obs_output_get_delay(const obs_output_t *output);
+		//EXPORT uint32_t obs_output_get_active_delay(const obs_output_t *output);
+		//EXPORT void obs_output_force_stop(obs_output_t *output);
 		//EXPORT bool obs_output_active(const obs_output_t *output);
 		//EXPORT obs_data_t *obs_output_defaults(const char *id);
 		//EXPORT obs_properties_t *obs_get_output_properties(const char *id);
 		//EXPORT obs_properties_t *obs_output_properties(const obs_output_t *output);
 		//EXPORT void obs_output_update(obs_output_t *output, obs_data_t *settings);
-		//EXPORT bool obs_output_canpause(const obs_output_t *output);
+		//EXPORT bool obs_output_can_pause(const obs_output_t *output);
 		//EXPORT void obs_output_pause(obs_output_t *output);
 		//EXPORT obs_data_t *obs_output_get_settings(const obs_output_t *output);
 		//EXPORT signal_handler_t *obs_output_get_signal_handler(
@@ -57,9 +61,12 @@ namespace OBS
 		//EXPORT void obs_output_set_preferred_size(obs_output_t *output, uint32_t width, uint32_t height);
 		//EXPORT uint32_t obs_output_get_width(const obs_output_t *output);
 		//EXPORT uint32_t obs_output_get_height(const obs_output_t *output);
-
+		//EXPORT const char *obs_output_get_id(const obs_output_t *output);
+		
 		/* ------------------------------------------------------------------------- */
 		/* Functions used by outputs */
+
+		//EXPORT void *obs_output_get_type_data(obs_output_t *output);
 
 		//EXPORT void obs_output_set_video_conversion(obs_output_t *output, const struct video_scale_info *conversion);
 		//EXPORT void obs_output_set_audio_conversion(obs_output_t *output, const struct audio_convert_info *conversion);

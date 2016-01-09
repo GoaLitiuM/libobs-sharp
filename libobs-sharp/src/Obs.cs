@@ -162,26 +162,16 @@ namespace OBS
 			return idList.ToArray();
 		}
 
-		public static unsafe GSEffect GetDefaultEffect()
+		public static unsafe GSEffect GetBaseEffect(ObsBaseEffect effect)
 		{
-			IntPtr ptr = libobs.obs_get_default_effect();
+			IntPtr ptr = libobs.obs_get_base_effect((libobs.obs_base_effect)effect);
 			if (ptr == IntPtr.Zero)
 				return null;
 
-			GSEffect effect = new GSEffect(ptr);
-			return effect;
+			GSEffect baseEffect = new GSEffect(ptr);
+			return baseEffect;
 		}
-
-		public static unsafe GSEffect GetSolidEffect()
-		{
-			IntPtr ptr = libobs.obs_get_solid_effect();
-			if (ptr == IntPtr.Zero)
-				return null;
-
-			GSEffect effect = new GSEffect(ptr);
-			return effect;
-		}
-
+		
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Version
 		{
@@ -241,5 +231,16 @@ namespace OBS
 		InvalidParam = -3,
 		CurrentlyActive = -4,
 		ModuleNotFound = -5,
+	};
+
+	public enum ObsBaseEffect : int
+	{
+		Default,
+		DefaultRect,
+		Opaque,
+		Solid,
+		Bicubic,
+		Lanczos,
+		BilinearLowres,
 	};
 }

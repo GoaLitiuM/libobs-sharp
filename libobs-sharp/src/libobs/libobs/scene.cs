@@ -32,6 +32,10 @@ namespace OBS
 		public static extern obs_scene_t obs_scene_create(
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern obs_source_t obs_scene_duplicate(obs_scene_t scene,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
+
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_addref(obs_scene_t source);
 
