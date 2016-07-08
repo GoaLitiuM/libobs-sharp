@@ -23,6 +23,16 @@ using System.Drawing;
 
 namespace test.Controls
 {
+	[Flags]
+	enum ResizeEdge
+	{
+		None = 0,
+		Left = 1,
+		Top = 2,
+		Right = 4,
+		Bottom = 8,
+	};
+
 	public partial class PreviewPanel : DisplayPanel
 	{
 		private Scene scene;
@@ -31,12 +41,13 @@ namespace test.Controls
 		private GSVertexBuffer circlePrimitive;
 		private float previewScale = 1;
 
-		private const float HANDLE_RADIUS = 5.0f;
-		private const float HANDLE_SEL_RADIUS = HANDLE_RADIUS * 1.5f;
-		private const float CLAMP_DISTANCE = 10.0f;
-
 		private bool dragging = false;
+		private ResizeEdge resizeEdge = ResizeEdge.None;
 		private Vector2 dragLastPosition;
+		private Vector2 dragStartPosition;
+
+		private Vector2 itemLastPosition;
+		private Vector2 itemLastBounds;
 		
 		private ObsSceneItem hoveredItem = null;
 
@@ -95,11 +106,10 @@ namespace test.Controls
 			base.OnMouseMove(e);
 
 			Vector2 mousePosition = GetPositionInScene(new Vector2(e.Location));
+			Vector2 dragOffset = mousePosition - dragLastPosition;
 
 			if (dragging)
 			{
-				Vector2 dragOffset = mousePosition - dragLastPosition;
-
 				// move all the selected items
 				foreach (ObsSceneItem item in scene.Items)
 				{
@@ -107,6 +117,69 @@ namespace test.Controls
 						continue;
 
 					item.Position += dragOffset;
+				}
+
+				dragLastPosition = mousePosition;
+			}
+			else if (resizeEdge != ResizeEdge.None && (dragOffset.x != 0.0f || dragOffset.y != 0.0f))
+			{
+				// move all the selected items
+				foreach (ObsSceneItem item in scene.Items)
+				{
+					if (!item.Selected)
+						continue;
+
+					Vector2 newPos = item.Position;
+					Vector2 newSize = item.Bounds;
+					Vector2 offset = new Vector2(0.0f, 0.0f);
+					ObsAlignment alignment = item.Alignment;
+
+					if (resizeEdge.HasFlag(ResizeEdge.Left) || resizeEdge.HasFlag(ResizeEdge.Right))
+						offset.x = dragOffset.x;
+					if (resizeEdge.HasFlag(ResizeEdge.Top) || resizeEdge.HasFlag(ResizeEdge.Bottom))
+						offset.y = dragOffset.y;
+
+					if (resizeEdge.HasFlag(ResizeEdge.Left))
+					{
+						newSize.x -= offset.x;
+						newPos.x += offset.x;
+					}
+					if (resizeEdge.HasFlag(ResizeEdge.Top))
+					{
+						newSize.y -= offset.y;
+						newPos.y += offset.y;
+					}
+					if (resizeEdge.HasFlag(ResizeEdge.Right))
+						newSize.x += offset.x;
+					if (resizeEdge.HasFlag(ResizeEdge.Bottom))
+						newSize.y += offset.y;
+
+					Vector2 adjust = newPos-item.Position;
+
+					if (alignment == ObsAlignment.Left)
+						adjust.x = offset.x;
+					else if (alignment == ObsAlignment.Right)
+						adjust.x = offset.x;
+					else
+						adjust.x = offset.x / 2.0f;
+
+					if (alignment == ObsAlignment.Top)
+						adjust.y = offset.y;
+					else if (alignment == ObsAlignment.Bottom)
+						adjust.y = offset.y;
+					else
+						adjust.y = offset.y / 2.0f;
+
+					if (resizeEdge.HasFlag(ResizeEdge.Left))
+						adjust.x = -adjust.x;
+					if (resizeEdge.HasFlag(ResizeEdge.Top))
+						adjust.y = -adjust.y;
+
+					newPos.x += adjust.x;
+					newPos.y += adjust.y;
+
+					item.Position = newPos;
+					item.Bounds = newSize;
 				}
 
 				dragLastPosition = mousePosition;
@@ -132,34 +205,78 @@ namespace test.Controls
 		{
 			base.OnMouseDown(e);
 
+			if (e.Button == MouseButtons.Left)
+				OnMouseLeftDown(e);
+		}
+
+		protected void OnMouseLeftDown(MouseEventArgs e)
+		{
 			Vector2 mousePosition = GetPositionInScene(new Vector2(e.Location));
 
-			if (e.Button == MouseButtons.Left)
+			// unselect all items
+			foreach (ObsSceneItem item in scene.Items)
+				item.Selected = false;
+
+			const float edgeSize = 0.01f;
+			// select item under the mouse cursor
+			using (ObsSceneItem mouseItem = GetItemAtPosition(mousePosition, edgeSize))
 			{
-				// unselect all items
-				foreach (ObsSceneItem item in scene.Items)
-					item.Selected = false;
+				if (mouseItem == null || dragging)
+					return;
 
-				// select item under the mouse cursor
-				using (ObsSceneItem mouseItem = GetItemAtPosition(mousePosition))
+				mouseItem.Selected = true;
+
+				Vector3 transformedPos = Vector3.GetTransform(
+					new Vector3(mousePosition), mouseItem.BoxTransform.GetInverse());
+
+				bool edgeTop = transformedPos.y <= edgeSize;
+				bool edgeBottom = transformedPos.y >= 1.0f-edgeSize;
+				bool edgeLeft = transformedPos.x <= edgeSize;
+				bool edgeRight = transformedPos.x >= 1.0f-edgeSize;
+				bool center = !edgeTop && !edgeBottom && !edgeLeft && !edgeRight;
+
+				if (center)
 				{
-					if (mouseItem != null && !dragging)
+					resizeEdge = ResizeEdge.None;
+					Cursor.Current = Cursors.Hand;
+
+					dragging = true;
+					dragLastPosition = mousePosition;
+					dragStartPosition = mousePosition;
+				}
+				else
+				{
+					dragLastPosition = mousePosition;
+					dragStartPosition = mousePosition;
+					itemLastPosition = mouseItem.Position;
+					itemLastBounds = mouseItem.Bounds;
+					resizeEdge = ResizeEdge.None;
+
+					if (edgeTop)
 					{
-						Vector2 pixel = new Vector2(1.0f / mouseItem.Bounds.x, 1.0f / mouseItem.Bounds.y);
-						Vector3 transformedPos = Vector3.GetTransform(
-							new Vector3(mousePosition), mouseItem.BoxTransform.GetInverse());
+						Cursor.Current = Cursors.SizeNS;
+						resizeEdge |= ResizeEdge.Top;
+					}
+					else if (edgeBottom)
+					{
+						Cursor.Current = Cursors.SizeNS;
+						resizeEdge |= ResizeEdge.Bottom;
+					}
 
-						Obs.Log(LogErrorLevel.Info, pixel.ToString());
-						//TODO: test dragging near edges
-
-						dragging = true;
-						dragLastPosition = mousePosition;
-						mouseItem.Selected = true;
-
-						if (mouseItem == hoveredItem)
-							SetHoveredItem(null);
+					if (edgeLeft)
+					{
+						Cursor.Current = Cursors.SizeWE;
+						resizeEdge |= ResizeEdge.Left;
+					}
+					else if (edgeRight)
+					{
+						Cursor.Current = Cursors.SizeWE;
+						resizeEdge |= ResizeEdge.Right;
 					}
 				}
+
+				if (mouseItem == hoveredItem)
+					SetHoveredItem(null);
 			}
 		}
 
@@ -168,7 +285,13 @@ namespace test.Controls
 			base.OnMouseUp(e);
 
 			if (e.Button == MouseButtons.Left)
-				dragging = false;
+				OnMouseLeftUp(e);
+		}
+
+		protected void OnMouseLeftUp(MouseEventArgs e)
+		{
+			dragging = false;
+			resizeEdge = ResizeEdge.None;
 		}
 
 		protected override void OnMouseClick(MouseEventArgs e)
@@ -203,7 +326,7 @@ namespace test.Controls
 			return new Vector2((int)((position.x / previewScale) - left), (int)((position.y / previewScale) - top));
 		}
 
-		private ObsSceneItem GetItemAtPosition(Vector2 position)
+		private ObsSceneItem GetItemAtPosition(Vector2 position, float extend = 0.0f)
 		{
 			foreach (ObsSceneItem item in scene.Items)
 			{
@@ -211,10 +334,10 @@ namespace test.Controls
 				Vector3 transformedPos = Vector3.GetTransform(
 					new Vector3(position), item.BoxTransform.GetInverse());
 
-				bool isInside = transformedPos.x >= 0.0f &&
-					transformedPos.x < 1.0f &&
-					transformedPos.y >= 0.0f &&
-					transformedPos.y < 1.0f;
+				bool isInside = transformedPos.x >= 0.0f-extend &&
+					transformedPos.x < 1.0f+extend &&
+					transformedPos.y >= 0.0f-extend &&
+					transformedPos.y < 1.0f+extend;
 
 				if (isInside)
 					return new ObsSceneItem(item);
