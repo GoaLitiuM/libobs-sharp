@@ -136,9 +136,9 @@ namespace OBS
 			get { return libobs.obs_property_path_default_path(instance); }
 		}
 
-		public unsafe bool EditableListAllowFiles
+		public unsafe ObsEditableListType EditableListType
 		{
-			get { return libobs.obs_property_editable_list_allow_files(instance); }
+			get { return (ObsEditableListType)libobs.obs_property_editable_list_type(instance); }
         }
 
 		public unsafe FileFilter EditableListFilter
@@ -245,6 +245,7 @@ namespace OBS
 	public enum ObsPathType : int
 	{
 		File,
+		FileSave,
 		Directory
 	};
 
@@ -263,6 +264,8 @@ namespace OBS
 
 	public enum ObsEditableListType : int
 	{
-		Path,
+		Strings,
+		Files,
+		FilesAndUrls
 	};
 }

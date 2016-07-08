@@ -24,6 +24,7 @@ namespace OBS
 
 		//EXPORT const char *obs_service_get_display_name(const char *id);
 		//EXPORT obs_service_t *obs_service_create(const char *id, const char *name, obs_data_t *settings, obs_data_t *hotkey_data);
+		//EXPORT obs_service_t *obs_service_create_private(const char *id, const char *name, obs_data_t *settings);
 		//EXPORT void obs_service_destroy(obs_service_t *service);
 		//EXPORT const char *obs_service_get_name(const obs_service_t *service);
 		//EXPORT obs_data_t *obs_service_defaults(const char *id);

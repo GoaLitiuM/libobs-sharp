@@ -174,7 +174,7 @@ namespace test
 			var filtermenu = new ContextMenuStrip();
 			foreach (string filterType in Obs.GetSourceFilterTypes())
 			{
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Filter, filterType) + FilterSource.Filters.Count + 1;
+				string displayname = Obs.GetSourceTypeDisplayName(filterType) + FilterSource.Filters.Count + 1;
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + filterType + ")");
 

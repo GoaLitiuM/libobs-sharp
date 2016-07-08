@@ -492,7 +492,7 @@ namespace test.Controls
 		private void AddEditableList(ObsProperty property, ObsData setting, List<Control> controls)
 		{
 			string name = property.Name;
-			bool allowFiles = property.EditableListAllowFiles;
+			ObsEditableListType type = property.EditableListType;
 
 			FlowLayoutPanel layoutPanel = new FlowLayoutPanel()
 			{
@@ -652,8 +652,12 @@ namespace test.Controls
 			};
 
 			layoutPanel.Controls.Add(buttonAdd);
-			if (allowFiles)
+
+			if (type == ObsEditableListType.Strings)
 				layoutPanel.Controls.Add(buttonAddMulti);
+			else
+				throw new NotImplementedException(type.ToString());
+
 			layoutPanel.Controls.Add(buttonRemove);
 			layoutPanel.Controls.Add(buttonConfig);
 			layoutPanel.Controls.Add(buttonUp);

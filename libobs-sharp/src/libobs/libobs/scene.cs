@@ -32,9 +32,12 @@ namespace OBS
 		public static extern obs_scene_t obs_scene_create(
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
 
+		//EXPORT obs_scene_t *obs_scene_create_private(const char *name);
+
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		public static extern obs_source_t obs_scene_duplicate(obs_scene_t scene,
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name);
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string name,
+			obs_scene_duplicate_type type);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_addref(obs_scene_t source);
@@ -70,5 +73,13 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern void obs_scene_atomic_update(obs_scene_t scene, obs_scene_atomic_update_func func, IntPtr data);
+
+		public enum obs_scene_duplicate_type : int
+		{
+			OBS_SCENE_DUP_REFS,
+			OBS_SCENE_DUP_COPY,
+			OBS_SCENE_DUP_PRIVATE_REFS,
+			OBS_SCENE_DUP_PRIVATE_COPY
+		};
 	}
 }

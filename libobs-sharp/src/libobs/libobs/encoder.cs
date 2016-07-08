@@ -50,6 +50,7 @@ namespace OBS
 		//EXPORT bool obs_encoder_active(const obs_encoder_t *encoder);
 		//EXPORT void *obs_encoder_get_type_data(obs_encoder_t *encoder);
 		//EXPORT const char *obs_encoder_get_id(const obs_encoder_t *encoder);
+		//EXPORT uint32_t obs_get_encoder_caps(const char *encoder_id);
 		//EXPORT void obs_duplicate_encoder_packet(struct encoder_packet *dst, const struct encoder_packet *src);
 		//EXPORT void obs_free_encoder_packet(struct encoder_packet *packet);
 	}

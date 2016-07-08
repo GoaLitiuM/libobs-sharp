@@ -88,6 +88,7 @@ namespace OBS
 		//EXPORT lookup_t *obs_module_load_locale(obs_module_t *module, const char *default_locale, const char *locale);
 		//EXPORT char *obs_find_module_file(obs_module_t *module, const char *file);
 		//EXPORT char *obs_module_get_config_path(obs_module_t *module, const char *file);
+		//EXPORT bool obs_enum_source_types(size_t idx, const char **id);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.I1)]
@@ -153,9 +154,7 @@ namespace OBS
 		public static extern void obs_render_main_view();
 
 		//EXPORT void obs_set_master_volume(float volume);
-		//EXPORT void obs_set_present_volume(float volume);
 		//EXPORT float obs_get_master_volume(void);
-		//EXPORT float obs_get_present_volume(void);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_t obs_save_source(obs_source_t source);
@@ -163,8 +162,12 @@ namespace OBS
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_source_t obs_load_source(obs_data_t data);
 
-		[DllImport(importLibrary, CallingConvention = importCall)]
-		public static extern void obs_load_sources(obs_data_array_t array);
+		//[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
+		//public delegate obs_load_source_cb(IntPtr private_data, obs_source_t source);
+
+		//[DllImport(importLibrary, CallingConvention = importCall)]
+		//public static extern void obs_load_sources(obs_data_array_t array, obs_load_source_cb cb, IntPtr private_data);
+
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_array_t obs_save_sources();
@@ -175,6 +178,18 @@ namespace OBS
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_data_array_t obs_save_sources_filtered(obs_save_source_filter_cb cb, IntPtr data);
+		
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern obs_obj_type obs_obj_get_type(IntPtr obj);
+		
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_obj_get_id(IntPtr obj);
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public static extern bool obs_obj_invalid(IntPtr obj);
 
 		[StructLayoutAttribute(LayoutKind.Sequential, CharSet = importCharSet)]
 		public struct obs_video_info
@@ -205,8 +220,17 @@ namespace OBS
 			public obs_scale_type scale_type;    //How to scale if scaling
 		};
 
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct obs_audio_info
+		{
+			public uint32_t samples_per_sec;
+			public speaker_layout speakers;
+		};
+
 		public enum obs_scale_type : int
 		{
+			OBS_SCALE_DISABLE,
+			OBS_SCALE_POINT,
 			OBS_SCALE_BICUBIC,
 			OBS_SCALE_BILINEAR,
 			OBS_SCALE_LANCZOS,
@@ -221,6 +245,15 @@ namespace OBS
 			OBS_EFFECT_BICUBIC,            /**< Bicubic downscale */
 			OBS_EFFECT_LANCZOS,            /**< Lanczos downscale */
 			OBS_EFFECT_BILINEAR_LOWRES,    /**< Bilinear low resolution downscale */
+		};
+		
+		public enum obs_obj_type : int
+		{
+			OBS_OBJ_TYPE_INVALID,
+			OBS_OBJ_TYPE_SOURCE,
+			OBS_OBJ_TYPE_OUTPUT,
+			OBS_OBJ_TYPE_ENCODER,
+			OBS_OBJ_TYPE_SERVICE
 		};
 	}
 }

@@ -157,8 +157,7 @@ namespace OBS
 		public delegate bool obs_property_clicked_t(obs_properties_t props, obs_property_t property, IntPtr data);
 		
 		[DllImport(importLibrary, CallingConvention = importCall)]
-		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool obs_property_editable_list_allow_files(obs_property_t p);
+		public static extern obs_editable_list_type obs_property_editable_list_type(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
@@ -217,9 +216,17 @@ namespace OBS
 			OBS_COMBO_TYPE_LIST,
 		};
 
+		public enum obs_editable_list_type : int
+		{
+			OBS_EDITABLE_LIST_TYPE_STRINGS,
+			OBS_EDITABLE_LIST_TYPE_FILES,
+			OBS_EDITABLE_LIST_TYPE_FILES_AND_URLS
+		};
+
 		public enum obs_path_type : int
 		{
 			OBS_PATH_FILE,
+			OBS_PATH_FILE_SAVE,
 			OBS_PATH_DIRECTORY,
 		};
 

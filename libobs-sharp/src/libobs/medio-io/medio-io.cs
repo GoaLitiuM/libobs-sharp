@@ -22,6 +22,7 @@ namespace OBS
 {
 	using uint32_t = UInt32;
 	using uint64_t = UInt64;
+	using audio_output_data = IntPtr;
 
 	public static partial class libobs
 	{
@@ -34,6 +35,10 @@ namespace OBS
 			private audio_format format;
 			private speaker_layout speakers;
 		};
+		
+		[UnmanagedFunctionPointer(importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.I1)]
+		public delegate bool audio_input_callback_t(IntPtr param, uint64_t start_ts, uint64_t end_ts, out uint64_t new_ts, uint32_t active_mixers, audio_output_data mixes);
 
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public unsafe struct audio_output_info
@@ -43,15 +48,8 @@ namespace OBS
 			public uint32_t samples_per_sec;
 			public audio_format format;
 			public speaker_layout speakers;
-			public uint64_t buffer_ms;
-		};
-
-		[StructLayoutAttribute(LayoutKind.Sequential)]
-		public struct obs_audio_info
-		{
-			public uint32_t samples_per_sec;
-			public speaker_layout speakers;
-			public uint64_t buffer_ms;
+			public audio_input_callback_t input_callback;
+			public void* input_param;
 		};
 
 		public enum video_format : int

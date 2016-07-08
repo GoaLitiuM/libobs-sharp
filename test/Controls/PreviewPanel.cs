@@ -307,7 +307,7 @@ namespace test.Controls
 
 		private void ClearBackground(uint cx, uint cy)
 		{
-			GSEffect solid = Obs.GetSolidEffect();
+			GSEffect solid = Obs.GetBaseEffect(ObsBaseEffect.Solid);
 			solid.SetParameterValue("color", new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 			GSEffectTechnique tech = solid.GetTechnique("Solid");
@@ -339,7 +339,7 @@ namespace test.Controls
 
 			// draw selection outlines
 
-			GSEffect solid = Obs.GetSolidEffect();
+			GSEffect solid = Obs.GetBaseEffect(ObsBaseEffect.Solid);
 			solid.SetParameterValue("color", new Vector4(1.0f, 1.0f, 1.0f, 0.6f));
 
 			GSEffectTechnique tech = solid.GetTechnique("Solid");

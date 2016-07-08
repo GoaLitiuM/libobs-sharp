@@ -120,9 +120,9 @@ namespace OBS
 			libobs.obs_render_main_view();
 		}
 
-		public static string GetSourceTypeDisplayName(ObsSourceType type, string id)
+		public static string GetSourceTypeDisplayName(string id)
 		{
-			return libobs.obs_source_get_display_name((libobs.obs_source_type)type, id);
+			return libobs.obs_source_get_display_name(id);
 		}
 
 		public static string[] GetSourceInputTypes()

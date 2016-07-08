@@ -27,5 +27,6 @@ namespace OBS
 		//EXPORT void obs_view_set_source(obs_view_t *view, uint32_t channel, obs_source_t *source);
 		//EXPORT obs_source_t *obs_view_get_source(obs_view_t *view, uint32_t channel);
 		//EXPORT void obs_view_render(obs_view_t *view);
+		//EXPORT uint64_t obs_get_video_frame_time(void);
 	}
 }

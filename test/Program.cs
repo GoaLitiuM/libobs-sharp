@@ -80,7 +80,7 @@ namespace test
 				{
 					samples_per_sec = 44100,
 					speakers = libobs.speaker_layout.SPEAKERS_STEREO,
-					buffer_ms = 1000
+					//buffer_ms = 1000
 				};
 
 				if (!Obs.ResetAudio(avi))

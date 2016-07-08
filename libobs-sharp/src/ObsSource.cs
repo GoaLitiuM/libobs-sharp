@@ -25,7 +25,7 @@ namespace OBS
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name)
 		{
-			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, IntPtr.Zero, IntPtr.Zero);
+			instance = libobs.obs_source_create(/*(libobs.obs_source_type)type,*/ id, name, IntPtr.Zero, IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
@@ -33,7 +33,7 @@ namespace OBS
 
 		public unsafe ObsSource(ObsSourceType type, string id, string name, ObsData settings)
 		{
-			instance = libobs.obs_source_create((libobs.obs_source_type)type, id, name, settings.GetPointer(), IntPtr.Zero);
+			instance = libobs.obs_source_create(/*(libobs.obs_source_type)type,*/ id, name, settings.GetPointer(), IntPtr.Zero);
 
 			if (instance == null)
 				throw new ApplicationException("obs_source_create failed");
@@ -133,7 +133,7 @@ namespace OBS
 
 		public unsafe static ObsProperties GetProperties(ObsSourceType type, string id)
 		{
-			IntPtr ptr = libobs.obs_get_source_properties((libobs.obs_source_type)type, id);
+			IntPtr ptr = libobs.obs_get_source_properties(/*(libobs.obs_source_type)type,*/ id);
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -215,7 +215,7 @@ namespace OBS
 		/// </param>
 		public static ObsData GetDefaults(ObsSourceType type, string id)
 		{
-			var ptr = libobs.obs_get_source_defaults((libobs.obs_source_type) type, id);
+			var ptr = libobs.obs_get_source_defaults(/*(libobs.obs_source_type) type,*/ id);
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -228,5 +228,6 @@ namespace OBS
 		Input,
 		Filter,
 		Transition,
+		Scene,
 	};
 }

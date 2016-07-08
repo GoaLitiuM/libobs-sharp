@@ -315,6 +315,7 @@ namespace OBS
 
 		//EXPORT enum obs_data_type obs_data_item_gettype(obs_data_item_t *item);
 		//EXPORT enum obs_data_number_type obs_data_item_numtype(obs_data_item_t *item);
+		//EXPORT const char *obs_data_item_get_name(obs_data_item_t *item);
 
 		//EXPORT void obs_data_item_set_string(obs_data_item_t **item, const char *val);
 		//EXPORT void obs_data_item_set_int(obs_data_item_t **item, long long val);

@@ -282,7 +282,7 @@ namespace test.Objects
 
 			foreach (string inputType in Obs.GetSourceInputTypes())
 			{
-				string displayname = Obs.GetSourceTypeDisplayName(ObsSourceType.Input, inputType);
+				string displayname = Obs.GetSourceTypeDisplayName(inputType);
 
 				var menuitem = new ToolStripMenuItem(displayname + " (" + inputType + ")")
 							   {
