@@ -72,6 +72,10 @@ namespace OBS
 
 		//EXPORT int obs_open_module(obs_module_t **module, const char *path, const char *data_path);
 		//EXPORT bool obs_init_module(obs_module_t *module);
+		
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_log_loaded_modules();
+		
 		//EXPORT const char *obs_get_module_file_name(obs_module_t *module);
 		//EXPORT const char *obs_get_module_name(obs_module_t *module);
 		//EXPORT const char *obs_get_module_author(obs_module_t *module);

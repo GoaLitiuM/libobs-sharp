@@ -55,12 +55,20 @@ namespace OBS
 			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string description);
 
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		public static extern void obs_property_set_long_description(obs_property_t p,
+			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string long_description);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_property_name(obs_property_t p);
-		
+
 		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
 		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
 		public static extern string obs_property_description(obs_property_t p);
+
+		[DllImport(importLibrary, CallingConvention = importCall, CharSet = importCharSet)]
+		[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))]
+		public static extern string obs_property_long_description(obs_property_t p);
 
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern obs_property_type obs_property_get_type(obs_property_t p);

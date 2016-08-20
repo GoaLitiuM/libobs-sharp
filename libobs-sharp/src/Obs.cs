@@ -38,6 +38,11 @@ namespace OBS
 		{
 			libobs.obs_load_all_modules();
 		}
+		
+		public static void LogLoadedModules()
+		{
+			libobs.obs_log_loaded_modules();
+		}
 
 		public static bool ResetVideo(libobs.obs_video_info ovi)
 		{
