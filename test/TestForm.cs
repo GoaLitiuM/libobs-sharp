@@ -62,10 +62,11 @@ namespace test
 			presentation.AddScene();
 
 			ItemListBox.DataSource = SceneListBox.SelectedValue;
-
-			var source = presentation.CreateSource("random", "some random source");
+			
+			var source = presentation.CreateSource("monitor_capture", "Monitor Capture Source");
 			presentation.AddSource(source);
 			var item = presentation.CreateItem(source);
+			item.Name = "Monitor Capture SceneItem";
 			presentation.AddItem(item);
 
 			presentation.SetScene(SceneListBox.SelectedIndex);
